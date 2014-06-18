@@ -1,0 +1,22 @@
+﻿7429cc47-687f-4e78-9016-f96a502021c7, VnExpress, vnexpress.net, Images/publishers/vnexpress.png, 1, 1
+ddc17557-3e9c-4937-98fa-bc3c0e514bcd, Dân Trí, dantri.com.vn, Images/publishers/dantri.png, 1, 1
+ae68f542-48d6-4622-9419-1ee4461babf4, VietnamNet, vietnamnet.vn, Images/publishers/vietnamnet.png, 1, 1
+51507882-9b60-4cf3-8523-2646366de8ee, ThanhNien, thanhnien.vn.com.vn, Images/publishers/thanhnien.png, 1, 1
+25b84657-159b-40bc-8507-f97e72440797, CongAn, congan.com.vn, Images/publishers/congan.png, 1, 0
+a1b77305-7182-43ff-b462-4231c101086d, HaiVL, haivl.com, Images/publishers/haivl.png, 1, 1
+cac4a482-fb74-4ef6-8797-638cfb542f58, 24h, 24h.com.vn, Images/publishers/24h.png, 1, 1
+e7ad6094-18fe-472f-b5da-7ba65164bb9c, BongDa, bongda.com.vn, Images/publishers/bongda.png, 1, 1
+11d64201-5ef7-47d4-9dc9-aa26e4dee31b, NgoiSao, ngoisao.net, Images/publishers/ngoisao.png, 1, 1
+fc3af6b0-093e-4b06-b25d-82d85a7528d0, Thể thao Văn hóa, thethaovanhoa.vn, Images/publishers/ttvh.png, 1, 1
+51f83702-07eb-4ea9-9d29-28c3b0b438ed, Kênh14, kenh14.vn, Images/publishers/kenh14.png, 1, 1
+adf4c5a9-3791-4fc6-bf3f-18e563480492, Gia đình & Xã hội, giadinh.net.vn, Images/publishers/giadinh.png, 1, 1
+9fb41b7b-0ffb-44d1-a6a1-1c1bf5625494, Afamily, afamily.vn, Images/publishers/afamily.png, 1, 1
+6fb6a19c-74ac-45da-be34-323ab6403b27, Kiến Thức Ngày Nay, kienthucngaynay.info, Images/publishers/ktnn.png, 1, 0
+890d1e54-8298-4fc4-ba10-2c8b494245cb, CafeBiz, cafebiz.vn, Images/publishers/cafebiz.png, 1,1
+074c83f9-2707-47d4-97ff-0de3985e92b3, CafeF, cafef.vn, Images/publishers/cafef.png, 1,1
+b60df1ad-4a0d-48d2-bbaf-d328ef00067a, Đờisống & Phápluật, doisongphapluat.com, Images/publishers/dspl.png,1,1
+59c5f421-6e68-4641-9d54-de145a4ae66f, Tinh tế, tinhte.vn, Images/publishers/tinhte.png,1,1
+455b6156-77ba-4023-a057-9c06c7f60849, 2sao, 2sao.vn, Images/publishers/2sao.png,1,1
+b99447ea-5c8b-4acb-8cc2-d6d215d4bf8d, WinphoneViet, winphoneviet.com, Images/publishers/wpv.png,1,0
+7b420408-13bf-4340-81f7-a6430c538686, Tuổi Trẻ, tuoitre.vn, Images/publishers/tuoitre.png,1,1
+67a3faf7-3ee4-4741-90f9-65713c37b261, Lao Động, laodong.com.vn, Images/publishers/laodong.png,1,0

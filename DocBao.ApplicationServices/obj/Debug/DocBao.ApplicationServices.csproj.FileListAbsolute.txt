@@ -1,0 +1,16 @@
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Data\Feeds.txt
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Data\Publishers.txt
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\DocBao.ApplicationServices.dll.config
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\DocBao.ApplicationServices.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\DocBao.ApplicationServices.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Davang.Parser.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Davang.Utilities.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\MockIAPLib.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Newtonsoft.Json.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Davang.Parser.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Davang.Utilities.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\MockIAPLib.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Debug\Newtonsoft.Json.xml
+G:\gitdev\DocBao\DocBao.ApplicationServices\obj\Debug\DocBao.ApplicationServices.csprojResolveAssemblyReference.cache
+G:\gitdev\DocBao\DocBao.ApplicationServices\obj\Debug\DocBao.ApplicationServices.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\obj\Debug\DocBao.ApplicationServices.pdb

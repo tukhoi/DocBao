@@ -1,0 +1,148 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="DocBao.WP.StoredItemsPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:cxi="clr-namespace:DocBao.WP.Helper;assembly=DocBao.WP"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="{StaticResource PhoneForegroundBrush}"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True">
+
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush ImageSource="\Images\background.png"/>
+        </Grid.Background>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Grid.Row="0" Margin="12,17,0,12">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
+                           x:Name="txtAppName" 
+                           Style="{StaticResource PhoneTextNormalStyle}" 
+                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                           Foreground="White" 
+                           Tap="txtAppName_Tap"/>
+                <Image x:Name="firstNextIcon" Source="/Resources/next.png" 
+                       Visibility="Visible"/>
+                <TextBlock Text="tin đã lưu"
+                           Style="{StaticResource PhoneTextNormalStyle}" 
+                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                           Foreground="White"/>
+            </StackPanel>
+            <TextBlock Text="" x:Name="txtReadCount" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
+        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <phone:LongListSelector x:Name="llsItemList"
+                    VerticalAlignment="Top"
+                    Grid.Row="1"
+                    ItemsSource="{Binding ItemViewModels}"
+                    LayoutMode="List"
+                    IsGroupingEnabled="False"
+                    HideEmptyGroups="False"
+                    ItemRealized="llsItemList_ItemRealized">
+                    <phone:LongListSelector.ItemTemplate>
+                        <DataTemplate>
+                            <Grid Tap="llsItemList_Tap" Margin="12,0,0,0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="10"/>
+                                </Grid.RowDefinitions>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Grid Grid.Row="0" Grid.Column="0" Background="White">
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                        <RowDefinition Height="Auto"/>
+                                    </Grid.RowDefinitions>
+
+                                    <TextBlock Grid.Row="0" Grid.Column="0"
+                                        Text="{Binding Title}" 
+                                        Style="{StaticResource PhoneTextNormalStyle}" 
+                                        TextWrapping="Wrap" 
+                                        FontFamily="{StaticResource PhoneFontFamilySemiBold}" 
+                                        Foreground="{Binding ForegroundColor}"/>
+
+                                    <phone:WebBrowser Grid.Row="1" Grid.Column="0"
+                                        BorderThickness="0"
+                                        Margin="12,0,12,0" 
+                                        HorizontalAlignment="Left" 
+                                        cxi:WebBrowserHelper.Html="{Binding Summary}"
+                                        Height="200" Width="400"
+                                        IsHitTestVisible="False"
+                                        Visibility="{Binding SummaryVisibility}"
+                                        ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                                        ScrollViewer.VerticalScrollBarVisibility="Disabled" />
+
+                                    <TextBlock Grid.Row="2" Grid.Column="0"
+                                        Margin="12"
+                                        Text="{Binding PublishDateString}" 
+                                        Style="{StaticResource PhoneTextSubtleStyle}" 
+                                        TextWrapping="NoWrap" 
+                                        Foreground="{Binding ForegroundColor}"/>
+                                </Grid>
+
+                                <toolkit:ContextMenuService.ContextMenu>
+                                    <toolkit:ContextMenu BorderThickness="0" BorderBrush="White">
+                                        <toolkit:MenuItem Header="mở bằng IE" Click="ctxOpenIE_Click"/>
+                                        <toolkit:MenuItem Header="{Binding MarkReadTitle}" Click="ctxMarkRead_Click"/>
+                                        <toolkit:MenuItem Header="sao chép link" Click="ctxCopyLink_Click"/>
+                                        <toolkit:MenuItem Header="xóa" Click="ctxStoreItem_Click"/>
+                                    </toolkit:ContextMenu>
+                                </toolkit:ContextMenuService.ContextMenu>
+                            </Grid>
+                        </DataTemplate>
+                    </phone:LongListSelector.ItemTemplate>
+                </phone:LongListSelector>
+
+
+            </Grid>
+        </Grid>
+    </Grid>
+
+</phone:PhoneApplicationPage>

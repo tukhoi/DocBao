@@ -1,0 +1,281 @@
+﻿<phone:PhoneApplicationPage
+    x:Class="DocBao.WP.ConfigPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:phone="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone"
+    xmlns:shell="clr-namespace:Microsoft.Phone.Shell;assembly=Microsoft.Phone"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    FontFamily="{StaticResource PhoneFontFamilyNormal}"
+    FontSize="{StaticResource PhoneFontSizeNormal}"
+    Foreground="White"
+    SupportedOrientations="Portrait" Orientation="Portrait"
+    mc:Ignorable="d"
+    shell:SystemTray.IsVisible="True">
+
+    <toolkit:TransitionService.NavigationInTransition>
+        <toolkit:NavigationInTransition>
+            <toolkit:NavigationInTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardIn"/>
+            </toolkit:NavigationInTransition.Backward>
+            <toolkit:NavigationInTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardIn"/>
+            </toolkit:NavigationInTransition.Forward>
+        </toolkit:NavigationInTransition>
+    </toolkit:TransitionService.NavigationInTransition>
+    <toolkit:TransitionService.NavigationOutTransition>
+        <toolkit:NavigationOutTransition>
+            <toolkit:NavigationOutTransition.Backward>
+                <toolkit:TurnstileTransition Mode="BackwardOut"/>
+            </toolkit:NavigationOutTransition.Backward>
+            <toolkit:NavigationOutTransition.Forward>
+                <toolkit:TurnstileTransition Mode="ForwardOut"/>
+            </toolkit:NavigationOutTransition.Forward>
+        </toolkit:NavigationOutTransition>
+    </toolkit:TransitionService.NavigationOutTransition>
+    
+    <!--LayoutRoot is the root grid where all page content is placed-->
+    <Grid x:Name="LayoutRoot">
+        <Grid.Background>
+            <ImageBrush ImageSource="\Images\background.png"/>
+        </Grid.Background>
+        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!--TitlePanel contains the name of the application and page title-->
+        <StackPanel Grid.Row="0" Margin="12,17,0,12">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
+                           x:Name="txtAppName" 
+                           Style="{StaticResource PhoneTextNormalStyle}" 
+                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                           Foreground="White" 
+                           Tap="txtAppName_Tap"/>
+                <Image x:Name="firstNextIcon" 
+                       Source="/Resources/next.png" 
+                       Visibility="Collapsed"/>
+                <TextBlock Text="" x:Name ="txtPageName" 
+                           Style="{StaticResource PhoneTextNormalStyle}" 
+                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                           Foreground="White"/>
+            </StackPanel>
+        </StackPanel>
+
+        <!--ContentPanel - place additional content here-->
+        <ScrollViewer Grid.Row="1">
+            <StackPanel>
+                <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,12">
+
+                    <!--<ScrollViewer Grid.Row="0">
+                <StackPanel>-->
+
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+
+                    <Grid Grid.Row="0">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ToggleSwitch Header="chỉ hiện danh sách tiêu đề" 
+                                              x:Name="chkShowTitleOnly" 
+                                              Tap="chkShowTitleOnly_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                                Foreground="White" 
+                                                Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="chỉ hiện danh sách tiêu đề khi duyệt tin trong từng chuyên mục. Tắt nếu bạn muốn hiện thêm phần tóm tắt tin..." FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
+                    </Grid>
+
+                    <Grid Grid.Row="2">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ToggleSwitch Header="hiện tiêu đề ở trang đọc tin" 
+                                              x:Name="chkShowItemTitle" 
+                                              Tap="chkShowItemTitle_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                                Foreground="White" 
+                                                Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="tắt nếu bạn muốn có nhiều không gian đọc tin" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
+                    </Grid>
+
+                    <Grid Grid.Row="4">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ToggleSwitch Header="chỉ hiện tin chưa đọc" 
+                                              x:Name="chkShowUnreadItemOnly" 
+                                              Tap="chkShowUnreadItemOnly_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                                Foreground="White" 
+                                                Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="chỉ hiện tin chưa đọc khi duyệt tin trong từng chuyên mục. Tắt nếu bạn muốn hiện cả tin đã đọc..." FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
+                    </Grid>
+
+                    <Grid Grid.Row="6">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                    
+                        <toolkit:ListPicker
+                                FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                Foreground="White"
+                                x:Name="lpkMaxItemStored">
+                                <toolkit:ListPicker.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="số tin lưu cho mỗi chuyên mục"
+                                    FontSize="{StaticResource PhoneFontSizeNormal}"
+                                    Foreground="White"/>
+                                    </DataTemplate>
+                                </toolkit:ListPicker.HeaderTemplate>
+                            </toolkit:ListPicker>
+                    </Grid>
+
+                    <Grid Grid.Row="8">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+
+                        <toolkit:ToggleSwitch Header="cho phép cập nhật tin ngầm" x:Name="chkAllowBackgroundUpdate" Tap="chkAllowBackgroundUpdate_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                        Foreground="White" 
+                                         Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="cho phép cập nhật tin tức ngay cả khi app không mở..." FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
+                    </Grid>
+                    
+                    <Grid Grid.Row="10">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ListPicker
+                                FontSize="{StaticResource PhoneFontSizeSmall}" 
+                                Foreground="White"
+                                x:Name="lpkFeedCountPerBackgroundUpdate">
+                                <toolkit:ListPicker.HeaderTemplate>
+                                    <DataTemplate>
+                                        <TextBlock Text="số chuyên mục được cập nhật một lần"
+                                    FontSize="{StaticResource PhoneFontSizeNormal}"
+                                    Foreground="White"/>
+                                    </DataTemplate>
+                                </toolkit:ListPicker.HeaderTemplate>
+                            </toolkit:ListPicker>
+                    </Grid>
+
+                    <Grid Grid.Row="12">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ToggleSwitch Header="hiện thông báo mỗi lần cập nhật ngầm xong" x:Name="chkShowBackgroundUpdateResult" Tap="chkShowBackgroundUpdateResult_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                            Foreground="White" 
+                                            Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="hiện thông báo số chuyên mục và tin vừa được cập nhật..." FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
+                    </Grid>
+                    
+                    <Grid Grid.Row="14">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ToggleSwitch Header="chỉ cập nhật ngầm khi có wifi" x:Name="chkJustUpdateOverWifi" Tap="chkJustUpdateOverWifi_Tap">
+                                <toolkit:ToggleSwitch.HeaderTemplate>
+                                    <DataTemplate>
+                                        <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                            Foreground="White" 
+                                            Content="{Binding}"/>
+                                    </DataTemplate>
+                                </toolkit:ToggleSwitch.HeaderTemplate>
+                                <toolkit:ToggleSwitch.ContentTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Vertical">
+                                            <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                            <TextBlock Text="bật tính năng này nếu bạn không muốn tốn tiền cập nhật với 2g/3g" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </toolkit:ToggleSwitch.ContentTemplate>
+                            </toolkit:ToggleSwitch>
+                    </Grid>
+                </Grid>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+
+</phone:PhoneApplicationPage>

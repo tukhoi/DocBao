@@ -1,0 +1,14 @@
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Data\Feeds.txt
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Data\Publishers.txt
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\DocBao.ApplicationServices.dll.config
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\DocBao.ApplicationServices.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\DocBao.ApplicationServices.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Davang.Parser.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Davang.Utilities.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Newtonsoft.Json.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Davang.Parser.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Davang.Utilities.pdb
+G:\gitdev\DocBao\DocBao.ApplicationServices\Bin\Release\Newtonsoft.Json.xml
+G:\gitdev\DocBao\DocBao.ApplicationServices\obj\Release\DocBao.ApplicationServices.csprojResolveAssemblyReference.cache
+G:\gitdev\DocBao\DocBao.ApplicationServices\obj\Release\DocBao.ApplicationServices.dll
+G:\gitdev\DocBao\DocBao.ApplicationServices\obj\Release\DocBao.ApplicationServices.pdb

@@ -1,0 +1,15 @@
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Data\Feeds.txt
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Data\Publishers.txt
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\DocBao.BackgroundUpdater.dll
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\DocBao.BackgroundUpdater.pdb
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Davang.Parser.dll
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Davang.Utilities.dll
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\DocBao.ApplicationServices.dll
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Newtonsoft.Json.dll
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Davang.Parser.pdb
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Davang.Utilities.pdb
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\DocBao.ApplicationServices.pdb
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\Bin\Release\Newtonsoft.Json.xml
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\obj\Release\DocBao.BackgroundUpdater.csprojResolveAssemblyReference.cache
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\obj\Release\DocBao.BackgroundUpdater.dll
+G:\gitdev\DocBao\DocBao.BackgroundUpdater\obj\Release\DocBao.BackgroundUpdater.pdb
