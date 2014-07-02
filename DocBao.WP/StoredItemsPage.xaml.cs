@@ -15,13 +15,13 @@ using Davang.Utilities.Extensions;
 using Microsoft.Phone.Net.NetworkInformation;
 using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class StoredItemsPage : PhoneApplicationPage
+    public partial class StoredItemsPage : BasePage
     {
         StoredItemsViewModel _viewModel;
-        FeedManager _feedManager = FeedManager.GetInstance();
         string _lastItemId;
         int _pageNumber = 0;
 
@@ -30,8 +30,10 @@ namespace DocBao.WP
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
+
             _viewModel = new StoredItemsViewModel();
             if (_viewModel.Items.Count == 0)
             {
@@ -44,8 +46,7 @@ namespace DocBao.WP
                 _lastItemId = lastItemId;
 
              Binding();
-            
-            base.OnNavigatedTo(e);
+             base.OnNavigatedTo(e);
         }
 
         private void Binding()
@@ -74,6 +75,7 @@ namespace DocBao.WP
             {
                 this.SetProgressIndicator(false);
                 Messenger.ShowToast("lỗi lấy dữ liệu...");
+                GA.LogException(ex);
                 return;
             }
         }
@@ -111,7 +113,9 @@ namespace DocBao.WP
                 if (i < llsItemList.ItemsSource.Count)
                     llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
             }
-            catch (Exception) { }
+            catch (Exception ex) {
+                GA.LogException(ex);
+            }
         }
 
         private void UpdateViewTitle()

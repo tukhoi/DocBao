@@ -14,12 +14,12 @@ using System.Collections.ObjectModel;
 using DocBao.WP.ViewModels;
 using System.Windows.Data;
 using DocBao.WP.Helper;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class PublisherPage : PhoneApplicationPage
+    public partial class PublisherPage : BasePage
     {
-        FeedManager _feedManager;
         PublisherViewModel _viewModel;
         int _pageNumber = 0;
         Guid _lastFeedId;
@@ -27,17 +27,19 @@ namespace DocBao.WP
         public PublisherPage()
         {
             InitializeComponent();
-            _feedManager = FeedManager.GetInstance();
             _viewModel = new PublisherViewModel();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
+            
             var lastFeedId = _feedManager.GetLastId<Guid>();
             if (!string.IsNullOrEmpty(lastFeedId))
                 _lastFeedId = new Guid(lastFeedId);
 
             Binding();
+
             base.OnNavigatedTo(e);
         }
 
@@ -81,8 +83,10 @@ namespace DocBao.WP
                 if (i < llsFeedList.ItemsSource.Count)
                     llsFeedList.ScrollTo(llsFeedList.ItemsSource[i]);
             }
-            catch (Exception)
-            { }
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+            }
         }
 
         //private void ScrollTo(Feed readingFeed)

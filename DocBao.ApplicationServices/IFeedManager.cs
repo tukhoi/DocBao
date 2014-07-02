@@ -1,4 +1,5 @@
 ﻿using Davang.Parser.Dto;
+using DocBao.ApplicationServices.Bank;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,8 +19,8 @@ namespace DocBao.ApplicationServices
         AppResult<List<Feed>> GetAllFeeds(Guid publisherId);
         AppResult<List<Feed>> GetSubscribedFeeds(Guid publisherId = default(Guid));
         AppResult<Feed> GetFeed(Guid feed);
-        AppResult<Feed> GetSubscribedFeed(Guid feedId);
-        Task<AppResult<int>> UpdateItems(Feed feed, bool refresh = false);
+        AppResult<Feed> GetSubscribedFeed(Guid feedId, bool autoSubscribe = false);
+        Task<AppResult<int>> UpdateItems(Feed feed, bool refresh = false, bool saveToDisk = true);
 
         AppResult<int> ReadCount(Guid publisherId);
         AppResult<int> ItemCount(Guid publisherId);
@@ -48,7 +49,6 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
-<<<<<<< HEAD
         #region Stored Items
 
         Task<AppResult<bool>> StoreItemAsync(Item item);
@@ -62,13 +62,17 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
-=======
->>>>>>> parent of db4037a... Stored item feature
-        //#region Reading
+        #region CustomView
 
-        //void SetReading<T, TId>(T readingOne) where T : BaseEntity<TId>;
-        //T GetReading<T, TId>(IList<T> lookupList) where T : BaseEntity<TId>;
+        Category GetCategory(Guid categoryId);
+        IList<Category> GetCategories();
+        Task<KeyValuePair<int,IList<Item>>> GetItemsByCategory(Guid categoryId, int top, bool refresh = false);
 
-        //#endregion
+        #endregion
+
+        Task<bool> SaveAsync();
+        bool Save();
+
+        void CreateFeedsToUpdate();
     }
 }

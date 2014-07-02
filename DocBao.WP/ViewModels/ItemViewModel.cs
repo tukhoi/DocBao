@@ -1,5 +1,6 @@
 ﻿
 using Davang.Parser.Dto;
+using DocBao.ApplicationServices;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,7 +30,7 @@ namespace DocBao.WP.ViewModels
 
         public string PublishDateString {
             get {
-                return "cập nhật: " + this.PublishDate.ToString("dd/MM/yyyy hh:mm:ss");
+                return "cập nhật: " + this.PublishDate.ToString("dd/MM/yyyy hh:mm:ss tt");
             }
         }
 
@@ -44,7 +45,6 @@ namespace DocBao.WP.ViewModels
             this.Id = item.Id;
             this.FeedId = item.FeedId;
             this.Read = item.Read;
-            this.Authors = item.Authors;
             this.PublishDate = item.PublishDate;
             this.Title = item.Title;
             this.Summary = item.Summary;
@@ -58,7 +58,6 @@ namespace DocBao.WP.ViewModels
                 Id = this.Id,
                 FeedId = this.FeedId,
                 Read = this.Read,
-                Authors = this.Authors,
                 PublishDate = this.PublishDate,
                 Title = this.Title,
                 Summary = this.Summary,

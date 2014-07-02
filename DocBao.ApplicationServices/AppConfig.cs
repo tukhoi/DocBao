@@ -1,6 +1,7 @@
 ﻿using Davang.Parser.Dto;
 using Davang.Utilities.Helpers;
 using Davang.Utilities.Helpers.Serialization;
+using DocBao.ApplicationServices.Background;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,20 +13,16 @@ namespace DocBao.ApplicationServices
     public class AppConfig
     {
         public static SerializationType DEFAULT_SERIALIZATION_TYPE = SerializationType.JsonSerialization;
-        private static IDictionary<Guid, Feed> _subscribedFeeds;
 
         public static string SUBSCRIBED_FEED_FILE_NAME = "subscribedFeeds.dat";
-<<<<<<< HEAD
         public static string STORED_ITEM_FILE_NAME = "storedFeeds.dat";
-=======
->>>>>>> parent of db4037a... Stored item feature
         public static string FEED_BANK_FILE_NAME = @"Data\Feeds.txt";
         public static string PUBLISHER_BANK_FILE_NAME = @"Data\Publishers.txt";
 
         public static string APP_NAME = "duyệt báo";
 
-        public static int ITEM_COUNT_PER_FEED = 20;
-        public static int FEED_COUNT_PER_PUBLISHER = 20;
+        public static int ITEM_COUNT_PER_FEED = 10;
+        public static int FEED_COUNT_PER_PUBLISHER = 10;
         public static int ITEM_COUNT_BEFORE_NEXT_LOADING = 1;
 
         public static string PAID_VERSION = "paid_version";
@@ -33,20 +30,41 @@ namespace DocBao.ApplicationServices
 
         public static string BACKGROUND_UPDATE_TASK_NAME = "DocBaoUpdater";
 
+        public static string GA_ID = "UA-52115271-1";
+        public static string GA_APP_NAME = "duyetbao";
+        public static string GA_APP_VERSION = "1.5";
+
         public static IDictionary<string, short> MaxItemStoredList;
         public static IDictionary<string, short> FeedCountPerBackgroundUpdateList;
+
+        public static short MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND = 50;
+        public static string TEMP_DOWNLOAD_FILE_PATTERN = "temp-download";
+        public static short MAX_NEW_UPDATE_MESSENGER_WAIT = 10;
 
         private static IDictionary<ConfigKey, object> _memConfigs;
 
         static AppConfig()
         {
-            _subscribedFeeds = new Dictionary<Guid, Feed>();
             _memConfigs = new Dictionary<ConfigKey, object>();
-
             InitializeConfigList();
         }
 
         #region Settings
+
+        public static Guid ClientId
+        {
+            get
+            {
+                var clientId = GetConfig<Guid>(ConfigKey.ClientId, default(Guid));
+                if (default(Guid).Equals(clientId))
+                {
+                    clientId = Guid.NewGuid();
+                    SetConfig<Guid>(ConfigKey.ClientId, clientId);
+                }
+
+                return clientId;
+            }
+        }
 
         public static bool Backup
         {
@@ -156,15 +174,51 @@ namespace DocBao.ApplicationServices
             }
         }
 
+        public static bool UseCustomView
+        {
+            get
+            {
+                return GetConfig<bool>(ConfigKey.UseCustomView, false);
+            }
+            set
+            {
+                SetConfig<bool>(ConfigKey.UseCustomView, value);
+            }
+        }
+
         public static bool AppRunning
         {
             get
             {
-                return GetPersistentConfig<bool>(ConfigKey.AppRunning, false);
+                return GetConfig<bool>(ConfigKey.AppRunning, true);
             }
             set
             {
                 SetConfig<bool>(ConfigKey.AppRunning, value);
+            }
+        }
+
+        public static UpdateVersion AppUpdate
+        {
+            get
+            {
+                return GetConfig<UpdateVersion>(ConfigKey.AppUpdate, UpdateVersion.NotSet);
+            }
+            set
+            {
+                SetConfig<UpdateVersion>(ConfigKey.AppUpdate, value);
+            }
+        }
+
+        public static IList<FeedDownload> FeedDownloads
+        {
+            get
+            {
+                return GetConfig<IList<FeedDownload>>(ConfigKey.FeedDownloads, null);
+            }
+            set
+            {
+                SetConfig<IList<FeedDownload>>(ConfigKey.FeedDownloads, value);
             }
         }
 
@@ -197,6 +251,11 @@ namespace DocBao.ApplicationServices
                 _memConfigs.Add(key, value);
             else
                 _memConfigs[key] = value;
+            SetPersistentConfig(key, value);
+        }
+
+        private static void SetPersistentConfig<T>(ConfigKey key, T value)
+        {
             StorageHelper.SaveConfig(key.ToString(), value);
         }
 
@@ -220,6 +279,7 @@ namespace DocBao.ApplicationServices
 
     public enum ConfigKey
     { 
+        ClientId,
         Backup,
         ShowTitleOnly,
         ShowUnreadItemOnly,
@@ -229,6 +289,16 @@ namespace DocBao.ApplicationServices
         FeedCountPerBackgroundUpdate,
         ShowBackgroundUpdateResult,
         JustUpdateOverWifi,
-        AppRunning //private only
+        UseCustomView,
+        AppRunning, //private only
+        AppUpdate,
+        FeedDownloads
+    }
+
+    public enum UpdateVersion
+    { 
+        NotSet = 0,
+        V1_4,
+        V1_5
     }
 }

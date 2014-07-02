@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using DocBao.WP.Helper;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP.ViewModels
 {
@@ -32,12 +33,6 @@ namespace DocBao.WP.ViewModels
             get 
             {
                 return FeedHelper.GetReadStats(this.Id);
-            }
-        }
-
-        public string ItemCount {
-            get {
-                return this.Items.Count.ToString();
             }
         }
 
@@ -76,7 +71,7 @@ namespace DocBao.WP.ViewModels
             }
         }
 
-        public async Task<int> Initialize(Guid feedId, Guid publisherId, bool requireUpdate)
+        public async Task<int> Initialize(Guid feedId, Guid publisherId, bool refresh)
         {
             try
             {
@@ -90,7 +85,7 @@ namespace DocBao.WP.ViewModels
                 if (feedResult.HasError || !feedResult.Target.Publisher.Id.Equals(publisherId)) return 0;
 
                 //var feed = feedResult.Target.FirstOrDefault(f => f.Id.Equals(feedId));
-                if (FeedHelper.ShouldUpdateItems(feedResult.Target) || requireUpdate)
+                if (FeedHelper.ShouldUpdateItems(feedResult.Target) || refresh)
                     try
                     {
                         var updateResult = await _feedManager.UpdateItems(feedResult.Target, true);
@@ -108,6 +103,7 @@ namespace DocBao.WP.ViewModels
             catch (Exception ex)
             {
                 IsLoading = false;
+                GA.LogException(ex);
                 throw ex;
             }
         }
@@ -133,6 +129,7 @@ namespace DocBao.WP.ViewModels
             }
             catch (Exception ex)
             {
+                GA.LogException(ex);
                 throw ex;
             }
             finally
@@ -155,8 +152,6 @@ namespace DocBao.WP.ViewModels
                         _itemViewModels.Remove(itemViewModel);
                 }
             });
-
-
         }
 
         public void UpdateFromDomainModel(Feed feed)
@@ -169,7 +164,8 @@ namespace DocBao.WP.ViewModels
             this.Description = feed.Description;
             this.LastUpdatedTime = feed.LastUpdatedTime;
             this.Link = feed.Link;
-            this.Items = feed.Items.OrderByDescending(i => i.PublishDate).ToList();
+            this.Items = feed.Items;
+            //this.Items = feed.Items.OrderByDescending(i => i.PublishDate).ToList();
             //if (excludeReadItems) this.Items = this.Items.Where(i => !i.Read).ToList();
             this.Publisher = feed.Publisher;
 

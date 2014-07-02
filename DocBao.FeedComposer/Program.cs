@@ -1,8 +1,11 @@
-﻿using System;
+﻿using Davang.Parser.Dto;
+using DocBao.ApplicationServices;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Davang.Utilities.Extensions;
 
 namespace DocBao.FeedComposer
 {
@@ -12,8 +15,11 @@ namespace DocBao.FeedComposer
 
         static void Main(string[] args)
         {
-            CreateBackup();
-            AddNewFeed(@"G:\gitdev\DocBao\DocBao.ApplicationServices\Data\dspl.txt");
+            //CreateBackup();
+            //AddNewFeed(@"G:\gitdev\DocBao\DocBao.ApplicationServices\Data\dspl.txt");
+
+            var rows = GetInvalidFeedRows();
+            rows.ForEach(r => Console.WriteLine(r));
 
             Console.ReadLine();
         }
@@ -84,6 +90,28 @@ namespace DocBao.FeedComposer
             var backupFile = FEED_DATA_FILE + "_bak";
             File.Copy(FEED_DATA_FILE, backupFile, true);
             Console.WriteLine("Created backup: " + backupFile);
+        }
+
+        private static IList<string> GetInvalidFeedRows()
+        {
+            IList<string> invalidRows = new List<string>();
+
+            using (var stream = new FileStream(AppConfig.FEED_BANK_FILE_NAME, FileMode.Open, FileAccess.Read))
+            {
+                using (var reader = new StreamReader(stream))
+                {
+                    while (!reader.EndOfStream)
+                    {
+                        var feedData = reader.ReadLine().Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                        if (feedData.Length != 6)
+                        {
+                            invalidRows.Add(feedData[0]);
+                        }
+                    }
+                }
+            }
+
+            return invalidRows;
         }
     }
 }

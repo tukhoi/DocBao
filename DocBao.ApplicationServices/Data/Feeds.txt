@@ -140,14 +140,14 @@ e0fab5b4-1636-44ce-9d4e-13a77d03b196,ae68f542-48d6-4622-9419-1ee4461babf4,Tin m�
 2671d60e-a304-4ce8-a95c-2732a33e4c7f,ae68f542-48d6-4622-9419-1ee4461babf4,Tin nổi bật,http://vietnamnet.vn/rss/tin-noi-bat.rss, 1, 0
 4d883ba0-c34e-4e0c-a06b-249f1b5f4621,ae68f542-48d6-4622-9419-1ee4461babf4,Xã hội,http://vietnamnet.vn/rss/xa-hoi.rss, 1, 0
 32fd5b2c-3055-4018-91c0-4950e32241d9,ae68f542-48d6-4622-9419-1ee4461babf4,Giáo dục,http://vietnamnet.vn/rss/giao-duc.rss		, 1, 0
-292afc69-39a8-4768-908a-0bed10ce6333,ae68f542-48d6-4622-9419-1ee4461babf4,Chính trị,http://vietnamnet.vn/rss/chinh-tri.rss		1, 0
+292afc69-39a8-4768-908a-0bed10ce6333,ae68f542-48d6-4622-9419-1ee4461babf4,Chính trị,http://vietnamnet.vn/rss/chinh-tri.rss,		1, 0
 c10d8c9e-7aad-4673-b3ea-925441593c0f,ae68f542-48d6-4622-9419-1ee4461babf4,Tuần Việt Nam,http://vietnamnet.vn/rss/tuanvietnam.rss		, 1, 0
 567b9103-a8bd-4196-be43-905f3f66181b,ae68f542-48d6-4622-9419-1ee4461babf4,Đời sống,http://vietnamnet.vn/rss/doi-song.rss	, 1, 0	
 96c697c5-1d31-485c-8204-b94a224f1469,ae68f542-48d6-4622-9419-1ee4461babf4,Kinh tế,http://vietnamnet.vn/rss/kinh-te.rss	, 1, 0	
-f4ce37c9-f70d-4cde-b137-54a0a17cfaf1,ae68f542-48d6-4622-9419-1ee4461babf4,Quốc tế,http://vietnamnet.vn/rss/quoc-te.rss	1, 1	
-b3dfff0d-80b3-4473-a301-45e8914906ad,ae68f542-48d6-4622-9419-1ee4461babf4,Văn hóa,http://vietnamnet.vn/rss/van-hoa.rss	1, 1	
+f4ce37c9-f70d-4cde-b137-54a0a17cfaf1,ae68f542-48d6-4622-9419-1ee4461babf4,Quốc tế,http://vietnamnet.vn/rss/quoc-te.rss,	1, 1	
+b3dfff0d-80b3-4473-a301-45e8914906ad,ae68f542-48d6-4622-9419-1ee4461babf4,Văn hóa,http://vietnamnet.vn/rss/van-hoa.rss,	1, 1	
 b7757374-03f5-4fc2-b840-3f768c79db6c,ae68f542-48d6-4622-9419-1ee4461babf4,Khoa học,http://vietnamnet.vn/rss/khoa-hoc.rss		, 1, 0
-1eed0e7b-0793-4e28-918f-0811e1c7f135,ae68f542-48d6-4622-9419-1ee4461babf4,CNTT - Viễn thông,http://vietnamnet.vn/rss/cong-nghe-thong-tin-vien-thong.rss		1,1
+1eed0e7b-0793-4e28-918f-0811e1c7f135,ae68f542-48d6-4622-9419-1ee4461babf4,CNTT - Viễn thông,http://vietnamnet.vn/rss/cong-nghe-thong-tin-vien-thong.rss,		1,1
 0df71be8-4767-4e64-90ab-c38fb1a6626d,ae68f542-48d6-4622-9419-1ee4461babf4,Bạn đọc,http://vietnamnet.vn/rss/ban-doc-phap-luat.rss	, 1, 0	
 e576b7cc-a77f-4aec-ba66-745292e5098a,ae68f542-48d6-4622-9419-1ee4461babf4,Thế giới ảnh,http://vietnamnet.vn/rss/the-gioi-anh.rss, 1, 0
 a947f475-b7c6-48ca-b279-a3127528702b,51507882-9b60-4cf3-8523-2646366de8ee, Trang chủ, http://www.thanhnien.com.vn/_layouts/newsrss.aspx, 1, 1
@@ -540,14 +540,14 @@ a0d68901-0b27-44e7-a82b-0ac87d58dea6,b60df1ad-4a0d-48d2-bbaf-d328ef00067a,Từ t
 68a5f3d9-e9d0-4097-906a-f2d014436cf7,b60df1ad-4a0d-48d2-bbaf-d328ef00067a,Hoàn cảnh,http://www.doisongphapluat.com/rss/tu-thien/hoan-canh.rss,1,0
 07a6d9a7-d6f1-4376-8864-3eb343d577e9,b60df1ad-4a0d-48d2-bbaf-d328ef00067a,Sống đẹp,http://www.doisongphapluat.com/rss/tu-thien/song-dep.rss,1,0
 c07602cd-b843-490d-9c52-a3aa5529734d, 59c5f421-6e68-4641-9d54-de145a4ae66f, Trang chủ, http://www.tinhte.vn/rss/, 1,1
-b7a37de4-465a-44f3-b9b3-72f556564903, 455b6156-77ba-4023-a057-9c06c7f60849, Trang chủ, http://2sao.vietnamnet.vn/rss/trangchu.rss, 1,1
-7a2fcf1d-e359-497b-ae86-4ec80d3bf853, 455b6156-77ba-4023-a057-9c06c7f60849, Sao, http://2sao.vietnamnet.vn/rss/sao.rss, 1,1
-29f4b0a9-cd49-4c58-a43b-a8efb6096cc9, 455b6156-77ba-4023-a057-9c06c7f60849, Âm nhạc,http://2sao.vietnamnet.vn/rss/amnhac.rss, 1,0
-896ad11e-1db6-42ea-9afe-67456f92eb88, 455b6156-77ba-4023-a057-9c06c7f60849, Phim,http://2sao.vietnamnet.vn/rss/phim.rss, 1,0
-36221c2e-323a-4fa7-8c0a-efc197cc2b14, 455b6156-77ba-4023-a057-9c06c7f60849, Alo2Sao,http://2sao.vietnamnet.vn/rss/hoidap.rss, 1,0
-931119e3-1e7c-40b2-9245-142788a0c7be, 455b6156-77ba-4023-a057-9c06c7f60849, Sự kiện xã hội,http://2sao.vietnamnet.vn/rss/sukien.rss, 1,0
-79549cb5-1f90-4b0e-abdb-5d4d855c2914, 455b6156-77ba-4023-a057-9c06c7f60849, Đời sống giới trẻ,http://2sao.vietnamnet.vn/rss/doisong.rss, 1,0
-a417c78c-6d53-4d46-9658-bd9aa520e6e7, 455b6156-77ba-4023-a057-9c06c7f60849, Công nghệ,http://2sao.vietnamnet.vn/rss/congnghe.rss, 1,0
+b7a37de4-465a-44f3-b9b3-72f556564903, 455b6156-77ba-4023-a057-9c06c7f60849, Trang chủ, http://2sao.vn/rss/trangchu.rss, 1,1
+7a2fcf1d-e359-497b-ae86-4ec80d3bf853, 455b6156-77ba-4023-a057-9c06c7f60849, Sao, http://2sao.vn/rss/sao.rss, 1,1
+29f4b0a9-cd49-4c58-a43b-a8efb6096cc9, 455b6156-77ba-4023-a057-9c06c7f60849, Âm nhạc,http://2sao.vn/rss/amnhac.rss, 1,0
+896ad11e-1db6-42ea-9afe-67456f92eb88, 455b6156-77ba-4023-a057-9c06c7f60849, Phim,http://2sao.vn/rss/phim.rss, 1,0
+36221c2e-323a-4fa7-8c0a-efc197cc2b14, 455b6156-77ba-4023-a057-9c06c7f60849, Alo2Sao,http://2sao.vn/rss/hoidap.rss, 1,0
+931119e3-1e7c-40b2-9245-142788a0c7be, 455b6156-77ba-4023-a057-9c06c7f60849, Sự kiện xã hội,http://2sao.vn/rss/sukien.rss, 1,0
+79549cb5-1f90-4b0e-abdb-5d4d855c2914, 455b6156-77ba-4023-a057-9c06c7f60849, Đời sống giới trẻ,http://2sao.vn/rss/doisong.rss, 1,0
+a417c78c-6d53-4d46-9658-bd9aa520e6e7, 455b6156-77ba-4023-a057-9c06c7f60849, Công nghệ,http://2sao.vn/rss/congnghe.rss, 1,0
 d1d25d63-5377-4703-9d99-d631dd94e7f6, b99447ea-5c8b-4acb-8cc2-d6d215d4bf8d, Trang chủ, http://www.winphoneviet.com/?feed=rss2, 1, 1
 4d5827f7-504b-494b-9176-c3c5dd10cad8, 7b420408-13bf-4340-81f7-a6430c538686, Chính trị - Xã hội,http://tuoitre.vn/Pages/RssFeeds.aspx?ChannelID=3 ,1,1
 afc26a38-fc7d-442e-9271-fc44e6046b85, 7b420408-13bf-4340-81f7-a6430c538686,Sống khỏe,http://tuoitre.vn/Pages/RssFeeds.aspx?ChannelID=12 ,1,0
@@ -589,3 +589,32 @@ ddc4edf8-de1c-4a32-a05c-d9c4c3987229,67a3faf7-3ee4-4741-90f9-65713c37b261,Kinh t
 4f3c232e-e1de-456f-9fa1-0932c674fd0d,67a3faf7-3ee4-4741-90f9-65713c37b261,Văn hóa,http://laodong.com.vn/rss/van-hoa-61.rss,1,0
 1d44c727-d875-45fe-87b4-457870584791,67a3faf7-3ee4-4741-90f9-65713c37b261,Khoa học - Công nghệ,http://laodong.com.vn/rss/khoa-hoc-cong-nghe-66.rss,1,0
 58b28bd5-a112-45e7-ab98-7ab552ac40e8,67a3faf7-3ee4-4741-90f9-65713c37b261,Diễn đàn,http://laodong.com.vn/rss/dien-dan-75.rss,1,0
+8b6f3b9e-842d-4e15-be5f-3c511eb7b98c,e200232a-7905-4d89-85a4-ef2f9e13be8a,Yan, http://yanner.yan.vn/forums/-/index.rss, 1,1
+7ce90a13-e79d-4289-aafb-c0bedd76a06a,1a9e4947-acc4-4994-9d1f-c2d1a7515833,Tin mới, http://news.zing.vn/RSS/new.rss,1,1
+eadee3bc-0811-452f-a221-b6b289de87b5,4bf0a456-71b1-4bf2-9eea-1ffb65b4abbc,Tin hot,  http://feeds.feedburner.com/TinHot-Linkhay,1,1
+204888a8-e53d-4e91-98ff-25325ea552fb,4bf0a456-71b1-4bf2-9eea-1ffb65b4abbc,Tin mới,  http://feeds.feedburner.com/TinMoi-Linkhay,1,1
+be5123c0-68ea-47af-be74-daf5f7638cb8,9e31b411-d24c-40c5-b16f-23acff1c524b,Trang chủ, http://feeds.feedburner.com/wttvn, 1,1
+7bbb39d1-49e3-4078-be50-695449a82340,7c13fa56-c25e-42b5-8887-03c59dfacd0e,Tin mới nhất, http://nld.com.vn/rss/tin-moi-nhat, 1,1
+681c25eb-b614-4b4e-8197-d79df14b0597,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Thời sự trong nước, http://nld.com.vn/rss/thoi-su-trong-nuoc, 1, 1
+493dc72b-5320-4457-b58b-7fc4255060a3,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Thời sự quốc tế, http://nld.com.vn/rss/thoi-su-quoc-te, 1, 1
+e75f5d05-f00d-4db7-9ad5-1f0389d96c02,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Kinh tế, http://nld.com.vn/rss/kinh-te, 1, 1
+a9a2615a-f08a-4da1-a929-88598b6008ad,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Công đoàn, http://nld.com.vn/rss/cong-doan, 1, 0
+70ee412d-bd02-4081-b08b-242c4d4eafa9,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Giáo dục Khoa học, http://nld.com.vn/rss/giao-duc-khoa-hoc, 1, 0
+cd767a30-141c-4afc-867c-e6251efd1725,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Hội nhập & phát triển, http://nld.com.vn/rss/hoi-nhap-phat-trien, 1, 0
+55419894-cd22-42b9-acd2-10b24433959f,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Pháp luật, http://nld.com.vn/rss/phap-luat, 1, 0
+7792d26c-3857-47bf-920c-0e58f8f74dc6,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Văn hóa Văn nghệ, http://nld.com.vn/rss/van-hoa-van-nghe, 1, 1
+efb3dae7-ace1-4f02-ae38-f891f1abdde9,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Thể thao, http://nld.com.vn/rss/the-thao, 1, 1
+b9bbca0a-6a8a-4a8f-b790-ab7624f3937a,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Sức khỏe, http://nld.com.vn/rss/suc-khoe, 1, 0
+27a5b555-2afa-4524-b60d-707ad6ac53c8,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Tình yêu Hôn nhân, http://nld.com.vn/rss/tinh-yeu-hon-nhan, 1, 1
+7cc46813-5151-4bbf-8a36-12308bc9c36e,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Bạn đọc, http://nld.com.vn/rss/ban-doc, 1, 0
+e11bc5ac-0a76-4f33-9706-170fe00dbba7,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Sức khỏe & Dinh dưỡng, http://nld.com.vn/rss/suc-khoe-dinh-duong, 1, 0
+c19c977d-7e2a-4bdd-a02a-955a71515ca7,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Khoa học, http://nld.com.vn/rss/khoa-hoc, 1, 1
+19fb000c-e03f-4fb2-863e-fd9863b56ac8,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Truyền hình, http://nld.com.vn/rss/truyen-hinh, 1, 0
+a288f05d-a58e-4efa-b837-974e97530c39,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Địa phương, http://nld.com.vn/rss/dia-phuong, 1, 0
+ae147e46-c00b-402b-a792-6cc3f52b24fe,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Mai vàng, http://nld.com.vn/rss/mai-vang, 1, 0
+6e56167c-5f6f-4eec-b480-056513f4302c,7c13fa56-c25e-42b5-8887-03c59dfacd0e, VnMoney, http://nld.com.vn/rss/vnmoney, 1, 0
+f2eeae2e-bc41-48de-939e-46d449d48ef3,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Diễn đàn, http://nld.com.vn/rss/dien-dan, 1, 0
+af399800-6857-4a61-9212-f387c89737b7,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Thi ảnh, http://nld.com.vn/rss/thi-anh, 1, 0
+ab0930f2-abf9-4fa7-ad38-893b2aa1498f,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Du lịch NLĐ, http://nld.com.vn/rss/du-lich, 1, 0
+8bbd4b1f-b0d4-4b13-8e61-353323ca8a3a,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Tuyển sinh NLĐ, http://nld.com.vn/rss/tuyen-sinh-nld, 1, 0
+bf3c9a97-2fdf-4cd7-b437-a0af2fd195ee,7c13fa56-c25e-42b5-8887-03c59dfacd0e, World Cup 2014, http://nld.com.vn/rss/world-cup-2014, 1, 0

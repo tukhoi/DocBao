@@ -31,32 +31,10 @@ namespace DocBao.WP.Helper
 
         public static void BackToPreviousPage(this PhoneApplicationPage page, short skip = 0)
         {
-<<<<<<< HEAD
-            try
-            {
-                for (short i = 0; i < skip; i++)
-                {
-                    if (page.NavigationService.BackStack.Count() > 0)
-                        page.NavigationService.RemoveBackEntry();
-                }
-
-                if (page.NavigationService.CanGoBack)
-                    page.NavigationService.GoBack();
-                else
-                {
-                    page.NavigationService.Navigate(new Uri("/HubTilePage.xaml", UriKind.Relative));
-                }
-            }
-            catch (Exception)
-            {
-                int i = 1;
-            }
-=======
             for (short i=0; i<skip; i++)
                 page.NavigationService.RemoveBackEntry();
 
             page.NavigationService.GoBack();
->>>>>>> parent of db4037a... Stored item feature
         }
 
         public static void SetBackground(this PhoneApplicationPage page, Uri backgroundImageUri)

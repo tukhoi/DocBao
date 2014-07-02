@@ -18,17 +18,17 @@ using DocBao.WP.ViewModels;
 using System.Windows.Data;
 using Davang.Utilities.Helpers;
 using Microsoft.Phone.Net.NetworkInformation;
+using DocBao.ApplicationServices.RssService;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class FeedPage : PhoneApplicationPage
+    public partial class FeedPage : BasePage
     {
-        FeedManager _feedManager = FeedManager.GetInstance();
         RssParserService _rssParser = RssParserService.GetInstance();
         FeedViewModel _viewModel = new FeedViewModel();
         int _pageNumber = 0;
         string _lastItemId;
-
         Publisher _currentPubisher;
         int _currentIndex=-1;
 
@@ -40,14 +40,15 @@ namespace DocBao.WP
                 adControl.Visibility = System.Windows.Visibility.Collapsed;
             else
                 adControl.Visibility = System.Windows.Visibility.Visible;
-
-            //adControl.Visibility = System.Windows.Visibility.Collapsed;
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
+
             var feedId = NavigationContext.QueryString.GetQueryStringToGuid("feedId");
             var publisherId = NavigationContext.QueryString.GetQueryStringToGuid("publisherId");
+
             var publisherResult = _feedManager.GetSubscribedPublisher(publisherId);
             if (publisherResult.HasError)
             {
@@ -109,10 +110,14 @@ namespace DocBao.WP
                 }
 
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
+
+                this.txtFeedName.Visibility = _viewModel.Publisher.FeedIds.Count() == 1
+                    ? System.Windows.Visibility.Collapsed
+                    : System.Windows.Visibility.Visible;
                 txtPublisherName.Text = _viewModel.Publisher.Name;
                 txtFeedName.Text = _viewModel.Name;
                 firstNextIcon.Visibility = System.Windows.Visibility.Visible;
-                secondNextIcon.Visibility = System.Windows.Visibility.Visible;
+                secondNextIcon.Visibility = txtFeedName.Visibility;
                 UpdateItemReadCount();
                 UpdateViewTitle();
                 this.llsItemList.DataContext = _viewModel;
@@ -134,6 +139,11 @@ namespace DocBao.WP
                     Messenger.ShowToast(message, completedAction: (() => this.BackToPreviousPage()));
                 else
                     Messenger.ShowToast(message);
+                var publisherName = _viewModel != null && _viewModel.Publisher != null && !string.IsNullOrEmpty(_viewModel.Publisher.Name)
+                    ? _viewModel.Publisher.Name : "null";
+                var feedName = _viewModel != null && !string.IsNullOrEmpty(_viewModel.Name)
+                    ? _viewModel.Name : "null";
+                GA.LogException(ex, "Publisher: " + publisherName + ", Feed: " + feedName);
                 return 0;
             }
         }
@@ -161,7 +171,9 @@ namespace DocBao.WP
                 if (i < llsItemList.ItemsSource.Count)
                     llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
             }
-            catch (Exception) { }
+            catch (Exception ex) {
+                GA.LogException(ex);
+            }
         }
 
         private void llsItemList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -235,7 +247,6 @@ namespace DocBao.WP
                 Messenger.ShowToast("không tìm thấy link");
         }
 
-<<<<<<< HEAD
         private async void ctxStoreItem_Click(object sender, RoutedEventArgs e)
         {
             var itemViewModel = GetItemFromContextMenu(sender);
@@ -254,8 +265,6 @@ namespace DocBao.WP
             this.SetProgressIndicator(false);
         }
 
-=======
->>>>>>> parent of db4037a... Stored item feature
         #endregion
 
         #region AppBar
@@ -301,8 +310,6 @@ namespace DocBao.WP
 
         private void CreateAppBar()
         {
-            var feedId = _currentPubisher.FeedIds[_currentIndex];
-
             ApplicationBar = new ApplicationBar();
             ApplicationBar.Mode = ApplicationBarMode.Default;
 
@@ -410,6 +417,7 @@ namespace DocBao.WP
 
         private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
+            if (_currentPubisher.FeedIds.Count() == 1) return;
             this.BackToPreviousPage();
         }
     }

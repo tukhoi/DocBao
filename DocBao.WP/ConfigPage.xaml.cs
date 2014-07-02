@@ -12,10 +12,11 @@ using Microsoft.Phone.Shell;
 using Davang.Utilities.Extensions;
 using System.Windows.Media;
 using DocBao.WP.Helper;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class ConfigPage : PhoneApplicationPage
+    public partial class ConfigPage : BasePage
     {
         public ConfigPage()
         {
@@ -25,6 +26,8 @@ namespace DocBao.WP
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
+
             txtPageName.Text = "tùy chọn";
             firstNextIcon.Visibility = System.Windows.Visibility.Visible;
 
@@ -37,6 +40,7 @@ namespace DocBao.WP
             lpkMaxItemStored.SelectionChanged += lpkMaxItemStored_SelectionChanged;
 
             this.SetProgressIndicator(false);
+
             base.OnNavigatedTo(e);
         }
 
@@ -65,7 +69,8 @@ namespace DocBao.WP
                 SetBackgroundUpdateStuff(AppConfig.AllowBackgroundUpdate);
             }
             catch (Exception ex)
-            { 
+            {
+                GA.LogException(ex);
             }
         }
 

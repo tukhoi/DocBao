@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Davang.Parser.Dto;
 using DocBao.ApplicationServices;
+using Davang.Utilities.Extensions;
 
 namespace DocBao.WP.Helper
 {
@@ -13,8 +14,11 @@ namespace DocBao.WP.Helper
         public static bool ShouldUpdateItems(Feed feed)
         {
             if (feed.Items.Count == 0) return true;
-            var lastestUpdate = feed.Items.Max(i => i.PublishDate);
-            if (lastestUpdate.AddHours(1) < DateTime.Now)
+            //var latestUpdate = feed.Items.Max(i => i.PublishDate);
+            //if (latestUpdate.AddHours(1) < DateTime.Now)
+            //    return true;
+
+            if (feed.LastUpdatedTime.AddHours(1) < DateTime.Now)
                 return true;
 
             return false;
@@ -33,7 +37,7 @@ namespace DocBao.WP.Helper
             if (feed.LastUpdatedTime.Equals(default(DateTime)))
                 updateStats = "chưa cập nhật";
             else
-            updateStats = "cập nhật " + feed.LastUpdatedTime.ToString("dd/MM/yyyy hh:mm:ss");
+            updateStats = "cập nhật " + feed.LastUpdatedTime.ToString("dd/MM/yyyy hh:mm:ss tt");
 
             return updateStats;
         }
@@ -48,7 +52,7 @@ namespace DocBao.WP.Helper
             var feed = feedResult.Target;
 
             string readStats = string.Empty;
-            if (feed.Items.Count(i => i.Read) == 0 && feed.Items.Count() == 0) readStats = "chưa đọc";
+            if (feed.Items.Count() == 0) readStats = "chưa đọc";
             else if (feed.Items.Count(i => i.Read) == 0 && feed.Items.Count() > 0)
                 readStats = string.Format("chưa đọc/{0} tin", feed.Items.Count());
             else
@@ -65,6 +69,25 @@ namespace DocBao.WP.Helper
             var readStats = GetReadStats(feedId);
 
             return updateStats + "\n" + readStats;
+        }
+
+        public static string BuildUpdateStatus(IDictionary<Guid, int> updatedFeeds)
+        {
+            if (updatedFeeds == null || updatedFeeds.Count == 0) return string.Empty;
+
+            var message = new StringBuilder();
+            var feedManager = FeedManager.GetInstance();
+            updatedFeeds.OrderByDescending(f => f.Value).Take(AppConfig.MAX_NEW_UPDATE_MESSENGER_WAIT).ForEach(f =>
+                { 
+                    var feedResult = feedManager.GetSubscribedFeed(f.Key);
+                    if (feedResult.HasError) return;
+                    message.AppendLine(string.Format("{0} của {1} có {2} tin mới", feedResult.Target.Name, feedResult.Target.Publisher.Name, f.Value.ToString()));
+                });
+
+            if (updatedFeeds.Count > AppConfig.MAX_NEW_UPDATE_MESSENGER_WAIT)
+                message.AppendLine("...");
+
+            return message.ToString();
         }
     }
 }

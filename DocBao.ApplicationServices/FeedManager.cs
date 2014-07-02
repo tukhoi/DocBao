@@ -6,6 +6,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Helpers;
+using DocBao.ApplicationServices.RssService;
+using DocBao.ApplicationServices.Persistence;
+using DocBao.ApplicationServices.Bank;
+using Davang.Utilities.Log;
+using System.Threading;
+using DocBao.ApplicationServices.Background;
 
 namespace DocBao.ApplicationServices
 {
@@ -34,38 +40,60 @@ namespace DocBao.ApplicationServices
             _dbContext = new PersistentManager();
         }
 
-        public async Task LoadAsync()
-        {
-            if (!_loaded) 
-                _subscribedFeeds = await _dbContext.ReadSerializedCopyAsync<IDictionary<Guid, Feed>>(AppConfig.SUBSCRIBED_FEED_FILE_NAME);
-<<<<<<< HEAD
-                if (!await LoadStoredItemsAsync())
-                    _storedItems = new Dictionary<string, Item>();
-            }
-=======
->>>>>>> parent of db4037a... Stored item feature
-
-            if (_subscribedFeeds == null || _subscribedFeeds.Count == 0)
-            {
-                _subscribedFeeds = new Dictionary<Guid, Feed>();
-                FeedBank.Feeds.Where(f => f.Default && f.Publisher.Default).ForEach(f => 
-                {
-                    var cloned = f.Clone();
-                    _subscribedFeeds.Add(cloned.Id, cloned);
-                });
-
-                await SaveAsync();
-            }
-
-            _loaded = true;
-        }
-
         #endregion
 
+        public async Task<IDictionary<Guid, int>> LoadAsync()
+        {
+            if (!_loaded)
+            {
+                try
+                {
+                    _subscribedFeeds = await _dbContext.ReadSerializedCopyAsync<IDictionary<Guid, Feed>>(AppConfig.SUBSCRIBED_FEED_FILE_NAME);
+                    if (!await LoadStoredItemsAsync())
+                        _storedItems = new Dictionary<string, Item>();
+
+                    await VersionChecking();
+                }
+                catch (Exception ex)
+                {
+                    GA.LogException(ex);
+                }
+
+
+                if (_subscribedFeeds == null || _subscribedFeeds.Count == 0)
+                {
+                    _subscribedFeeds = new Dictionary<Guid, Feed>();
+                    FeedBank.Feeds.Where(f => f.Default && f.Publisher.Default).ForEach(f =>
+                    {
+                        var cloned = f.Clone();
+                        _subscribedFeeds.Add(cloned.Id, cloned);
+                    });
+
+                    await SaveAsync();
+                }
+                
+                _loaded = true;
+            }
+
+            return await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
+        }
+
+        public async Task VersionChecking()
+        {
+            if (AppConfig.AppUpdate == UpdateVersion.NotSet)
+            {
+                await UpdateForVersionBefore1_4();
+                AppConfig.AppUpdate = UpdateVersion.V1_4;
+            }
+
+            if (AppConfig.AppUpdate == UpdateVersion.V1_4)
+                AppConfig.AppUpdate = UpdateVersion.V1_5;
+        }
+
         private IDictionary<Guid, Feed> _subscribedFeeds;
+        private IDictionary<string, Item> _storedItems;
         private RssParserService _rssService;
         private IPersistentManager _dbContext;
-        
 
         #region Get
 
@@ -120,22 +148,29 @@ namespace DocBao.ApplicationServices
         public AppResult<Feed> GetFeed(Guid feedId)
         {
             if (default(Guid).Equals(feedId)) return AppResult<Feed>(ErrorCode.FeedNotFound);
-            
+
             var feed = FeedBank.Feeds.FirstOrDefault(f => f.Id.Equals(feedId));
             if (feed == null) return AppResult<Feed>(ErrorCode.FeedNotFound);
             return AppResult(feed);
         }
 
-        public AppResult<Feed> GetSubscribedFeed(Guid feedId)
+        public AppResult<Feed> GetSubscribedFeed(Guid feedId, bool autoSubscribe = false)
         {
             if (default(Guid).Equals(feedId)) return AppResult<Feed>(ErrorCode.FeedNotFound);
+            if (!_subscribedFeeds.ContainsKey(feedId) && !autoSubscribe) return AppResult<Feed>(ErrorCode.FeedNotSubscribed);
 
-            var feed = _subscribedFeeds.Values.FirstOrDefault(f => f.Id.Equals(feedId));
+            Feed feed = null;
+
+            if (!_subscribedFeeds.TryGetValue(feedId, out feed) 
+                && autoSubscribe 
+                && (feed = FeedBank.Feeds.FirstOrDefault(f => f.Id.Equals(feedId))) != null)
+                _subscribedFeeds.Add(feed.Id, feed);
+             
             if (feed == null) return AppResult<Feed>(ErrorCode.FeedNotFound);
             return AppResult(feed);
         }
 
-        public async Task<AppResult<int>> UpdateItems(Feed feed, bool refresh = false)
+        public async Task<AppResult<int>> UpdateItems(Feed feed, bool refresh = false, bool saveToDisk = true)
         {
             if (!_subscribedFeeds.ContainsKey(feed.Id))
                 return AppResult<int>(ErrorCode.FeedNotSubscribed);
@@ -146,9 +181,10 @@ namespace DocBao.ApplicationServices
                 var updated = 0;
                 if (refresh)
                 {
-                    updated = await _rssService.UpdateItemsAsync(persistentFeed);
                     persistentFeed.LastUpdatedTime = DateTime.Now;
-                    Task.Factory.StartNew(() => SaveAsync());
+                    updated = await _rssService.UpdateItemsAsync(persistentFeed);
+                    //if (updated > 0 && saveToDisk)
+                    //    Task.Factory.StartNew(() => SaveAsync());
                 }
 
                 return AppResult(updated);
@@ -227,7 +263,7 @@ namespace DocBao.ApplicationServices
             if (!item.Read && !read) return AppResult<bool>(ErrorCode.ItemAlreadyUnread);
 
             item.Read = read;
-            Task.Factory.StartNew(() => SaveAsync());
+            //Task.Factory.StartNew(() => Save());
 
             return AppResult(true);
         }
@@ -325,7 +361,6 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
-<<<<<<< HEAD
         #region Stored Feeds
 
         public async Task<AppResult<bool>> StoreItemAsync(Item item)
@@ -425,89 +460,113 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
-=======
->>>>>>> parent of db4037a... Stored item feature
-        //#region Reading
+        #region CustomView
 
-        //public void SetReading<T, TId>(T readingOne)
-        //    where T : BaseEntity<TId>
-        //{
-        //    if (typeof(T).Equals(typeof(Feed)) || typeof(T).IsSubclassOf(typeof(Feed)))
-        //    {
-        //        var readingFeed = readingOne as Feed;
-        //        if (readingFeed == null) return;
-        //        var feedList = _subscribedFeeds.Values.Where(f => f.Publisher.Id.Equals(readingFeed.Publisher.Id)).ToList();
-        //        var persistentReadingFeed = feedList.FirstOrDefault(f => f.Id.Equals(readingFeed.Id));
-        //        if (persistentReadingFeed == null) return;
-        //        SetReadingGeneric<Feed, Guid>(feedList, persistentReadingFeed, SetFeedReadingValue);
-        //    }
+        public Category GetCategory(Guid categoryId)
+        {
+            return CategoryBank.Categories.FirstOrDefault(c => c.Id.Equals(categoryId));
+        }
 
-        //    if (typeof(T).Equals(typeof(Item)))
-        //    {
-        //        var readingItem = readingOne as Item;
-        //        if (readingItem == null) return;
-        //        var feedResult = _feedManager.GetSubscribedFeed(readingItem.FeedId);
-        //        if (feedResult.HasError) return;
-        //        var persistentReadingItem = feedResult.Target.Items.FirstOrDefault(i => i.Id.Equals(readingItem.Id));
-        //        if (persistentReadingItem == null) return;
-        //        SetReadingGeneric<Item, string>(feedResult.Target.Items, persistentReadingItem, SetItemReadingValue);
-        //    }
-        //}
+        public IList<Category> GetCategories() 
+        {
+            return CategoryBank.Categories;
+        }
 
-        //public T GetReading<T, TId>(IList<T> lookupList)
-        //    where T : BaseEntity<TId>
-        //{
-        //    if (typeof(T).Equals(typeof(Feed)) || typeof(T).IsSubclassOf(typeof(Feed)))
-        //    {
-        //        var readingOne = lookupList.FirstOrDefault(t =>
-        //        {
-        //            var feed = t as Feed;
-        //            if (feed == null) return false;
-        //            if (_subscribedFeeds.ContainsKey(feed.Id))
-        //            {
-        //                var persistentFeed = _subscribedFeeds[feed.Id];
-        //                if (persistentFeed == null) return false;
-        //                return persistentFeed.Reading;
-        //            }
-        //            return false;                    
-        //        });
+        public async Task<KeyValuePair<int, IList<Item>>> GetItemsByCategory(Guid categoryId, int top, bool refresh = false) 
+        {
+            var updatedItemCount = 0;
+            var category = CategoryBank.Categories.FirstOrDefault(c => c.Id.Equals(categoryId));
+            if (category == null) return new KeyValuePair<int,IList<Item>>(0, null);
 
-        //        return readingOne;
-        //    }
+            var items = new List<Item>();
 
-        //    if (typeof(T).Equals(typeof(Item)))
-        //    {
-        //        var readingOne = lookupList.FirstOrDefault(t =>
-        //        {
-        //            var item = t as Item;
-        //            if (item == null) return false;
+            foreach (var feed in category.Feeds)
+            {
+                if (!_subscribedFeeds.ContainsKey(feed.Id))
+                    _subscribedFeeds.Add(feed.Id, feed);
 
-        //            return item.Reading;
-        //        });
+                var feedToUpdate = _subscribedFeeds[feed.Id];
+                if (feedToUpdate != null)
+                {
+                    if (refresh)
+                    {
+                        try
+                        {
+                            var result = await UpdateItems(feedToUpdate, true, false);
+                            if (!result.HasError)
+                                updatedItemCount += result.Target;
+                        }
+                        catch (Exception ex) 
+                        {
+                            GA.LogException(ex);
+                        }
+                    }
+                    items.AddRange(feedToUpdate.Items.OrderByDescending(i => i.PublishDate).ToList());
+                }
+                Thread.Sleep(100);
+            }
 
-        //        return readingOne;
-        //    }
+            //Task.Factory.StartNew(() => Save());
 
-        //    return null;
-        //}
+            items = items.OrderByDescending(i => i.PublishDate).Take(top * category.Feeds.Count()).ToList();
+            return new KeyValuePair<int, IList<Item>>(updatedItemCount, items);
+        }
 
-        //#endregion
+        #endregion
+
+        public async Task<bool> SaveAsync()
+        {
+            if (_subscribedFeeds == null || _subscribedFeeds.Count == 0) return false;
+            var savingFeeds = TailorSavingFeeds(_subscribedFeeds);
+
+            try
+            {
+                return await _dbContext.UpdateSerializedCopyAsync(savingFeeds, AppConfig.SUBSCRIBED_FEED_FILE_NAME);
+            }
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+                return false;
+            }
+        }
+
+        public bool Save()
+        {
+            if (_subscribedFeeds == null || _subscribedFeeds.Count == 0) return false;
+            var savingFeeds = TailorSavingFeeds(_subscribedFeeds);
+
+            try
+            {
+                return _dbContext.UpdateSerializedCopy(savingFeeds, AppConfig.SUBSCRIBED_FEED_FILE_NAME, false);
+            }
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+                return false;
+            }
+        }
+
+        public void CreateFeedsToUpdate()
+        {
+            BackgroundDownload.CreateFeedsToDownload(_subscribedFeeds);
+        }
 
         #region private
 
-        private async Task<bool> SaveAsync()
+        public static IDictionary<Guid, Feed> TailorSavingFeeds(IDictionary<Guid, Feed> bareFeeds)
         {
-            if (_subscribedFeeds == null || _subscribedFeeds.Count == 0) return false;
+            if (bareFeeds == null || bareFeeds.Count == 0)
+                return null;
+
             var savingFeeds = new Dictionary<Guid, Feed>();
-            _subscribedFeeds.Values.ForEach(feed => {
+            bareFeeds.Values.ForEach(feed =>
+            {
                 var savingFeed = feed;
                 savingFeed.Items = feed.Items.OrderByDescending(i => i.PublishDate).Take(AppConfig.MaxItemStored).ToList();
-                //savingFeed.Items.Where(i => i.Reading).ToList().ForEach(i => i.Reading = false);
                 savingFeeds.Add(savingFeed.Id, savingFeed);
             });
 
-            //await SyncFeedsAsync(savingFeeds);
-            return await _dbContext.UpdateSerializedCopyAsync(savingFeeds, AppConfig.SUBSCRIBED_FEED_FILE_NAME);
+            return savingFeeds;
         }
 
         public static async Task SyncFeedsAsync(IDictionary<Guid, Feed> newFeeds)
@@ -550,32 +609,13 @@ namespace DocBao.ApplicationServices
             });
         }
 
-        //private void SetReadingGeneric<T, TId>(IList<T> list, T readingItem, Action<T, bool> setReadingAction)
-        //{
-        //    list.ForEach(i =>
-        //    {
-        //        setReadingAction(i, false);
-        //    });
-
-        //    setReadingAction(readingItem, true);
-        //}
-
-        //private void SetFeedReadingValue(Feed feed, bool value)
-        //{
-        //    feed.Reading = value;
-        //}
-
-        //private void SetItemReadingValue(Item item, bool value)
-        //{
-        //    item.Reading = value;
-        //}
-
         private void UpdatePublisherFeedIds(Publisher publisher)
         {
             publisher.FeedIds.Clear();
 
             var feeds = new List<Feed>();
-            _subscribedFeeds.Values.ForEach(f => {
+            _subscribedFeeds.Values.ForEach(f => 
+            {
                 if (f.Publisher.Id.Equals(publisher.Id))
                     feeds.Add(f);
                     //publisher.FeedIds.Add(f.Id);
@@ -585,22 +625,44 @@ namespace DocBao.ApplicationServices
             feeds.ForEach(f => f.Publisher = publisher);
         }
 
-<<<<<<< HEAD
         private async Task<bool> LoadStoredItemsAsync()
         {
             if (_storedItems == null || _storedItems.Count == 0)
-                _storedItems = await _dbContext.ReadSerializedCopyAsync<IDictionary<string, Item>>(AppConfig.STORED_ITEM_FILE_NAME, false);
+                _storedItems = await _dbContext.ReadSerializedCopyAsync<IDictionary<string, Item>>(AppConfig.STORED_ITEM_FILE_NAME);
             return _storedItems != null && _storedItems.Count > 0;
         }
 
         private async Task<bool> SaveItemsAsync()
         {
             if (_storedItems == null) return false;
-            return await _dbContext.UpdateSerializedCopyAsync(_storedItems, AppConfig.STORED_ITEM_FILE_NAME, false);
+            return await _dbContext.UpdateSerializedCopyAsync(_storedItems, AppConfig.STORED_ITEM_FILE_NAME);
         }
 
-=======
->>>>>>> parent of db4037a... Stored item feature
+        private async Task<bool> UpdateForVersionBefore1_4()
+        {
+            if (_subscribedFeeds == null || _subscribedFeeds.Values.Count() == 0)
+                return false;
+
+            try
+            {
+                _subscribedFeeds.Values
+                    .Where(f => f.Publisher.Id.Equals(new Guid("455b6156-77ba-4023-a057-9c06c7f60849")))
+                    .ForEach(f => {
+                        var feedFromBank = FeedBank.Feeds.FirstOrDefault(ffb => ffb.Id.Equals(f.Id));
+                        if (feedFromBank != null)
+                            f.Link = feedFromBank.Link;
+                    });
+
+                await SaveAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+                return false;
+            }
+        }
+
         #endregion
     }
 }

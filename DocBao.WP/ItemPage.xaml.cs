@@ -17,55 +17,70 @@ using Microsoft.Phone.Net.NetworkInformation;
 
 namespace DocBao.WP
 {
-    public partial class ItemPage : PhoneApplicationPage
+    public partial class ItemPage : BasePage
     {
-        FeedManager _feedManager = FeedManager.GetInstance();
         Feed _currentFeed;
         int _currentIndex=-1;
         private bool _webLoaded = false;
-        private bool _comeFromFeedPage = false;
+        //private bool _comeFromFeedPage = false;
+        private PreviousPage _previousPage = PreviousPage.FeedPage;
 
         public ItemPage()
         {
             InitializeComponent();
 
+            adControl.StartAds();
+
             if (LicenseHelper.Purchased(AppConfig.PAID_VERSION))
                 adControl.Visibility = System.Windows.Visibility.Collapsed;
             else
+            {
                 adControl.Visibility = System.Windows.Visibility.Visible;
+                adControl.StartAds();
+            }
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
+
             if (_webLoaded)
                 return;
 
             var feedId = NavigationContext.QueryString.GetQueryStringToGuid("feedId");
+            var categoryId = NavigationContext.QueryString.GetQueryStringToGuid("categoryId");
             var itemId = HttpUtility.UrlDecode(NavigationContext.QueryString.GetQueryString("itemId"));
             
             var previousPage = NavigationService.BackStack.First().Source;
-            _comeFromFeedPage = previousPage.ToString().Contains("FeedPage.xaml");
+            if (previousPage.ToString().Contains("FeedPage.xaml"))
+                _previousPage = PreviousPage.FeedPage;
+            if (previousPage.ToString().Contains("StoredItemsPage.xaml"))
+                _previousPage = PreviousPage.StoredItemsPage;
+            if (previousPage.ToString().Contains("CategoryPage.xaml"))
+                _previousPage = PreviousPage.CategoryPage;
 
-            if (_comeFromFeedPage)
-            {
-                var feedResult = _feedManager.GetSubscribedFeed(feedId);
-                if (feedResult.HasError)
-                {
-                    Messenger.ShowToast("không tìm thấy báo");
-                    return;
-                }
+            BindItemListToFlick(feedId, categoryId);
 
-                _currentFeed = feedResult.Target;
-            }
-            else
-            {
-                var storedItemsResult = _feedManager.GetStoredItems();
-                if (!storedItemsResult.HasError)
-                {
-                    _currentFeed = new Feed();
-                    _currentFeed.Items = storedItemsResult.Target;
-                }
-            }
+            //if (_comeFromFeedPage)
+            //{
+            //    var feedResult = _feedManager.GetSubscribedFeed(feedId);
+            //    if (feedResult.HasError)
+            //    {
+            //        Messenger.ShowToast("không tìm thấy báo");
+            //        return;
+            //    }
+
+            //    _currentFeed = feedResult.Target;
+            //}
+            //else
+            //{
+            //    var storedItemsResult = _feedManager.GetStoredItems();
+            //    if (!storedItemsResult.HasError)
+            //    {
+            //        _currentFeed = new Feed();
+            //        _currentFeed.Items = storedItemsResult.Target;
+            //    }
+            //}
 
             _currentIndex = _currentIndex == -1 ? _currentFeed.Items.IndexOf(_currentFeed.Items.FirstOrDefault(i => i.Id.Equals(itemId))) : _currentIndex;
             if (_currentIndex == -1 && _currentFeed.Items.Count > 0)
@@ -99,24 +114,12 @@ namespace DocBao.WP
             var item = _currentFeed.Items[_currentIndex];
             if (item != null)
             {
-<<<<<<< HEAD
                 BindingNavigationBar(item);
-                if (_comeFromFeedPage)
-                    _feedManager.MarkItemAsRead(_currentFeed.Id, item.Id, true);
+                if (_previousPage == PreviousPage.FeedPage || _previousPage == PreviousPage.CategoryPage)
+                    _feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
                 else
                     _feedManager.MarkStoredItemAsRead(item.Id, true);
                 CreateAppBar();
-=======
-                //txtTitle.Text = "duyệt báo " + _currentFeed.Publisher.Name;
-                txtPublisherName.Text = _currentFeed.Publisher.Name;
-                txtFeedName.Text = _currentFeed.Name;
-                txtItemTitle.Text = item.Title;
-                firstNextIcon.Visibility = System.Windows.Visibility.Visible;
-                secondNextIcon.Visibility = System.Windows.Visibility.Visible;
-                txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
-                itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
-                _feedManager.MarkItemAsRead(_currentFeed.Id, item.Id, true);
->>>>>>> parent of db4037a... Stored item feature
                 _feedManager.SetLastId<string>(item.Id);
                 wbsContent.Navigate(new Uri(item.Link, UriKind.Absolute));
             }
@@ -174,6 +177,28 @@ namespace DocBao.WP
             shareLinkTask.Show();
         }
 
+        private async void storeButton_Click(object sender, EventArgs e)
+        {
+            var item = _currentFeed.Items[_currentIndex];
+            if (item == null) return;
+
+            var stored = _feedManager.IsStored(item.Id);
+            var message = stored ? "đang xóa..." : "đang lưu...";
+            var doneMessage = stored ? "xóa xong..." : "lưu xong...";
+
+            this.SetProgressIndicator(true, message);
+            var result = stored ? await _feedManager.DeleteStoredItemAsync(item.Id) : await _feedManager.StoreItemAsync(item);
+            if (result.HasError)
+                Messenger.ShowToast(result.ErrorMessage());
+            else
+            {
+                Messenger.ShowToast(doneMessage);
+                CreateAppBar();
+            }
+
+            this.SetProgressIndicator(false);
+        }
+
         private void showTitleMenuItem_Click(object sender, EventArgs e)
         {
             AppConfig.ShowItemTitle = !AppConfig.ShowItemTitle;
@@ -190,7 +215,7 @@ namespace DocBao.WP
             this.SetProgressIndicator(true, message);
 
             AppResult<bool> result;
-            if (_comeFromFeedPage)
+            if (_previousPage == PreviousPage.FeedPage || _previousPage == PreviousPage.CategoryPage)
                 result = item.Read ? _feedManager.MarkItemAsRead(item.FeedId, item.Id, false) : _feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
             else
                 result = item.Read ? _feedManager.MarkStoredItemAsRead(item.Id, false) : _feedManager.MarkStoredItemAsRead(item.Id, true);
@@ -261,15 +286,12 @@ namespace DocBao.WP
             markReadButton.IconUri = new Uri(iconUrl, UriKind.Relative);
             markReadButton.Click += new EventHandler(unreadButton_Click);
 
-<<<<<<< HEAD
             var storeButton = new ApplicationBarIconButton();
             storeButton.Text = _feedManager.IsStored(item.Id) ? "xóa tin" : "lưu tin";
             var storeIconUrl = _feedManager.IsStored(item.Id) ? "/Assets/AppBar/minus.png" : "/Assets/AppBar/new.png";
             storeButton.IconUri = new Uri(storeIconUrl, UriKind.Relative);
             storeButton.Click += new EventHandler(storeButton_Click);
 
-=======
->>>>>>> parent of db4037a... Stored item feature
             var emailMenuItem = new ApplicationBarMenuItem();
             emailMenuItem.Text = "gởi qua email";
             emailMenuItem.Click += new EventHandler(emailButton_Click);
@@ -286,59 +308,116 @@ namespace DocBao.WP
             showTitleMenuItem.Text = AppConfig.ShowItemTitle ? "tắt tiêu đề" : "hiện tiêu đề";
             showTitleMenuItem.Click += new EventHandler(showTitleMenuItem_Click);
 
-            ApplicationBar.Buttons.Add(ieButton);
             ApplicationBar.Buttons.Add(updateButton);
+            ApplicationBar.Buttons.Add(ieButton);
             ApplicationBar.Buttons.Add(markReadButton);
+            ApplicationBar.Buttons.Add(storeButton);
             ApplicationBar.MenuItems.Add(emailMenuItem);
             ApplicationBar.MenuItems.Add(copyLinkMenuItem);
             ApplicationBar.MenuItems.Add(facebookMenuItem);
             ApplicationBar.MenuItems.Add(showTitleMenuItem);
         }
 
-        private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            this.BackToPreviousPage(2);
-        }
+        //private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        //{
+        //    this.BackToPreviousPage(2);
+        //}
 
-        private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            this.BackToPreviousPage(1);
-        }
+        //private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        //{
+        //    this.BackToPreviousPage(1);
+        //}
 
-<<<<<<< HEAD
-            if (_comeFromFeedPage)
+        //private void txtFeedName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        //{
+        //    this.BackToPreviousPage();
+        //}
+
+        private void BindingNavigationBar(Item item)
+        {
+            if (item == null) return;
+            txtItemTitle.Text = item.Title;
+
+            if (_previousPage == PreviousPage.FeedPage)
                 txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(2));
             else
                 txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
 
-            txtPublisherName.Text = _comeFromFeedPage ? _currentFeed.Publisher.Name : "tin đã lưu";
+            switch (_previousPage)
+            { 
+                case PreviousPage.FeedPage:
+                    txtPublisherName.Text = _currentFeed.Publisher.Name;
+                    break;
+                case PreviousPage.StoredItemsPage:
+                    txtPublisherName.Text = _currentFeed.Name;
+                    break;
+                case PreviousPage.CategoryPage:
+                    txtPublisherName.Text = _currentFeed.Name;
+                    break;
+            }
 
-            if (_comeFromFeedPage)
+            if (_previousPage == PreviousPage.FeedPage && _currentFeed.Publisher.FeedIds.Count() > 1)
                 txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
             else
                 txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(0));
 
-            txtFeedName.Visibility = _comeFromFeedPage ? Visibility.Visible : Visibility.Collapsed;
-            txtFeedName.Text = _comeFromFeedPage ? _currentFeed.Name : string.Empty;
+            txtFeedName.Visibility = _previousPage == PreviousPage.FeedPage && _currentFeed.Publisher.FeedIds.Count() > 1 ? Visibility.Visible : Visibility.Collapsed;
+            txtFeedName.Text = _previousPage == PreviousPage.FeedPage ? _currentFeed.Name : string.Empty;
 
-            if (_comeFromFeedPage)
+            if (_previousPage == PreviousPage.FeedPage)
                 txtFeedName.Tap += ((sender, e) => this.BackToPreviousPage());
 
-            firstNextIcon.Visibility = System.Windows.Visibility.Visible;
-            secondNextIcon.Visibility = System.Windows.Visibility.Visible;
             txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
             itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
 
             firstNextIcon.Visibility = System.Windows.Visibility.Visible;
-            secondNextIcon.Visibility = _comeFromFeedPage ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
+            secondNextIcon.Visibility = txtFeedName.Visibility;
 
             txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
             itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
-=======
-        private void txtFeedName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            this.BackToPreviousPage();
->>>>>>> parent of db4037a... Stored item feature
         }
+
+        private void BindItemListToFlick(Guid feedId, Guid categoryId)
+        {
+            switch (_previousPage)
+            { 
+                case PreviousPage.FeedPage:
+                    var feedResult = _feedManager.GetSubscribedFeed(feedId);
+                    if (feedResult.HasError)
+                    {
+                        Messenger.ShowToast("không tìm thấy báo");
+                        return;
+                    }
+
+                    _currentFeed = feedResult.Target;
+                    break;
+                case PreviousPage.StoredItemsPage:
+                    var storedItemsResult = _feedManager.GetStoredItems();
+                    if (!storedItemsResult.HasError)
+                    {
+                        _currentFeed = new Feed();
+                        _currentFeed.Name = "tin đã lưu";
+                        _currentFeed.Items = storedItemsResult.Target;
+                    }
+                    break;
+                case PreviousPage.CategoryPage:
+                    var result = _feedManager.GetItemsByCategory(categoryId, AppConfig.MaxItemStored, false).Result;
+                    if (result.Value != null || result.Value.Count > 0)
+                    {
+                        _currentFeed = new Feed();
+                        _currentFeed.Id = feedId;
+                        _currentFeed.Name = _feedManager.GetCategory(categoryId).Name;
+                        _currentFeed.Items = result.Value;
+                    }
+                    break;
+            }
+        }
+    }
+
+    enum PreviousPage
+    { 
+        FeedPage,
+        StoredItemsPage,
+        CategoryPage
     }
 }

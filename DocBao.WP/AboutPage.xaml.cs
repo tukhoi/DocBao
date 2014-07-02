@@ -14,15 +14,16 @@ using DocBao.WP.Helper;
 
 namespace DocBao.WP
 {
-    public partial class AboutPage : PhoneApplicationPage
+    public partial class AboutPage : BasePage
     {
         public AboutPage()
         {
             InitializeComponent();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
             Binding();
             base.OnNavigatedTo(e);
         }

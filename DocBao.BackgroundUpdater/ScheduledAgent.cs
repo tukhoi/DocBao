@@ -11,6 +11,16 @@ using Microsoft.Phone.Net.NetworkInformation;
 using Microsoft.Phone.Scheduler;
 using Microsoft.Phone.Shell;
 using System.Linq;
+using DocBao.ApplicationServices.Persistence;
+using DocBao.ApplicationServices.RssService;
+using System.Text;
+using GoogleAnalytics.Core;
+using Davang.Utilities.Log;
+using Davang.Utilities;
+using System.IO.IsolatedStorage;
+using Davang.Utilities.Helpers;
+using DocBao.ApplicationServices.Background;
+using System.Windows.Threading;
 
 namespace DocBao.BackgroundUpdater
 {
@@ -21,6 +31,12 @@ namespace DocBao.BackgroundUpdater
         /// </remarks>
         static ScheduledAgent()
         {
+            Action intialization = new Action(() 
+                => GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, AppConfig.GA_APP_VERSION));
+
+            Task.Factory.StartNew(() =>
+                Deployment.Current.Dispatcher.BeginInvoke(intialization));
+
             // Subscribe to the managed exception handler
             Deployment.Current.Dispatcher.BeginInvoke(delegate
             {
@@ -31,6 +47,8 @@ namespace DocBao.BackgroundUpdater
         /// Code to execute on Unhandled Exceptions
         private static void UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            GA.LogException(e.ExceptionObject, true);
+
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
@@ -54,60 +72,35 @@ namespace DocBao.BackgroundUpdater
             //TODO: Add code to perform your task in background
             try
             {
-                if (!NetworkInterface.GetIsNetworkAvailable() 
-                    || !AppConfig.AllowBackgroundUpdate
-                    || AppConfig.AppRunning
-                    || (AppConfig.JustUpdateOverWifi && (!AppConfig.JustUpdateOverWifi || NetworkInterface.NetworkInterfaceType!=NetworkInterfaceType.Wireless80211)))
+                if (!NetworkInterface.GetIsNetworkAvailable()
+                        || !AppConfig.AllowBackgroundUpdate
+                        || AppConfig.AppRunning
+                        || (AppConfig.JustUpdateOverWifi && (!AppConfig.JustUpdateOverWifi || NetworkInterface.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)))
+                {
+                    var reason = string.Format("Exit - User allows: {0} - AppRuning: {1} - WifiOnly: {2} - CurrentNework: {3}",
+                        AppConfig.AllowBackgroundUpdate,
+                        AppConfig.AppRunning,
+                        AppConfig.JustUpdateOverWifi,
+                        NetworkInterface.NetworkInterfaceType.ToString());
+                    GA.LogBackgroundAgent(reason, 0);
                     return;
-
-                IDictionary<string, int> updated = new Dictionary<string, int>();
-                var dbContext = new PersistentManager();
-                var rssService = RssParserService.GetInstance();
-                var subscribedFeeds = dbContext.ReadSerializedCopy<IDictionary<Guid, Feed>>(AppConfig.SUBSCRIBED_FEED_FILE_NAME);
-                var feedsToBeUpdated = subscribedFeeds.Values.OrderBy(f => f.LastUpdatedTime).Take(AppConfig.FeedCountPerBackgroundUpdate).ToList();
-
-                if (feedsToBeUpdated != null && feedsToBeUpdated.Count > 0)
-                {
-                    feedsToBeUpdated.ForEach(f =>
-                    {
-                        var updatedCount = rssService.UpdateItemsAsync(f).Result;
-                        f.LastUpdatedTime = DateTime.Now;
-                        if (updatedCount > 0)
-                            updated.Add(f.Name, updatedCount);
-                    });
                 }
-
-                //FeedManager.SyncFeeds(subscribedFeeds);
-
-                if (dbContext.UpdateSerializedCopy(subscribedFeeds, AppConfig.SUBSCRIBED_FEED_FILE_NAME, true)
-                    && updated.Count > 0)
-                {
-                    if (AppConfig.ShowBackgroundUpdateResult)
-                    {
-                        ShellToast toast = new ShellToast();
-                        toast.Title = "duyệt báo";
-                        toast.Content = string.Format("{0} mục và {1} tin được cập nhật", updated.Count, updated.Values.Sum().ToString());
-                        toast.Show();
-                    }
-
-                    FlipTileData flipTileData = new FlipTileData()
-                    {
-                        Count = updated.Values.Sum(),
-                        BackContent = string.Format("{0} tin mới", updated.Values.Sum()),
-                        BackTitle = string.Format("{0} mục cập nhật", updated.Count),
-                        BackBackgroundImage = new Uri("Resources/tile-med-back.png", UriKind.Relative)
-                    };
-
-                    ShellTile appTile = ShellTile.ActiveTiles.First();
-                    if (appTile != null)
-                        appTile.Update(flipTileData);
-                }
+            
+                var feedsDownloaded = BackgroundDownload.DownloadFeeds();
+                BackgroundDownload.PostDownload(feedsDownloaded);
+                GA.LogBackgroundAgent("Downloaded completed", feedsDownloaded.Sum(f => f.Items.Count));
             }
-            catch (Exception)
+            catch (OutOfMemoryException)
             {
             }
-
-            NotifyComplete();
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+            }
+            finally
+            {
+                NotifyComplete();
+            }
         }
     }
 }

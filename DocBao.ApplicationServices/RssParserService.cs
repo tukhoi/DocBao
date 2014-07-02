@@ -44,7 +44,8 @@ namespace DocBao.ApplicationServices
             }
             catch (Exception ex)
             {
-                throw ex;
+                return 0;
+                //throw ex;
             }
         }
 

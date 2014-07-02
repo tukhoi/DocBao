@@ -12,13 +12,13 @@ using Davang.Utilities.Extensions;
 using DocBao.ApplicationServices;
 using DocBao.WP.Helper;
 using System.Threading.Tasks;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class FeedPickupPage : PhoneApplicationPage
+    public partial class FeedPickupPage : BasePage
     {
         FeedPickupViewModel _viewModel;
-        FeedManager _feedManager;
         FeedBankViewModel _lastItem;
 
         public FeedPickupPage()
@@ -27,10 +27,12 @@ namespace DocBao.WP
             _feedManager = FeedManager.GetInstance();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            await MyOnNavigatedTo();
             Binding();
+
+            base.OnNavigatedTo(e);
         }
 
         private void Binding()
@@ -58,7 +60,9 @@ namespace DocBao.WP
                 if (i < llmsFeed.ItemsSource.Count)
                     llmsFeed.ScrollTo(llmsFeed.ItemsSource[i]);
             }
-            catch (Exception) { }
+            catch (Exception ex) {
+                GA.LogException(ex);
+            }
         }
 
         private async void OnItemContentTap(object sender, System.Windows.Input.GestureEventArgs e)

@@ -95,8 +95,14 @@
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
     </Compile>
+    <Compile Include="CategoryPage.xaml.cs">
+      <DependentUpon>CategoryPage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ConfigPage.xaml.cs">
       <DependentUpon>ConfigPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="CustomViewPage.xaml.cs">
+      <DependentUpon>CustomViewPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="FeedPage.xaml.cs">
       <DependentUpon>FeedPage.xaml</DependentUpon>
@@ -105,10 +111,11 @@
       <DependentUpon>FeedPickupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\AppResultExtensions.cs" />
+    <Compile Include="Helper\BasePage.cs" />
+    <Compile Include="Helper\CategoryHelper.cs" />
     <Compile Include="Helper\FeedHelper.cs" />
-    <Compile Include="Helper\MemoryDiagnostic.cs" />
     <Compile Include="Helper\Messenger.cs" />
-    <Compile Include="Helper\PhoneApplicationExtensions.cs" />
+    <Compile Include="Helper\BasePageExtensions.cs" />
     <Compile Include="Helper\PublisherHelper.cs" />
     <Compile Include="Helper\WebBrowserHelper.cs" />
     <Compile Include="HubTilePage.xaml.cs">
@@ -130,12 +137,18 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppResources.resx</DependentUpon>
     </Compile>
+    <Compile Include="StoredItemsPage.xaml.cs">
+      <DependentUpon>StoredItemsPage.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ViewModels\CategoryModel.cs" />
+    <Compile Include="ViewModels\CustomHubTileItem.cs" />
     <Compile Include="ViewModels\FeedPickupViewModel.cs" />
     <Compile Include="ViewModels\FeedViewModel.cs" />
     <Compile Include="ViewModels\HubTileItem.cs" />
     <Compile Include="ViewModels\ItemViewModel.cs" />
     <Compile Include="ViewModels\PublisherPickupViewModel.cs" />
     <Compile Include="ViewModels\PublisherViewModel.cs" />
+    <Compile Include="ViewModels\StoredItemsViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
@@ -146,7 +159,15 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="CategoryPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="ConfigPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CustomViewPage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -174,6 +195,10 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
+    <Page Include="StoredItemsPage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -191,11 +216,22 @@
     <Content Include="Assets\AppBar\feature.settings.png" />
     <Content Include="Assets\AppBar\folder.png" />
     <Content Include="Assets\AppBar\ie-icon.png" />
+    <Content Include="Assets\AppBar\minus.png" />
     <Content Include="Assets\AppBar\new.png" />
     <Content Include="Assets\AppBar\refresh.png" />
     <Content Include="Assets\AppBar\save.png" />
     <Content Include="Images\background.png" />
     <Content Include="Images\background2.png" />
+    <Content Include="Images\categories\cuoi.png" />
+    <Content Include="Images\categories\giaitri.png" />
+    <Content Include="Images\categories\khcn.png" />
+    <Content Include="Images\categories\kinhte.png" />
+    <Content Include="Images\categories\otoxemay.png" />
+    <Content Include="Images\categories\thegioi.png" />
+    <Content Include="Images\categories\thethao.png" />
+    <Content Include="Images\categories\tinmoi.png" />
+    <Content Include="Images\categories\vanhoa.png" />
+    <Content Include="Images\categories\xahoi.png" />
     <Content Include="Images\publishers\24h.png" />
     <Content Include="Images\publishers\2sao.png" />
     <Content Include="Images\publishers\afamily.png" />
@@ -210,7 +246,9 @@
     <Content Include="Images\publishers\kenh14.png" />
     <Content Include="Images\publishers\ktnn.png" />
     <Content Include="Images\publishers\laodong.png" />
+    <Content Include="Images\publishers\linkhay.png" />
     <Content Include="Images\publishers\ngoisao.png" />
+    <Content Include="Images\publishers\nld.png" />
     <Content Include="Images\publishers\thanhnien.png" />
     <Content Include="Images\publishers\tinhte.png" />
     <Content Include="Images\publishers\ttvh.png" />
@@ -218,9 +256,13 @@
     <Content Include="Images\publishers\vietnamnet.png" />
     <Content Include="Images\publishers\vnexpress.png" />
     <Content Include="Images\publishers\wpv.png" />
+    <Content Include="Images\publishers\wtt.png" />
+    <Content Include="Images\publishers\yan.png" />
+    <Content Include="Images\publishers\zing.png" />
     <Content Include="Resources\check.png" />
     <Content Include="Resources\icon.png" />
     <Content Include="Resources\message.png" />
+    <Content Include="Resources\new-icon.png" />
     <Content Include="Resources\next.png" />
     <Content Include="Resources\paid-version.png" />
     <Content Include="Resources\rating.png" />
@@ -271,10 +313,6 @@
       <Project>{015E3DFE-EB56-429F-95EF-BAB5D41B23BE}</Project>
       <Name>MockIAPLib</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\WPToolkit\Microsoft.Phone.Controls.Toolkit.WP8\Microsoft.Phone.Controls.Toolkit.WP8.csproj">
-      <Project>{486642F0-AB94-4F28-B49C-106CA3134239}</Project>
-      <Name>Microsoft.Phone.Controls.Toolkit.WP8</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DocBao.ApplicationServices\DocBao.ApplicationServices.csproj">
       <Project>{B07B1992-3A2F-484E-82F2-E7221E1420A0}</Project>
       <Name>DocBao.ApplicationServices</Name>
@@ -292,7 +330,25 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Coding4Fun.Toolkit.Controls.2.0.7\lib\windowsphone8\Coding4Fun.Toolkit.Controls.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Phone.Controls.Toolkit">
+      <HintPath>..\packages\MyWPToolkit\Microsoft.Phone.Controls.Toolkit.dll</HintPath>
+    </Reference>
+    <Reference Include="SOMAWP8">
+      <HintPath>..\packages\SmaatoSDK\SOMAWP8.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Extensions">
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Primitives, Version=1.5.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Microsoft.Net.Http.2.2.22\lib\sl4-windowsphone71\System.Net.Http.Primitives.dll</HintPath>
+    </Reference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).$(TargetFrameworkVersion).Overrides.targets" />
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\$(TargetFrameworkIdentifier)\$(TargetFrameworkVersion)\Microsoft.$(TargetFrameworkIdentifier).CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
@@ -303,4 +359,9 @@
   </Target>
   -->
   <ProjectExtensions />
+  <Import Project="..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets" Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureBclBuildImported" BeforeTargets="BeforeBuild" Condition="'$(BclBuildImported)' == ''">
+    <Error Condition="!Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=317567." HelpKeyword="BCLBUILD2001" />
+    <Error Condition="Exists('..\packages\Microsoft.Bcl.Build.1.0.14\tools\Microsoft.Bcl.Build.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build. For more information, see http://go.microsoft.com/fwlink/?LinkID=317568." HelpKeyword="BCLBUILD2002" />
+  </Target>
 </Project>

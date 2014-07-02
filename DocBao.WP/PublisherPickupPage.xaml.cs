@@ -11,25 +11,25 @@ using DocBao.WP.ViewModels;
 using DocBao.ApplicationServices;
 using DocBao.WP.Helper;
 using Davang.Utilities.Extensions;
+using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class PublisherPickupPage : PhoneApplicationPage
+    public partial class PublisherPickupPage : BasePage
     {
         PublisherPickupViewModel _viewModel;
-        FeedManager _feedManager;
         PublisherBankViewModel _lastItem;
 
         public PublisherPickupPage()
         {
             InitializeComponent();
-            _feedManager = FeedManager.GetInstance();
         }
 
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
-            base.OnNavigatedTo(e);
+            await MyOnNavigatedTo();
             Binding();
+            base.OnNavigatedTo(e);
         }
 
         private void Binding()
@@ -55,17 +55,9 @@ namespace DocBao.WP
                 if (i < llmsPublisher.ItemsSource.Count)
                     llmsPublisher.ScrollTo(llmsPublisher.ItemsSource[i]);
             }
-            catch (Exception) { }
-        }
-
-        private void OnEmailListSelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            
-        }
-
-        private void OnEmailListIsSelectionEnabledChanged(object sender, DependencyPropertyChangedEventArgs e)
-        {
-            
+            catch (Exception ex) {
+                GA.LogException(ex);
+            }
         }
 
         private async void OnItemContentTap(object sender, System.Windows.Input.GestureEventArgs e)

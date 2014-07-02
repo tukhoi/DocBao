@@ -16,24 +16,25 @@ using Davang.Utilities.Helpers;
 
 namespace DocBao.WP
 {
-    public partial class HubTilePage : PhoneApplicationPage
+    public partial class HubTilePage : BasePage
     {
-        FeedManager _feedManager;
-
         public HubTilePage()
         {
             InitializeComponent();
-
-            _feedManager = FeedManager.GetInstance();
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
+            await MyOnNavigatedTo();
+
             this.SetProgressIndicator(true, "đang mở...");
-            await _feedManager.LoadAsync();
             Binding();
             HubTileService.UnfreezeGroup("Publishers");
             this.SetProgressIndicator(false);
+
+            this.SetMainPage();
+
+            base.OnNavigatedTo(e);
         }
 
         private void HubTile_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -51,9 +52,13 @@ namespace DocBao.WP
             var publisher = publishersResult.Target.FirstOrDefault(p => p.Name.Equals(tileItem.Title, StringComparison.InvariantCultureIgnoreCase));
             if (publisher == null) return;
 
-            var uri = string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString());
+            var uri = publisher.FeedIds.Count() > 1
+                ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
+                : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
+            
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }
+
         private void Binding()
         {
             var result = _feedManager.GetSubscribedPublishers();
@@ -87,7 +92,6 @@ namespace DocBao.WP
             var uri = new Uri("/ConfigPage.xaml", UriKind.Relative);
             NavigationService.Navigate(uri);
         }
-<<<<<<< HEAD
 
         private void savedItemButton_Click(object sender, EventArgs e)
         {
@@ -107,7 +111,13 @@ namespace DocBao.WP
             var uri = new Uri("/StoredItemsPage.xaml", UriKind.Relative);
             NavigationService.Navigate(uri);
         }
-=======
->>>>>>> parent of db4037a... Stored item feature
+
+        private void mnuSwitchView_Click(object sender, EventArgs e)
+        {
+            AppConfig.UseCustomView = true;
+
+            var uri = new Uri("/CustomViewPage.xaml", UriKind.Relative);
+            NavigationService.Navigate(uri);
+        }
     }
 }

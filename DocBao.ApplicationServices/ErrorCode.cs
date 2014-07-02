@@ -18,6 +18,9 @@ namespace DocBao.ApplicationServices
         ItemAlreadyRead,
         ItemAlreadyUnread,
         LicenseRequired,
+        CouldNotLoadStoredItem,
+        NoStoredItemFound,
+        ItemAlreadyStored,
         UnknownError
     }
 }

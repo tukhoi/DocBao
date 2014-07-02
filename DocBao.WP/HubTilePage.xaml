@@ -1,4 +1,4 @@
-﻿<phone:PhoneApplicationPage
+﻿<docbao:BasePage
     x:Class="DocBao.WP.HubTilePage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
+    xmlns:docbao="clr-namespace:DocBao.WP.Helper"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -18,7 +19,11 @@
         <shell:ApplicationBar IsVisible="True" Mode="Minimized">
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/folder.png" Text="chọn báo" Click="addButton_Click"/>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/feature.settings.png" Text="tùy chọn" Click="configButton_Click"/>
+            <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/save.png" Text="tin lưu" Click="savedItemButton_Click"/>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/favs.png" Text="giới thiệu" Click="aboutButton_Click"/>
+            <shell:ApplicationBar.MenuItems>
+                <shell:ApplicationBarMenuItem Text="xem theo mục" Click="mnuSwitchView_Click"/>
+            </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
     
@@ -45,10 +50,6 @@
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-
-        <Grid.Background>
-            <ImageBrush ImageSource="\Images\background.png"/>
-        </Grid.Background>
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -56,7 +57,7 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,12">
+        <StackPanel Grid.Row="0" Margin="12,12,0,12">
             <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
                        Style="{StaticResource PhoneTextNormalStyle}" 
                        FontFamily="{StaticResource PhoneFontFamilySemiBold}"
@@ -65,7 +66,6 @@
 
         <!--ContentPanel - place additional content here-->
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0">
-            <!--<ScrollViewer>-->
             <Grid Width="450" HorizontalAlignment="Left" Margin="0,0,0,12">
 
                 <Grid.RowDefinitions>
@@ -73,16 +73,7 @@
                     <RowDefinition Height="*"/>
                 </Grid.RowDefinitions>
 
-                <!--<TextBlock Grid.Row="0"
-                    Foreground="White"
-                           Style="{StaticResource PhoneTextSubtleStyle}"
-                    TextWrapping="Wrap"
-                    Margin="12,0,0,12">
-                Bạn có thể cài thêm hoặc gỡ bớt báo ở app bar bên dưới. Ở mỗi báo bạn cũng có
-                thể cài thêm hoặc gỡ bớt chuyên mục. Ở trang chuyên mục hay đọc từng tin, bạn có thể vuốt nhẹ sang trái hay sang phải để di chuyển 
-                đến tin kế hoặc tin trước đó...
-                </TextBlock>-->
-                <ListBox x:Name="tileList" Grid.Row="1">
+                <ListBox x:Name="tileList" Grid.Row="1" ScrollViewer.VerticalScrollBarVisibility="Hidden">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
                             <toolkit:WrapPanel Orientation="Horizontal"/>
@@ -111,8 +102,7 @@
                     </ListBox.ItemTemplate>
                 </ListBox>
             </Grid>
-            <!--</ScrollViewer>-->
         </Grid>
     </Grid>
 
-</phone:PhoneApplicationPage>
+</docbao:BasePage>

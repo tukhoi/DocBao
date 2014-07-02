@@ -14,16 +14,18 @@ using DocBao.ApplicationServices;
 using System.Threading.Tasks;
 using System.Windows.Media;
 using Microsoft.Phone.Scheduler;
+using DocBao.WP.Helper;
 
 #if DEBUG
 using MockIAPLib;
 using Store = MockIAPLib;
-using DocBao.WP.Helper;
+using Davang.Utilities.Log;
+using Davang.Utilities;
+using DocBao.ApplicationServices.Background;
 #else
 using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
-using DocBao.WP.Helper;
-
+using Davang.Utilities.Log;
 #endif
 
 namespace DocBao.WP
@@ -53,6 +55,8 @@ namespace DocBao.WP
 
             // Language display initialization
             InitializeLanguage();
+
+            InitializeApp();
 
             // Show graphics profiling information while debugging.
             if (Debugger.IsAttached)
@@ -85,7 +89,6 @@ namespace DocBao.WP
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            InitializeApp();
             AppConfig.AppRunning = true;
             InitializeBackgroundUpdater();
         }
@@ -103,6 +106,9 @@ namespace DocBao.WP
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
+            FeedManager.GetInstance().Save();
+            FeedManager.GetInstance().CreateFeedsToUpdate();
+
             AppConfig.AppRunning = false;
             // Ensure that required application state is persisted here.
         }
@@ -111,6 +117,9 @@ namespace DocBao.WP
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
+            FeedManager.GetInstance().Save();
+            FeedManager.GetInstance().CreateFeedsToUpdate();
+
             AppConfig.AppRunning = false;
         }
 
@@ -122,6 +131,8 @@ namespace DocBao.WP
                 // A navigation has failed; break into the debugger
                 Debugger.Break();
             }
+
+            GA.LogException(e.Exception, true);
         }
 
         // Code to execute on Unhandled Exceptions
@@ -132,6 +143,8 @@ namespace DocBao.WP
                 // An unhandled exception has occurred; break into the debugger
                 Debugger.Break();
             }
+
+            GA.LogException(e.ExceptionObject, true);
         }
 
         #region Phone application initialization
@@ -159,6 +172,12 @@ namespace DocBao.WP
 
             // Ensure we don't initialize again
             phoneApplicationInitialized = true;
+
+            var startUri = AppConfig.UseCustomView
+                ? new Uri("/CustomViewPage.xaml", UriKind.Relative)
+                : new Uri("/HubTilePage.xaml", UriKind.Relative);
+            
+            RootFrame.Navigate(startUri);
         }
 
         // Do not add any additional code to this method
@@ -256,27 +275,38 @@ namespace DocBao.WP
 
         private void InitializeApp()
         {
+            GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, AppConfig.GA_APP_VERSION);
+
             Messenger.Initialize(AppResources.ApplicationTitle, 
                 new Uri("/Resources/message.png", UriKind.Relative),
                 new Uri("Images/background2.png", UriKind.Relative),
                 new SolidColorBrush(Colors.White));
-            //FeedBank.Intialize();
+
+            var feeds = new List<KeyValuePair<Guid, DateTime>>();
+            feeds.Add(new KeyValuePair<Guid, DateTime>(Guid.NewGuid(), DateTime.Now));
+            feeds.Add(new KeyValuePair<Guid, DateTime>(Guid.NewGuid(), DateTime.Now));
         }
 
         private void InitializeBackgroundUpdater()
         {
             if (!AppConfig.AllowBackgroundUpdate)
                 return;
+            try
+            {
+                periodicTask = ScheduledActionService.Find(AppConfig.BACKGROUND_UPDATE_TASK_NAME) as PeriodicTask;
+                if (periodicTask != null && !periodicTask.IsEnabled) //fuck this is disabed by user
+                    return;
 
-            periodicTask = ScheduledActionService.Find(AppConfig.BACKGROUND_UPDATE_TASK_NAME) as PeriodicTask;
-            if (periodicTask != null && !periodicTask.IsEnabled) //fuck this is disabed by user
-                return;
-
-            if (periodicTask != null && periodicTask.IsEnabled)
-                RemoveAgent(AppConfig.BACKGROUND_UPDATE_TASK_NAME);
-            periodicTask = new PeriodicTask(AppConfig.BACKGROUND_UPDATE_TASK_NAME);
-            periodicTask.Description = "Tự động cập nhật tin tức mới...";
-            ScheduledActionService.Add(periodicTask);
+                if (periodicTask != null && periodicTask.IsEnabled)
+                    RemoveAgent(AppConfig.BACKGROUND_UPDATE_TASK_NAME);
+                periodicTask = new PeriodicTask(AppConfig.BACKGROUND_UPDATE_TASK_NAME);
+                periodicTask.Description = "Tự động cập nhật tin tức mới...";
+                ScheduledActionService.Add(periodicTask);
+            }
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+            }
 
 #if(DEBUG)
             ScheduledActionService.LaunchForTest(AppConfig.BACKGROUND_UPDATE_TASK_NAME, TimeSpan.FromSeconds(30));
@@ -289,8 +319,10 @@ namespace DocBao.WP
             {
                 ScheduledActionService.Remove(name);
             }
-            catch (Exception)
-            { }
+            catch (Exception ex)
+            {
+                GA.LogException(ex);
+            }
         }
 
         private void SetupMockIAP()

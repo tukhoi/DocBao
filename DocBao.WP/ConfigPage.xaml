@@ -1,4 +1,4 @@
-﻿<phone:PhoneApplicationPage
+﻿<docbao:BasePage
     x:Class="DocBao.WP.ConfigPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -8,6 +8,7 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:sys="clr-namespace:System;assembly=mscorlib"
+    xmlns:docbao="clr-namespace:DocBao.WP.Helper"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="White"
@@ -38,9 +39,6 @@
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-        <Grid.Background>
-            <ImageBrush ImageSource="\Images\background.png"/>
-        </Grid.Background>
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -48,7 +46,7 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,17,0,12">
+        <StackPanel Grid.Row="0" Margin="12,12,0,12">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
                            x:Name="txtAppName" 
@@ -278,4 +276,4 @@
         </ScrollViewer>
     </Grid>
 
-</phone:PhoneApplicationPage>
+</docbao:BasePage>

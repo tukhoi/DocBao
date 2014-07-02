@@ -45,6 +45,15 @@ namespace DocBao.WP.Helper
                     var subscribedFeedResult = FeedManager.GetInstance().AllSubscribedFeedCount();
                     message = "bản miễn phí không hỗ trợ lưu tin và giới hạn 90 mục. Vui lòng mua bản trả tiền ở mục giới thiệu...";
                     break;
+                case ErrorCode.CouldNotLoadStoredItem:
+                    message = "không mở được tin đã lưu";
+                    break;
+                case ErrorCode.NoStoredItemFound:
+                    message = "không có tin lưu này";
+                    break;
+                case ErrorCode.ItemAlreadyStored:
+                    message = "tin này đã lưu";
+                    break;
                 case ErrorCode.UnknownError:
                     message = "có lỗi xảy ra";
                     break;
