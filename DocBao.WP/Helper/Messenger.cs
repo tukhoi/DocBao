@@ -37,15 +37,14 @@ namespace DocBao.WP.Helper
         private static Action _completedAction;
         private static ToastPrompt _toast;
 
-        public static void ShowToast(string message, string title = "", Action completedAction = null, int miliSecondsUntilHidden = 0)
+        public static void ShowToast(string message, string title = "", Action completedAction = null, int miliSecondsUntilHidden = 4000)
         {
             if (completedAction != null)
                 _completedAction = completedAction;
 
             _toast.Title = string.IsNullOrEmpty(title) ? _title : title;
             _toast.Message = message;
-            if (miliSecondsUntilHidden != 0)
-                _toast.MillisecondsUntilHidden = miliSecondsUntilHidden;
+            _toast.MillisecondsUntilHidden = miliSecondsUntilHidden;
             _toast.Show();
         }
 
