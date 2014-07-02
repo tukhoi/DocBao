@@ -1,5 +1,0 @@
-G:\gitdev\DocBao\DocBao.FeedComposer\bin\Release\DocBao.FeedComposer.exe
-G:\gitdev\DocBao\DocBao.FeedComposer\bin\Release\DocBao.FeedComposer.pdb
-G:\gitdev\DocBao\DocBao.FeedComposer\obj\Release\DocBao.FeedComposer.csprojResolveAssemblyReference.cache
-G:\gitdev\DocBao\DocBao.FeedComposer\obj\Release\DocBao.FeedComposer.exe
-G:\gitdev\DocBao\DocBao.FeedComposer\obj\Release\DocBao.FeedComposer.pdb
