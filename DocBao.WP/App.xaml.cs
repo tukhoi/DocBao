@@ -89,7 +89,6 @@ namespace DocBao.WP
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            AppConfig.AppRunning = true;
             InitializeBackgroundUpdater();
         }
 
@@ -97,7 +96,6 @@ namespace DocBao.WP
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-            AppConfig.AppRunning = true;
             if (!e.IsApplicationInstancePreserved)
                 InitializeApp();
         }
@@ -108,8 +106,6 @@ namespace DocBao.WP
         {
             FeedManager.GetInstance().Save();
             FeedManager.GetInstance().CreateFeedsToUpdate();
-
-            AppConfig.AppRunning = false;
             // Ensure that required application state is persisted here.
         }
 
@@ -119,13 +115,13 @@ namespace DocBao.WP
         {
             FeedManager.GetInstance().Save();
             FeedManager.GetInstance().CreateFeedsToUpdate();
-
-            AppConfig.AppRunning = false;
         }
 
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            FeedManager.GetInstance().Save();
+
             if (Debugger.IsAttached)
             {
                 // A navigation has failed; break into the debugger
@@ -138,6 +134,8 @@ namespace DocBao.WP
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            FeedManager.GetInstance().Save();
+
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger

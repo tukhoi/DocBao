@@ -364,6 +364,8 @@ namespace DocBao.WP
 
         private async void OnFlick(object sender, FlickGestureEventArgs e)
         {
+            if (_currentPubisher.FeedIds.Count == 1) return;
+
             if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
             {
                 _pageNumber = 0;
@@ -403,12 +405,15 @@ namespace DocBao.WP
 
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            this.BackToPreviousPage(1);
+            if (_currentPubisher.FeedIds.Count == 1)
+                this.BackToPreviousPage();
+            else
+                this.BackToPreviousPage(1);
         }
 
         private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (_currentPubisher.FeedIds.Count() == 1) return;
+            if (_currentPubisher.FeedIds.Count == 1) return;
             this.BackToPreviousPage();
         }
     }

@@ -155,7 +155,7 @@ namespace DocBao.ApplicationServices.Background
                 return;
 
             Array.Sort(downloadedFiles, StringComparer.InvariantCulture);
-            downloadedFiles.Take(AppConfig.MAX_FILE_DOWNLOAD_ALLOW).ToList().ForEach(f => 
+            downloadedFiles.Take(downloadedFiles.Length - AppConfig.MAX_FILE_DOWNLOAD_ALLOW).ForEach(f =>
                 {
                     StorageHelper.DeleteFile(f);
                 });

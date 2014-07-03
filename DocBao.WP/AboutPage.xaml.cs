@@ -25,6 +25,7 @@ namespace DocBao.WP
         {
             await MyOnNavigatedTo();
             Binding();
+            txtClientId.Text = AppConfig.ClientId.ToString();
             base.OnNavigatedTo(e);
         }
 
