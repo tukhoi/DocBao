@@ -44,7 +44,7 @@ namespace DocBao.WP.ViewModels
             private set
             {
                 _itemViewModels = value;
-                NotifyPropertyChanged("ItemViewModels");
+                //NotifyPropertyChanged("ItemViewModels");
             }
         }
 
@@ -79,7 +79,6 @@ namespace DocBao.WP.ViewModels
             catch (Exception ex)
             {
                 IsLoading = false;
-                GA.LogException(ex);
                 throw ex;
             }
         }
@@ -106,7 +105,6 @@ namespace DocBao.WP.ViewModels
             }
             catch (Exception ex)
             {
-                GA.LogException(ex);
                 throw ex;
             }
             finally

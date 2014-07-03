@@ -496,7 +496,7 @@ namespace DocBao.ApplicationServices
                             if (!result.HasError)
                                 updatedItemCount += result.Target;
                         }
-                        catch (Exception ex) 
+                        catch (ApplicationException ex) 
                         {
                             GA.LogException(ex);
                         }

@@ -14,7 +14,7 @@ using DocBao.WP.Helper;
 
 namespace DocBao.WP
 {
-    public partial class AboutPage : BasePage
+    public partial class AboutPage : DBBasePage
     {
         public AboutPage()
         {

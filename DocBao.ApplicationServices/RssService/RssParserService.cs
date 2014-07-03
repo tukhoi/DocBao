@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Davang.Utilities.Extensions;
+using Davang.Utilities.Log;
 
 namespace DocBao.ApplicationServices.RssService
 {
@@ -35,7 +36,7 @@ namespace DocBao.ApplicationServices.RssService
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new ApplicationException("feedUrl: " + feed.Link, ex);
             }
         }
 
@@ -51,7 +52,7 @@ namespace DocBao.ApplicationServices.RssService
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new ApplicationException("feedUrl: " + feedUrl, ex);
             }
         }
 

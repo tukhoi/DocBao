@@ -111,13 +111,7 @@
       <DependentUpon>FeedPickupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\AppResultExtensions.cs" />
-    <Compile Include="Helper\BasePage.cs" />
-    <Compile Include="Helper\CategoryHelper.cs" />
-    <Compile Include="Helper\FeedHelper.cs" />
-    <Compile Include="Helper\Messenger.cs" />
-    <Compile Include="Helper\BasePageExtensions.cs" />
-    <Compile Include="Helper\PublisherHelper.cs" />
-    <Compile Include="Helper\WebBrowserHelper.cs" />
+    <Compile Include="Helper\DBBasePage.cs" />
     <Compile Include="HubTilePage.xaml.cs">
       <DependentUpon>HubTilePage.xaml</DependentUpon>
     </Compile>
@@ -308,6 +302,10 @@
     <ProjectReference Include="..\..\DaVang\DaVang.Utilities\Davang.Utilities.csproj">
       <Project>{99E59374-E551-4A32-B5B1-50BB76C28371}</Project>
       <Name>Davang.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Davang\Davang.WP.Utilities\Davang.WP.Utilities.csproj">
+      <Project>{5A896732-6D0F-4F35-B22C-C0294A6CD114}</Project>
+      <Name>Davang.WP.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Davang\MockIAPLib\MockIAPLib.csproj">
       <Project>{015E3DFE-EB56-429F-95EF-BAB5D41B23BE}</Project>

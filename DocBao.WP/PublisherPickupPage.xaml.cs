@@ -12,13 +12,14 @@ using DocBao.ApplicationServices;
 using DocBao.WP.Helper;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class PublisherPickupPage : BasePage
+    public partial class PublisherPickupPage : DBBasePage
     {
         PublisherPickupViewModel _viewModel;
-        PublisherBankViewModel _lastItem;
+        Guid _lastPublisherId;
 
         public PublisherPickupPage()
         {
@@ -41,29 +42,13 @@ namespace DocBao.WP
             txtStats.Text = PublisherHelper.GetAllStatsString();
             this.llmsPublisher.ItemsSource = _viewModel.PublisherBankViewModels;
 
-            if (_lastItem != null)
-                ScrollTo(_lastItem);
-        }
-
-        private void ScrollTo(PublisherBankViewModel item)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llmsPublisher.ItemsSource.Count && !item.Id.Equals((llmsPublisher.ItemsSource[i] as PublisherBankViewModel).Id))
-                    i++;
-                if (i < llmsPublisher.ItemsSource.Count)
-                    llmsPublisher.ScrollTo(llmsPublisher.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
+            llmsPublisher.ScrollTo<Guid>(_lastPublisherId);
         }
 
         private async void OnItemContentTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             PublisherBankViewModel publisher = ((FrameworkElement)sender).DataContext as PublisherBankViewModel;
-            _lastItem = publisher;
+            _lastPublisherId = publisher.Id;
             if (publisher != null)
             {
                 var message = string.Format("đang {0} {1}...", publisher.Subscribed ? "gỡ" : "cài", publisher.Name);

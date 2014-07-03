@@ -39,7 +39,8 @@ namespace DocBao.ApplicationServices
 
         public static short MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND = 50;
         public static string TEMP_DOWNLOAD_FILE_PATTERN = "temp-download";
-        public static short MAX_NEW_UPDATE_MESSENGER_WAIT = 10;
+        public static short MAX_NEW_FEED_UPDATED_SHOW = 10;
+        public static short MAX_FILE_DOWNLOAD_ALLOW = 72;
 
         private static IDictionary<ConfigKey, object> _memConfigs;
 

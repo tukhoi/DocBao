@@ -16,7 +16,7 @@ using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class ConfigPage : BasePage
+    public partial class ConfigPage : DBBasePage
     {
         public ConfigPage()
         {

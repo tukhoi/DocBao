@@ -16,7 +16,7 @@ using Davang.Utilities.Helpers;
 
 namespace DocBao.WP
 {
-    public partial class HubTilePage : BasePage
+    public partial class HubTilePage : DBBasePage
     {
         public HubTilePage()
         {

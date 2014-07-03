@@ -15,10 +15,11 @@ using DocBao.WP.ViewModels;
 using System.Windows.Data;
 using DocBao.WP.Helper;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class PublisherPage : BasePage
+    public partial class PublisherPage : DBBasePage
     {
         PublisherViewModel _viewModel;
         int _pageNumber = 0;
@@ -43,12 +44,6 @@ namespace DocBao.WP
             base.OnNavigatedTo(e);
         }
 
-        //protected override void OnNavigatedFrom(NavigationEventArgs e)
-        //{
-        //    _pageNumber--;
-        //    base.OnNavigatedFrom(e);
-        //}
-
         private void Binding()
         {
             var publisherId = NavigationContext.QueryString.GetQueryStringToGuid("publisherId");
@@ -65,43 +60,8 @@ namespace DocBao.WP
             txtStats.Text = PublisherHelper.GetStatsString(_viewModel.Id);
             this.llsFeedList.ItemsSource = _viewModel.FeedViewModels;
 
-            //var readingFeed = _feedManager.GetReading<FeedViewModel, Guid>(_viewModel.FeedViewModels);
-            //if (readingFeed != null)
-            //    ScrollTo(readingFeed);
-
-            if (_lastFeedId != null)
-                ScrollTo(_lastFeedId);
+            llsFeedList.ScrollTo<Guid>(_lastFeedId);
         }
-
-        private void ScrollTo(Guid lastFeedId)
-        { 
-            try
-            {
-                int i = 0;
-                while (i < llsFeedList.ItemsSource.Count && !lastFeedId.Equals((llsFeedList.ItemsSource[i] as FeedViewModel).Id))
-                    i++;
-                if (i < llsFeedList.ItemsSource.Count)
-                    llsFeedList.ScrollTo(llsFeedList.ItemsSource[i]);
-            }
-            catch (Exception ex)
-            {
-                GA.LogException(ex);
-            }
-        }
-
-        //private void ScrollTo(Feed readingFeed)
-        //{
-        //    try
-        //    {
-        //        int i = 0;
-        //        while (i < llsFeedList.ItemsSource.Count && !readingFeed.Id.Equals((llsFeedList.ItemsSource[i] as FeedViewModel).Id))
-        //            i++;
-        //        if (i < llsFeedList.ItemsSource.Count)
-        //            llsFeedList.ScrollTo(llsFeedList.ItemsSource[i]);
-        //    }
-        //    catch (Exception)
-        //    { }
-        //}
 
         private void llsFeedList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
@@ -111,27 +71,12 @@ namespace DocBao.WP
                 var feed = fe.DataContext as Feed;
                 if (feed != null)
                 {
-                    //_feedManager.SetReading<Feed, Guid>(feed);
                     _lastFeedId = feed.Id;
                     var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", feed.Id, feed.Publisher.Id);
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }
         }
-
-        //private void Page_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    var progressIndicator = SystemTray.ProgressIndicator;
-        //    if (progressIndicator != null) return;
-
-        //    progressIndicator = new ProgressIndicator();
-        //    SystemTray.SetProgressIndicator(this, progressIndicator);
-        //    Binding binding = new Binding("IsLoading") { Source = _viewModel };
-        //    BindingOperations.SetBinding(progressIndicator, ProgressIndicator.IsVisibleProperty, binding);
-        //    binding = new Binding("IsLoading") { Source = _viewModel };
-        //    BindingOperations.SetBinding(progressIndicator, ProgressIndicator.IsIndeterminateProperty, binding);
-        //    progressIndicator.Text = "tải thêm kênh...";
-        //}
 
         private void llsFeedList_ItemRealized(object sender, ItemRealizationEventArgs e)
         {

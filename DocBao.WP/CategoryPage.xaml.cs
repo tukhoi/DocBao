@@ -18,10 +18,11 @@ using Microsoft.Phone.Net.NetworkInformation;
 using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class CategoryPage : BasePage
+    public partial class CategoryPage : DBBasePage
     {
         int _pageNumber = 0;
         string _lastItemId;
@@ -97,16 +98,23 @@ namespace DocBao.WP
                     return 0;
                 }
 
+                if (updated > 0)
+                {
+                    _viewModel.ItemViewModels.Clear();
+                    _pageNumber = 1;
+                }
+
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
                 
                 UpdateItemReadCount();
                 UpdateViewTitle();
                 this.llsItemList.DataContext = _viewModel;
-
                 CreateAppBar();
 
-                if (_lastItemId != null)
-                    ScrollTo(_lastItemId);
+                if (updated > 0)
+                    llsItemList.ScrollToTop();
+                else
+                    llsItemList.ScrollTo<string>(_lastItemId);
 
                 this.SetProgressIndicator(false);
 
@@ -382,21 +390,6 @@ namespace DocBao.WP
                 _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Collapsed);
             else
                 _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Visible);
-        }
-
-        private void ScrollTo(string lastItemId)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llsItemList.ItemsSource.Count && !lastItemId.Equals((llsItemList.ItemsSource[i] as ItemViewModel).Id))
-                    i++;
-                if (i < llsItemList.ItemsSource.Count)
-                    llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
         }
 
         #endregion

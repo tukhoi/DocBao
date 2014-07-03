@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DocBao.BackgroundUpdater", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{6B976F96-2F83-45BC-A79F-ECBB8DAE72E6}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Davang.WP.Utilities", "..\Davang\Davang.WP.Utilities\Davang.WP.Utilities.csproj", "{5A896732-6D0F-4F35-B22C-C0294A6CD114}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,18 @@ Global
 		{C15A54AB-816E-4E6E-A4D8-D683A735D169}.Release|ARM.Build.0 = Release|ARM
 		{C15A54AB-816E-4E6E-A4D8-D683A735D169}.Release|x86.ActiveCfg = Release|x86
 		{C15A54AB-816E-4E6E-A4D8-D683A735D169}.Release|x86.Build.0 = Release|x86
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Debug|ARM.ActiveCfg = Debug|ARM
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Debug|ARM.Build.0 = Debug|ARM
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Debug|x86.ActiveCfg = Debug|x86
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Debug|x86.Build.0 = Debug|x86
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Release|ARM.ActiveCfg = Release|ARM
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Release|ARM.Build.0 = Release|ARM
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Release|x86.ActiveCfg = Release|x86
+		{5A896732-6D0F-4F35-B22C-C0294A6CD114}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

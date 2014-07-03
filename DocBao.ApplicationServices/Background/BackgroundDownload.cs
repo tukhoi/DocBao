@@ -45,7 +45,7 @@ namespace DocBao.ApplicationServices.Background
         public static async Task<IDictionary<Guid, int>> LoadDownloadedFeedsAsync(IDictionary<Guid, Feed> subscribedFeeds, IPersistentManager dbContext)
         {
             var downloadedFiles = StorageHelper.GetLocalFilesStartWith(AppConfig.TEMP_DOWNLOAD_FILE_PATTERN);
-            
+
             IDictionary<Guid, int> updatedFeeds = null;
             if (downloadedFiles != null && downloadedFiles.Count() > 0)
             {
@@ -122,7 +122,7 @@ namespace DocBao.ApplicationServices.Background
             if (downloadedFeeds != null && downloadedFeeds.Count > 0)
             {
                 var dbContext = new PersistentManager();
-                var downloadedFileName = string.Format("{0}-{1}.dat", AppConfig.TEMP_DOWNLOAD_FILE_PATTERN, DateTime.Now.ToString("dd-MM-yyyy-hh-mm-ss-tt"));
+                var downloadedFileName = string.Format("{0}-{1}.dat", AppConfig.TEMP_DOWNLOAD_FILE_PATTERN, DateTime.Now.ToString("yyyy-MM-dd-hh-mm-ss-tt"));
 
                 if (dbContext.UpdateSerializedCopy(downloadedFeeds, downloadedFileName, false))
                 {
@@ -146,6 +146,19 @@ namespace DocBao.ApplicationServices.Background
                         appTile.Update(flipTileData);
                 }
             }
+        }
+
+        public static void CleanOldFiles()
+        {
+            var downloadedFiles = StorageHelper.GetLocalFilesStartWith(AppConfig.TEMP_DOWNLOAD_FILE_PATTERN);
+            if (downloadedFiles.Count() < AppConfig.MAX_FILE_DOWNLOAD_ALLOW)
+                return;
+
+            Array.Sort(downloadedFiles, StringComparer.InvariantCulture);
+            downloadedFiles.Take(AppConfig.MAX_FILE_DOWNLOAD_ALLOW).ToList().ForEach(f => 
+                {
+                    StorageHelper.DeleteFile(f);
+                });
         }
 
         #endregion

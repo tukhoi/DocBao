@@ -20,10 +20,11 @@ using Davang.Utilities.Helpers;
 using Microsoft.Phone.Net.NetworkInformation;
 using DocBao.ApplicationServices.RssService;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class FeedPage : BasePage
+    public partial class FeedPage : DBBasePage
     {
         RssParserService _rssParser = RssParserService.GetInstance();
         FeedViewModel _viewModel = new FeedViewModel();
@@ -109,6 +110,12 @@ namespace DocBao.WP
                     return 0;
                 }
 
+                if (updated > 0)
+                {
+                    _viewModel.ItemViewModels.Clear();
+                    _pageNumber = 1;
+                }
+
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
 
                 this.txtFeedName.Visibility = _viewModel.Publisher.FeedIds.Count() == 1
@@ -124,8 +131,10 @@ namespace DocBao.WP
 
                 CreateAppBar();
 
-                if (_lastItemId != null)
-                    ScrollTo(_lastItemId);
+                if (updated > 0)
+                    llsItemList.ScrollToTop();
+                else
+                    llsItemList.ScrollTo<string>(_lastItemId);
 
                 this.SetProgressIndicator(false);
 
@@ -139,11 +148,7 @@ namespace DocBao.WP
                     Messenger.ShowToast(message, completedAction: (() => this.BackToPreviousPage()));
                 else
                     Messenger.ShowToast(message);
-                var publisherName = _viewModel != null && _viewModel.Publisher != null && !string.IsNullOrEmpty(_viewModel.Publisher.Name)
-                    ? _viewModel.Publisher.Name : "null";
-                var feedName = _viewModel != null && !string.IsNullOrEmpty(_viewModel.Name)
-                    ? _viewModel.Name : "null";
-                GA.LogException(ex, "Publisher: " + publisherName + ", Feed: " + feedName);
+                GA.LogException(ex);
                 return 0;
             }
         }
@@ -159,21 +164,6 @@ namespace DocBao.WP
                 _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Collapsed);
             else
                 _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Visible);
-        }
-
-        private void ScrollTo(string lastItemId)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llsItemList.ItemsSource.Count && !lastItemId.Equals((llsItemList.ItemsSource[i] as ItemViewModel).Id))
-                    i++;
-                if (i < llsItemList.ItemsSource.Count)
-                    llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
         }
 
         private void llsItemList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -272,6 +262,7 @@ namespace DocBao.WP
         private async void refreshButton_Click(object sender, EventArgs e)
         {
             this.SetProgressIndicator(true, "đang cập nhật...");
+            this._lastItemId = string.Empty;
             var updated = await Binding(true, false);
             if (updated > 0)
                 Messenger.ShowToast(updated + " tin mới");

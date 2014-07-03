@@ -1,4 +1,4 @@
-﻿<docbao:BasePage
+﻿<docbao:DBBasePage
     x:Class="DocBao.WP.FeedPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -7,6 +7,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:docbao="clr-namespace:DocBao.WP.Helper"
+    xmlns:cxi="clr-namespace:Davang.WP.Utilities.Helper;assembly=Davang.WP.Utilities"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
     xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
@@ -135,7 +136,7 @@
                                         BorderThickness="0"
                                         Margin="12,0,12,0" 
                                         HorizontalAlignment="Left" 
-                                        docbao:WebBrowserHelper.Html="{Binding Summary}"
+                                        cxi:WebBrowserHelper.Html="{Binding Summary}"
                                         Height="200" Width="400"
                                         IsHitTestVisible="False"
                                         Visibility="{Binding SummaryVisibility}"
@@ -168,4 +169,4 @@
         </Grid>
     </Grid>
 
-</docbao:BasePage>
+</docbao:DBBasePage>

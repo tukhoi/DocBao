@@ -13,13 +13,14 @@ using DocBao.ApplicationServices;
 using DocBao.WP.Helper;
 using System.Threading.Tasks;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class FeedPickupPage : BasePage
+    public partial class FeedPickupPage : DBBasePage
     {
         FeedPickupViewModel _viewModel;
-        FeedBankViewModel _lastItem;
+        Guid _lastFeedId;
 
         public FeedPickupPage()
         {
@@ -46,29 +47,14 @@ namespace DocBao.WP
             firstNextIcon.Visibility = System.Windows.Visibility.Visible;
             txtStats.Text = PublisherHelper.GetStatsString(publisherId);
             this.llmsFeed.ItemsSource = _viewModel.FeedBankViewModels;
-            if (_lastItem != null)
-                ScrollTo(_lastItem);
-        }
 
-        private void ScrollTo(FeedBankViewModel item)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llmsFeed.ItemsSource.Count && !item.Id.Equals((llmsFeed.ItemsSource[i] as FeedBankViewModel).Id))
-                    i++;
-                if (i < llmsFeed.ItemsSource.Count)
-                    llmsFeed.ScrollTo(llmsFeed.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
+            llmsFeed.ScrollTo<Guid>(_lastFeedId);
         }
 
         private async void OnItemContentTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             FeedBankViewModel feed = ((FrameworkElement)sender).DataContext as FeedBankViewModel;
-            _lastItem = feed;
+            _lastFeedId = feed.Id;
             if (feed != null)
             {
                 var message = string.Format("đang {0} {1}...", feed.Subscribed ? "gỡ" : "cài", feed.Name);

@@ -17,7 +17,7 @@ using Microsoft.Phone.Net.NetworkInformation;
 
 namespace DocBao.WP
 {
-    public partial class ItemPage : BasePage
+    public partial class ItemPage : DBBasePage
     {
         Feed _currentFeed;
         int _currentIndex=-1;

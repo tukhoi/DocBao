@@ -16,7 +16,7 @@ using Davang.Utilities.Helpers;
 
 namespace DocBao.WP
 {
-    public partial class CustomViewPage : BasePage
+    public partial class CustomViewPage : DBBasePage
     {
         public CustomViewPage()
         {

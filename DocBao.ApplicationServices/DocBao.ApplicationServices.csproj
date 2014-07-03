@@ -92,6 +92,9 @@
     <Compile Include="Bank\CategoryBank.cs" />
     <Compile Include="ErrorCode.cs" />
     <Compile Include="FeedManager.cs" />
+    <Compile Include="Helper\CategoryHelper.cs" />
+    <Compile Include="Helper\FeedHelper.cs" />
+    <Compile Include="Helper\PublisherHelper.cs" />
     <Compile Include="IFeedManager.cs" />
     <Compile Include="Persistence\IPersistentManager.cs" />
     <Compile Include="Persistence\PersistentManager.cs" />

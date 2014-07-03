@@ -74,12 +74,12 @@ namespace DocBao.BackgroundUpdater
             {
                 if (!NetworkInterface.GetIsNetworkAvailable()
                         || !AppConfig.AllowBackgroundUpdate
-                        || AppConfig.AppRunning
+                        //|| AppConfig.AppRunning
                         || (AppConfig.JustUpdateOverWifi && (!AppConfig.JustUpdateOverWifi || NetworkInterface.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)))
                 {
                     var reason = string.Format("Exit - User allows: {0} - AppRuning: {1} - WifiOnly: {2} - CurrentNework: {3}",
                         AppConfig.AllowBackgroundUpdate,
-                        AppConfig.AppRunning,
+                        //AppConfig.AppRunning,
                         AppConfig.JustUpdateOverWifi,
                         NetworkInterface.NetworkInterfaceType.ToString());
                     GA.LogBackgroundAgent(reason, 0);
@@ -87,8 +87,12 @@ namespace DocBao.BackgroundUpdater
                 }
             
                 var feedsDownloaded = BackgroundDownload.DownloadFeeds();
-                BackgroundDownload.PostDownload(feedsDownloaded);
-                GA.LogBackgroundAgent("Downloaded completed", feedsDownloaded.Sum(f => f.Items.Count));
+                if (feedsDownloaded != null && feedsDownloaded.Count > 0)
+                {
+                    BackgroundDownload.CleanOldFiles();
+                    BackgroundDownload.PostDownload(feedsDownloaded);
+                    GA.LogBackgroundAgent("Downloaded completed", feedsDownloaded.Sum(f => f.Items.Count));
+                }
             }
             catch (OutOfMemoryException)
             {

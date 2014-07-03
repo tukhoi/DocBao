@@ -16,10 +16,11 @@ using Microsoft.Phone.Net.NetworkInformation;
 using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class StoredItemsPage : BasePage
+    public partial class StoredItemsPage : DBBasePage
     {
         StoredItemsViewModel _viewModel;
         string _lastItemId;
@@ -65,9 +66,7 @@ namespace DocBao.WP
                 this.llsItemList.DataContext = _viewModel;
 
                 CreateAppBar();
-
-                if (_lastItemId != null)
-                    ScrollTo(_lastItemId);
+                llsItemList.ScrollTo<string>(_lastItemId);
 
                 this.SetProgressIndicator(false);
             }
@@ -94,27 +93,11 @@ namespace DocBao.WP
                 var item = fe.DataContext as Item;
                 if (item != null)
                 {
-                    //_feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
                      _feedManager.MarkStoredItemAsRead(item.Id, true);
                     _lastItemId = item.Id;
                     var uri = string.Format("/ItemPage.xaml?feedId={0}&itemId={1}", item.FeedId, HttpUtility.UrlEncode(item.Id));
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
-            }
-        }
-
-        private void ScrollTo(string lastItemId)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llsItemList.ItemsSource.Count && !lastItemId.Equals((llsItemList.ItemsSource[i] as ItemViewModel).Id))
-                    i++;
-                if (i < llsItemList.ItemsSource.Count)
-                    llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
             }
         }
 
