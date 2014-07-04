@@ -18,7 +18,7 @@ namespace DocBao.WP.ViewModels
 
         public ObservableCollection<PublisherBankViewModel> PublisherBankViewModels { get; set; }
 
-        public PublisherPickupViewModel()
+        public PublisherPickupViewModel(bool showAllPublisher = false)
         {
             var publisherResult = _feedManager.GetAllPublishers();
             if (publisherResult.HasError) return;
@@ -36,6 +36,9 @@ namespace DocBao.WP.ViewModels
                     ImageUri = p.ImageUri,
                     Order = p.Order
                 };
+                if (!showAllPublisher && model.Subscribed)
+                    return;
+
                 models.Add(model);
             });
             PublisherBankViewModels = new ObservableCollection<PublisherBankViewModel>();

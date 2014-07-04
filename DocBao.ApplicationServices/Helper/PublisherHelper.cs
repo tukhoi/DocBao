@@ -30,9 +30,9 @@ namespace DocBao.WP.Helper
 
             string followStats = string.Empty;
             if (subscribedFeedCount == 0)
-                followStats = "chưa chọn chuyên mục";
+                followStats = "chưa cài chuyên mục";
             else
-                followStats = string.Format("xem {0}/{1} chuyên mục", subscribedFeedCount, totalFeedCount);
+                followStats = string.Format("cài {0}/{1} chuyên mục", subscribedFeedCount, totalFeedCount);
 
             return followStats + "\n" + readStats;
         }
@@ -52,7 +52,7 @@ namespace DocBao.WP.Helper
             if (!subscribedPubResult.HasError)
                 subscribedPubCount = subscribedPubResult.Target.Count;
 
-            return string.Format("xem {0}/{1} báo", subscribedPubCount, allPubCount);
+            return string.Format("cài {0}/{1} báo", subscribedPubCount, allPubCount);
 
         }
     }

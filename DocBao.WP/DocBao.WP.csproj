@@ -232,6 +232,7 @@
     <Content Include="Images\publishers\bongda.png" />
     <Content Include="Images\publishers\cafebiz.png" />
     <Content Include="Images\publishers\cafef.png" />
+    <Content Include="Images\publishers\cand.png" />
     <Content Include="Images\publishers\congan.png" />
     <Content Include="Images\publishers\dantri.png" />
     <Content Include="Images\publishers\dspl.png" />
@@ -243,12 +244,16 @@
     <Content Include="Images\publishers\linkhay.png" />
     <Content Include="Images\publishers\ngoisao.png" />
     <Content Include="Images\publishers\nld.png" />
+    <Content Include="Images\publishers\qdnd.png" />
     <Content Include="Images\publishers\thanhnien.png" />
     <Content Include="Images\publishers\tinhte.png" />
+    <Content Include="Images\publishers\TP.png" />
     <Content Include="Images\publishers\ttvh.png" />
     <Content Include="Images\publishers\tuoitre.png" />
     <Content Include="Images\publishers\vietnamnet.png" />
     <Content Include="Images\publishers\vnexpress.png" />
+    <Content Include="Images\publishers\vov.png" />
+    <Content Include="Images\publishers\vtc.png" />
     <Content Include="Images\publishers\wpv.png" />
     <Content Include="Images\publishers\wtt.png" />
     <Content Include="Images\publishers\yan.png" />

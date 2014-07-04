@@ -25,3 +25,8 @@ e200232a-7905-4d89-85a4-ef2f9e13be8a, YanTV, yanner.yan.vn, Images/publishers/ya
 4bf0a456-71b1-4bf2-9eea-1ffb65b4abbc, LinkHay, linkhay.com, Images/publishers/linkhay.png,1,0
 9e31b411-d24c-40c5-b16f-23acff1c524b, WebTrẻThơ, webtretho.com, Images/publishers/wtt.png,1,0
 7c13fa56-c25e-42b5-8887-03c59dfacd0e, Người lao động, nld.com.vn, Images/publishers/nld.png,0,0
+662d0f68-d2ff-4880-82dc-bb47fb1654de, Đài Tiếng Nói Việt Nam, vov.vn, Images/publishers/vov.png,1,0
+23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Công An Nhân Dân, cand.com.vn, Images/publishers/cand.png,1,0
+fcbc7304-612f-477c-af10-554d46abdffa, Quân đội nhân dân, qdnd.vn, Images/publishers/qdnd.png,1,0
+89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Tiền Phong, tienphong.vn, Images/publishers/tp.png,1,0
+3ffb9ef7-30a3-4a5e-b0cc-662bd514d23a, VTC News, vtc.vn, Images/publishers/vtc.png, 1, 0

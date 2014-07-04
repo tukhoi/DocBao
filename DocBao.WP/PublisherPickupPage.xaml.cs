@@ -13,6 +13,7 @@ using DocBao.WP.Helper;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
+using System.Threading.Tasks;
 
 namespace DocBao.WP
 {
@@ -29,15 +30,17 @@ namespace DocBao.WP
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             await MyOnNavigatedTo();
+            CreateAppBar();
             Binding();
             base.OnNavigatedTo(e);
         }
 
         private void Binding()
         {
-            _viewModel = new PublisherPickupViewModel();
+            _viewModel = new PublisherPickupViewModel(AppConfig.ShowAllPublisher);
 
             txtPickupName.Text = "chọn báo";
+            txtGuid.Text = AppConfig.ShowAllPublisher ? "Chạm vào từng báo để cài hay gỡ..." : "Chỉ đang hiện những báo chưa cài. Chạm vào từng báo để cài hay gỡ...";
             firstNextIcon.Visibility = System.Windows.Visibility.Visible;
             txtStats.Text = PublisherHelper.GetAllStatsString();
             this.llmsPublisher.ItemsSource = _viewModel.PublisherBankViewModels;
@@ -73,6 +76,25 @@ namespace DocBao.WP
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this.BackToPreviousPage();
+        }
+
+        private void CreateAppBar()
+        {
+            ApplicationBar = new ApplicationBar();
+            ApplicationBar.Mode = ApplicationBarMode.Default;
+
+            var showAllMenuItem = new ApplicationBarMenuItem();
+            showAllMenuItem.Text = AppConfig.ShowAllPublisher ? "chỉ hiện báo chưa cài" : "hiện hết báo";
+            showAllMenuItem.Click += new EventHandler(showAllButton_Click);
+
+            ApplicationBar.MenuItems.Add(showAllMenuItem);
+        }
+
+        private void showAllButton_Click(object sender, EventArgs e)
+        {
+            AppConfig.ShowAllPublisher = !AppConfig.ShowAllPublisher;
+            Binding();
+            CreateAppBar();
         }
     }
 }

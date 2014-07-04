@@ -42,7 +42,7 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
-        public async Task<IDictionary<Guid, int>> LoadAsync()
+        public async Task LoadAsync()
         {
             if (!_loaded)
             {
@@ -75,6 +75,11 @@ namespace DocBao.ApplicationServices
                 _loaded = true;
             }
 
+            //return await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
+        }
+
+        public async Task<IDictionary<Guid, int>> LoadDownloadedFeeds()
+        {
             return await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
         }
 
@@ -88,6 +93,9 @@ namespace DocBao.ApplicationServices
 
             if (AppConfig.AppUpdate == UpdateVersion.V1_4)
                 AppConfig.AppUpdate = UpdateVersion.V1_5;
+
+            if (AppConfig.AppUpdate == UpdateVersion.V1_5)
+                AppConfig.AppUpdate = UpdateVersion.V1_6;
         }
 
         private IDictionary<Guid, Feed> _subscribedFeeds;
@@ -143,6 +151,11 @@ namespace DocBao.ApplicationServices
             return AppResult(_subscribedFeeds.Values.Where(f => f.Publisher.Id.Equals(publisherId))
                 .OrderBy(f=>f.Order)
                 .ToList());
+        }
+
+        public IDictionary<Guid, Feed> GetSubscribedFeedsAsDictionary()
+        {
+            return _subscribedFeeds;
         }
 
         public AppResult<Feed> GetFeed(Guid feedId)

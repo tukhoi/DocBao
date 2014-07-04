@@ -28,18 +28,11 @@ namespace DocBao.WP
             await MyOnNavigatedTo();
 
             this.SetProgressIndicator(true, "đang mở...");
-            var updatedFeeds = await _feedManager.LoadAsync();
             Binding();
             HubTileService.UnfreezeGroup("Publishers");
             this.SetProgressIndicator(false);
 
             this.SetMainPage();
-
-            if (updatedFeeds != null && updatedFeeds.Count > 0)
-            {
-                var message = FeedHelper.BuildUpdateStatus(updatedFeeds);
-                Messenger.ShowToast(message);
-            }
 
             base.OnNavigatedTo(e);
         }

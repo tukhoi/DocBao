@@ -1,6 +1,7 @@
 ﻿using Davang.Utilities.Log;
 using Davang.WP.Utilities;
 using DocBao.ApplicationServices;
+using DocBao.ApplicationServices.Background;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
 using System;
@@ -31,7 +32,9 @@ namespace DocBao.WP.Helper
             try
             {
                 if (IsMainPage()
-                    && (AppConfig.AppUpdate == UpdateVersion.NotSet || AppConfig.AppUpdate == UpdateVersion.V1_4)
+                    && (AppConfig.AppUpdate == UpdateVersion.NotSet 
+                    || AppConfig.AppUpdate == UpdateVersion.V1_4
+                    || AppConfig.AppUpdate == UpdateVersion.V1_5)
                     && !popUpNewVersion.IsOpen)
                 {
                     this.IsEnabled = false;
@@ -46,7 +49,12 @@ namespace DocBao.WP.Helper
                 ClearPopUpError();
             }
 
-            var updatedFeeds = await _feedManager.LoadAsync();
+            this.SetProgressIndicator(message: "đang mở...");
+            await _feedManager.LoadAsync();
+
+            this.SetProgressIndicator(message: "đang cập nhật tin đã tải ngầm...");
+            var updatedFeeds = await _feedManager.LoadDownloadedFeeds();
+            this.SetProgressIndicator(false);
 
             if (updatedFeeds != null && updatedFeeds.Count > 0)
             {
@@ -56,6 +64,18 @@ namespace DocBao.WP.Helper
                     : updatedFeeds.Count;
                 
                 Messenger.ShowToast(message, miliSecondsUntilHidden:count * 2000);
+
+                StandardTileData tile = new StandardTileData()
+                {
+                    Count = 0,
+                    BackBackgroundImage = new Uri("IDontExist", UriKind.Relative),
+                    BackContent = string.Empty,
+                    BackTitle = string.Empty
+
+                };
+                ShellTile appTile = ShellTile.ActiveTiles.First();
+                if (appTile != null)
+                    appTile.Update(tile);
             }
         }
         
@@ -83,14 +103,14 @@ namespace DocBao.WP.Helper
                 skt_pnl_outter.Children.Add(img_disclaimer);
 
                 TextBlock txt_blk1 = new TextBlock();
-                txt_blk1.Text = "Phiên bản 1.5";
+                txt_blk1.Text = "Phiên bản 1.6";
                 txt_blk1.TextAlignment = TextAlignment.Center;
                 txt_blk1.FontSize = 40;
                 txt_blk1.Margin = new Thickness(10, 0, 10, 0);
                 txt_blk1.Foreground = new SolidColorBrush(Colors.White);
 
                 TextBlock txt_blk2 = new TextBlock();
-                txt_blk2.Text = "4 báo mới!";
+                txt_blk2.Text = "5 báo mới!";
                 txt_blk2.TextAlignment = TextAlignment.Left;
                 txt_blk2.TextWrapping = TextWrapping.Wrap;
                 txt_blk2.FontSize = 21;
@@ -98,7 +118,7 @@ namespace DocBao.WP.Helper
                 txt_blk2.Foreground = new SolidColorBrush(Colors.White);
 
                 TextBlock txt_blk2bis = new TextBlock();
-                txt_blk2bis.Text = "Yan TV, Zing News, LinkHay, WebTreTho";
+                txt_blk2bis.Text = "VOV, Công an Nhân dân, Quân đội Nhân dân, Tiền phong, VTC";
                 txt_blk2bis.TextAlignment = TextAlignment.Left;
                 txt_blk2bis.FontSize = 14;
                 txt_blk2bis.Margin = new Thickness(10, 0, 10, 0);
@@ -107,12 +127,12 @@ namespace DocBao.WP.Helper
                 TextBlock txt_blk3 = new TextBlock();
                 txt_blk3.Text = "(*) chọn để xem trong phần chọn báo";
                 txt_blk3.TextAlignment = TextAlignment.Left;
-                txt_blk3.FontSize = 14;
+                txt_blk3.FontSize = 16;
                 txt_blk3.Margin = new Thickness(10, 0, 10, 0);
                 txt_blk3.Foreground = new SolidColorBrush(Colors.White);
 
                 TextBlock txt_blk4 = new TextBlock();
-                txt_blk4.Text = "và pin được tối ưu hơn bao giờ hết!";
+                txt_blk4.Text = "và nhiều lỗi được sửa!";
                 txt_blk4.TextAlignment = TextAlignment.Left;
                 txt_blk4.FontSize = 21;
                 txt_blk4.Margin = new Thickness(10, 0, 10, 0);

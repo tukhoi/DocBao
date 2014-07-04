@@ -234,6 +234,8 @@ namespace DocBao.WP
 
         private void OnFlick(object sender, FlickGestureEventArgs e)
         {
+            if (_currentFeed.Items.Count == 1) return;
+
             if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
             {
                 if (e.HorizontalVelocity < 0)

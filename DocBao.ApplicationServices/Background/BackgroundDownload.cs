@@ -44,8 +44,9 @@ namespace DocBao.ApplicationServices.Background
 
         public static async Task<IDictionary<Guid, int>> LoadDownloadedFeedsAsync(IDictionary<Guid, Feed> subscribedFeeds, IPersistentManager dbContext)
         {
-            var downloadedFiles = StorageHelper.GetLocalFilesStartWith(AppConfig.TEMP_DOWNLOAD_FILE_PATTERN);
+            if (subscribedFeeds == null) return null;
 
+            var downloadedFiles = StorageHelper.GetLocalFilesStartWith(AppConfig.TEMP_DOWNLOAD_FILE_PATTERN);
             IDictionary<Guid, int> updatedFeeds = null;
             if (downloadedFiles != null && downloadedFiles.Count() > 0)
             {

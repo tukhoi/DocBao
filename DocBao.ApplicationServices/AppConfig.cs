@@ -32,7 +32,7 @@ namespace DocBao.ApplicationServices
 
         public static string GA_ID = "UA-52115271-1";
         public static string GA_APP_NAME = "duyetbao";
-        public static string GA_APP_VERSION = "1.5.1";
+        public static string GA_APP_VERSION = "1.6";
 
         public static IDictionary<string, short> MaxItemStoredList;
         public static IDictionary<string, short> FeedCountPerBackgroundUpdateList;
@@ -211,6 +211,18 @@ namespace DocBao.ApplicationServices
             }
         }
 
+        public static bool ShowAllPublisher
+        {
+            get
+            {
+                return GetConfig<bool>(ConfigKey.ShowAllPublisher, false);
+            }
+            set
+            {
+                SetConfig<bool>(ConfigKey.ShowAllPublisher, value);
+            }
+        }
+
         #endregion
 
         #region private
@@ -280,13 +292,15 @@ namespace DocBao.ApplicationServices
         JustUpdateOverWifi,
         UseCustomView,
         AppUpdate,
-        FeedDownloads
+        FeedDownloads,
+        ShowAllPublisher
     }
 
     public enum UpdateVersion
     { 
         NotSet = 0,
         V1_4,
-        V1_5
+        V1_5,
+        V1_6
     }
 }
