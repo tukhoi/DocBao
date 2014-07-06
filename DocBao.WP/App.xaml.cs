@@ -22,6 +22,7 @@ using Store = MockIAPLib;
 using Davang.Utilities.Log;
 using Davang.Utilities;
 using DocBao.ApplicationServices.Background;
+using Davang.WP.Utilities;
 #else
 using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
@@ -273,6 +274,8 @@ namespace DocBao.WP
 
         private void InitializeApp()
         {
+            BasePage.Initialize(mainPage:AppConfig.UseCustomView ? "CustomViewPage.xaml" : "HubTilePage.xaml");
+
             GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, AppConfig.GA_APP_VERSION);
 
             Messenger.Initialize(AppResources.ApplicationTitle, 

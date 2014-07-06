@@ -90,6 +90,8 @@ ipch/
 *.psess
 *.vsp
 *.vspx
+*.suo
+*.csproj.user
 
 # Guidance Automation Toolkit
 *.gpState
