@@ -93,7 +93,7 @@ namespace DocBao.WP.ViewModels
                     }
                     catch (Exception ex) 
                     {
-                        throw ex;
+                        GA.LogException(ex);
                     }
 
                 UpdateFromDomainModel(feedResult.Target);
@@ -115,8 +115,8 @@ namespace DocBao.WP.ViewModels
 
                 UpdateReadItems(excludeReadItems);
 
-                if (_itemViewModels.Count >= pageNumber * AppConfig.ITEM_COUNT_PER_FEED)
-                    return;
+                if (_itemViewModels.Count >= pageNumber * AppConfig.ITEM_COUNT_PER_FEED) return;
+                if (_itemViewModels.Count >= this.Items.Count) return; 
 
                 if (pageNumber == 1) _itemViewModels.Clear();
 

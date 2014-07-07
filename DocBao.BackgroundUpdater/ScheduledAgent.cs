@@ -74,12 +74,15 @@ namespace DocBao.BackgroundUpdater
             {
                 if (!NetworkInterface.GetIsNetworkAvailable()
                         || !AppConfig.AllowBackgroundUpdate
+                        || (AppConfig.DisAllowBackgroundInMidNight && IsMidNight())
                         || (AppConfig.JustUpdateOverWifi && (!AppConfig.JustUpdateOverWifi || NetworkInterface.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)))
                 {
-                    var reason = string.Format("Exit - User allows: {0} - WifiOnly: {1} - CurrentNework: {2}",
+                    var reason = string.Format("Exit - User allows: {0} - WifiOnly: {1} - CurrentNework: {2} - DisAllowInMidNight: {3} - CurrentTime: {4}",
                         AppConfig.AllowBackgroundUpdate,
                         AppConfig.JustUpdateOverWifi,
-                        NetworkInterface.NetworkInterfaceType.ToString());
+                        NetworkInterface.NetworkInterfaceType.ToString(),
+                        AppConfig.DisAllowBackgroundInMidNight,
+                        DateTime.Now.TimeOfDay.ToString());
                     GA.LogBackgroundAgent(reason, 0);
                     return;
                 }
@@ -103,6 +106,22 @@ namespace DocBao.BackgroundUpdater
             {
                 NotifyComplete();
             }
+        }
+
+        bool IsMidNight()
+        {
+            return IsMidNight(DateTime.Now.TimeOfDay);
+        }
+
+        bool IsMidNight(TimeSpan now)
+        {
+            var midNightStart = new TimeSpan(23, 0, 0);
+            var midNightEnd = new TimeSpan(6, 0, 0);
+
+            if (midNightStart < midNightEnd)
+                return midNightStart <= now && now <= midNightEnd;
+
+            return !(midNightEnd < now && now < midNightStart);
         }
     }
 }

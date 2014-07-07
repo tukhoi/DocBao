@@ -74,8 +74,8 @@ namespace DocBao.WP.ViewModels
 
                 UpdateStats();
 
-                if (FeedViewModels.Count >= pageNumber * AppConfig.FEED_COUNT_PER_PUBLISHER)
-                    return;
+                if (FeedViewModels.Count >= pageNumber * AppConfig.FEED_COUNT_PER_PUBLISHER) return;
+                if (FeedViewModels.Count >= this.FeedIds.Count) return;
 
                 if (pageNumber == 1) FeedViewModels.Clear();
 

@@ -10,6 +10,7 @@ using Davang.Utilities.Log;
 using DocBao.ApplicationServices.Persistence;
 using Microsoft.Phone.Shell;
 using Davang.Utilities.Helpers;
+using DocBao.WP.Helper;
 
 namespace DocBao.ApplicationServices.Background
 {
@@ -177,7 +178,7 @@ namespace DocBao.ApplicationServices.Background
                 if (!subscribedFeeds.ContainsKey(f.Id)) return;
                 var persistentFeed = subscribedFeeds[f.Id];
 
-                var updatedItemCount = RssParserService.UpdateFeedItems(persistentFeed, f.Items);
+                var updatedItemCount = FeedHelper.UpdateFeedItems(persistentFeed, f.Items);
                 if (updatedItemCount > 0)
                 {
                     updatedFeeds.Add(persistentFeed.Id, updatedItemCount);

@@ -88,6 +88,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="10"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
@@ -171,17 +173,17 @@
                         </Grid.Background>
                     
                         <toolkit:ListPicker
-                                FontSize="{StaticResource PhoneFontSizeSmall}" 
-                                Foreground="White"
-                                x:Name="lpkMaxItemStored">
-                                <toolkit:ListPicker.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="số tin lưu cho mỗi chuyên mục"
-                                    FontSize="{StaticResource PhoneFontSizeNormal}"
-                                    Foreground="White"/>
-                                    </DataTemplate>
-                                </toolkit:ListPicker.HeaderTemplate>
-                            </toolkit:ListPicker>
+                            FontSize="{StaticResource PhoneFontSizeSmall}" 
+                            Foreground="White"
+                            x:Name="lpkMaxItemStored">
+                            <toolkit:ListPicker.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="số tin lưu cho mỗi chuyên mục"
+                                FontSize="{StaticResource PhoneFontSizeNormal}"
+                                Foreground="White"/>
+                                </DataTemplate>
+                            </toolkit:ListPicker.HeaderTemplate>
+                        </toolkit:ListPicker>
                     </Grid>
 
                     <Grid Grid.Row="8">
@@ -207,26 +209,50 @@
                             </toolkit:ToggleSwitch.ContentTemplate>
                         </toolkit:ToggleSwitch>
                     </Grid>
-                    
+
                     <Grid Grid.Row="10">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
-                        <toolkit:ListPicker
-                                FontSize="{StaticResource PhoneFontSizeSmall}" 
-                                Foreground="White"
-                                x:Name="lpkFeedCountPerBackgroundUpdate">
-                                <toolkit:ListPicker.HeaderTemplate>
-                                    <DataTemplate>
-                                        <TextBlock Text="số chuyên mục được cập nhật một lần"
-                                    FontSize="{StaticResource PhoneFontSizeNormal}"
-                                    Foreground="White"/>
-                                    </DataTemplate>
-                                </toolkit:ListPicker.HeaderTemplate>
-                            </toolkit:ListPicker>
+
+                        <toolkit:ToggleSwitch Header="chỉ cập nhật ban ngày" x:Name="chkDisAllowBackgroundInMidnight" Tap="chkDisAllowBackgroundInMidnight_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                        Foreground="White" 
+                                         Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="chỉ tự động cập nhật ban ngày..." FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
                     </Grid>
 
                     <Grid Grid.Row="12">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+                        <toolkit:ListPicker
+                            FontSize="{StaticResource PhoneFontSizeSmall}" 
+                            Foreground="White"
+                            x:Name="lpkFeedCountPerBackgroundUpdate">
+                            <toolkit:ListPicker.HeaderTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="số chuyên mục được cập nhật một lần"
+                                FontSize="{StaticResource PhoneFontSizeNormal}"
+                                Foreground="White"/>
+                                </DataTemplate>
+                            </toolkit:ListPicker.HeaderTemplate>
+                        </toolkit:ListPicker>
+                    </Grid>
+
+                    <Grid Grid.Row="14">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
@@ -249,27 +275,27 @@
                         </toolkit:ToggleSwitch>
                     </Grid>
                     
-                    <Grid Grid.Row="14">
+                    <Grid Grid.Row="16">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
                         <toolkit:ToggleSwitch Header="chỉ cập nhật ngầm khi có wifi" x:Name="chkJustUpdateOverWifi" Tap="chkJustUpdateOverWifi_Tap">
-                                <toolkit:ToggleSwitch.HeaderTemplate>
-                                    <DataTemplate>
-                                        <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
-                                            Foreground="White" 
-                                            Content="{Binding}"/>
-                                    </DataTemplate>
-                                </toolkit:ToggleSwitch.HeaderTemplate>
-                                <toolkit:ToggleSwitch.ContentTemplate>
-                                    <DataTemplate>
-                                        <StackPanel Orientation="Vertical">
-                                            <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
-                                            <TextBlock Text="bật tính năng này nếu bạn không muốn tốn tiền cập nhật với 2g/3g" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </toolkit:ToggleSwitch.ContentTemplate>
-                            </toolkit:ToggleSwitch>
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                        Foreground="White" 
+                                        Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="tắt cấu hình này nếu bạn muốn cập nhật ngay cả với 2g, 3g" FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
                     </Grid>
                 </Grid>
             </StackPanel>

@@ -4,6 +4,7 @@ using DocBao.ApplicationServices;
 using DocBao.ApplicationServices.Background;
 using Microsoft.Phone.Controls;
 using Microsoft.Phone.Shell;
+using RateMyApp.Controls;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,6 +26,7 @@ namespace DocBao.WP.Helper
         public DBBasePage()
         {
             _feedManager = FeedManager.GetInstance();
+            
         }
 
         protected async Task MyOnNavigatedTo()
@@ -49,9 +51,19 @@ namespace DocBao.WP.Helper
                 ClearPopUpError();
             }
 
+            if (IsMainPage())
+                CreateFeedbackOverlayControl();
+
             this.SetProgressIndicator(message: "đang mở...");
             await _feedManager.LoadAsync();
 
+            //this is set to null once load feeds downloaded process finished
+            if (AppConfig.FeedDownloads == null) return;
+            else await LoadDownloadedFeeds();
+        }
+
+        private async Task LoadDownloadedFeeds()
+        {
             this.SetProgressIndicator(message: "đang cập nhật tin đã tải ngầm...");
             var updatedFeeds = await _feedManager.LoadDownloadedFeeds();
             this.SetProgressIndicator(false);
@@ -62,8 +74,8 @@ namespace DocBao.WP.Helper
                 var count = updatedFeeds.Count > AppConfig.MAX_NEW_FEED_UPDATED_SHOW
                     ? AppConfig.MAX_NEW_FEED_UPDATED_SHOW
                     : updatedFeeds.Count;
-                
-                Messenger.ShowToast(message, miliSecondsUntilHidden:count * 2000);
+
+                Messenger.ShowToast(message, miliSecondsUntilHidden: count * 2000);
 
                 StandardTileData tile = new StandardTileData()
                 {
@@ -71,7 +83,6 @@ namespace DocBao.WP.Helper
                     BackBackgroundImage = new Uri("IDontExist", UriKind.Relative),
                     BackContent = string.Empty,
                     BackTitle = string.Empty
-
                 };
                 ShellTile appTile = ShellTile.ActiveTiles.First();
                 if (appTile != null)
@@ -194,6 +205,39 @@ namespace DocBao.WP.Helper
             if (!this.IsEnabled) this.IsEnabled = true;
             if (!ApplicationBar.IsVisible) ApplicationBar.IsVisible = true;
             if (popUpNewVersion.IsOpen) popUpNewVersion.IsOpen = false;
+        }
+
+        private void CreateFeedbackOverlayControl()
+        {
+            FeedbackOverlay fbOverlay = new FeedbackOverlay();
+            FeedbackOverlay.SetApplicationName(fbOverlay, "duyệtbáo");
+            FeedbackOverlay.SetEnableAnimation(fbOverlay, true);
+            FeedbackOverlay.SetRatingTitle(fbOverlay, "Thấy hay?");
+            FeedbackOverlay.SetRatingMessage1(fbOverlay, "bạn đã xài app duyệtbáo được một số lần! nếu thấy hay hãy cho 5 saoooooo nhé!");
+            FeedbackOverlay.SetRatingMessage2(fbOverlay, "hay là thử cho ít sao hơn cũng được...");
+            FeedbackOverlay.SetRatingYes(fbOverlay, "đồng ý");
+            FeedbackOverlay.SetRatingNo(fbOverlay, "không, cám ơn");
+            FeedbackOverlay.SetFeedbackTitle(fbOverlay, "Phản hồi");
+            FeedbackOverlay.SetFeedbackMessage1(fbOverlay, "Huhu buồn quá bạn không muốn đánh giá duyệtbáo... Hay là bạn cho biết những gì cần cải thiện?");
+            FeedbackOverlay.SetFeedbackYes(fbOverlay, "cũng được");
+            FeedbackOverlay.SetFeedbackNo(fbOverlay, "không, cám ơn");
+            FeedbackOverlay.SetFeedbackTo(fbOverlay, "davangsolutions@outlook.com");
+            FeedbackOverlay.SetFeedbackSubject(fbOverlay, "phản hồi app duyệtbáo, clienId: " + AppConfig.ClientId);
+            FeedbackOverlay.SetFeedbackBody(fbOverlay, "");
+            FeedbackOverlay.SetCompanyName(fbOverlay, "Davang Solutions");
+            FeedbackOverlay.SetFirstCount(fbOverlay, 10);
+            FeedbackOverlay.SetSecondCount(fbOverlay, 15);
+            FeedbackOverlay.SetCountDays(fbOverlay, false);
+
+            fbOverlay.VisibilityChanged += (sender, e) => 
+            {
+                ApplicationBar.IsVisible = (fbOverlay.Visibility != Visibility.Visible);
+            };
+
+            var grid = this.FindName(BasePage.LayoutRoot) as Grid;
+
+            if (grid != null)
+                grid.Children.Add(fbOverlay);
         }
     }
 }

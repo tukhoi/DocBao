@@ -89,5 +89,28 @@ namespace DocBao.WP.Helper
 
             return message.ToString();
         }
+
+        public static int UpdateFeedItems(Feed feed, IList<Item> items)
+        {
+            int updated = 0;
+            items.OrderBy(i => i.PublishDate).ToList().ForEach(item =>
+            {
+                var loadedItem = feed.Items.FirstOrDefault(i => i.Id.Equals(item.Id));
+                if (loadedItem == null)
+                {
+                    if (feed.AddItem(item))
+                        updated++;
+                }
+                else
+                {
+                    loadedItem.Title = item.Title;
+                    loadedItem.Summary = item.Summary;
+                    loadedItem.PublishDate = item.PublishDate;
+                    loadedItem.Link = item.Link;
+                }
+            });
+
+            return updated;
+        }
     }
 }

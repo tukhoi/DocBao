@@ -27,6 +27,7 @@ using Davang.WP.Utilities;
 using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities;
 #endif
 
 namespace DocBao.WP
@@ -91,6 +92,7 @@ namespace DocBao.WP
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
             InitializeBackgroundUpdater();
+            GA.LogStartSession();
         }
 
         // Code to execute when the application is activated (brought to foreground)
@@ -116,6 +118,7 @@ namespace DocBao.WP
         {
             FeedManager.GetInstance().Save();
             FeedManager.GetInstance().CreateFeedsToUpdate();
+            GA.LogStartSession();
         }
 
         // Code to execute if a navigation fails

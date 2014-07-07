@@ -80,7 +80,9 @@ namespace DocBao.ApplicationServices
 
         public async Task<IDictionary<Guid, int>> LoadDownloadedFeeds()
         {
-            return await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
+            var updated = await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
+            await SaveAsync();
+            return updated;
         }
 
         public async Task VersionChecking()

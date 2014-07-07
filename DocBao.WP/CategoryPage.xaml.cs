@@ -172,7 +172,7 @@ namespace DocBao.WP
 
                     _pageNumber++;
                     var maxPageNumber = _viewModel.Items.GetMaxPageNumber(AppConfig.ITEM_COUNT_PER_FEED);
-                    if (_pageNumber < maxPageNumber)
+                    if (_pageNumber <= maxPageNumber)
                         _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
                     else
                         _pageNumber = maxPageNumber;

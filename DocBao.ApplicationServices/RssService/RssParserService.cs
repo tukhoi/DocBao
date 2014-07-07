@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Log;
+using DocBao.WP.Helper;
 
 namespace DocBao.ApplicationServices.RssService
 {
@@ -32,7 +33,7 @@ namespace DocBao.ApplicationServices.RssService
                 if (updatedFeed == null || updatedFeed.Items.Count == 0) return 0;
                 updatedFeed.Publisher.Id = feed.Publisher.Id;
                 TailorFeed(updatedFeed);
-                return UpdateFeedItems(feed, updatedFeed.Items);
+                return FeedHelper.UpdateFeedItems(feed, updatedFeed.Items);
             }
             catch (Exception ex)
             {
@@ -54,33 +55,6 @@ namespace DocBao.ApplicationServices.RssService
             {
                 throw new ApplicationException("feedUrl: " + feedUrl, ex);
             }
-        }
-
-        #endregion
-
-        #region Static
-
-        internal static int UpdateFeedItems(Feed feed, IList<Item> items)
-        {
-            int updated = 0;
-            items.OrderBy(i=>i.PublishDate).ToList().ForEach(item => 
-            {
-                var loadedItem = feed.Items.FirstOrDefault(i => i.Id.Equals(item.Id));
-                if (loadedItem == null)
-                {
-                    if (feed.AddItem(item))
-                        updated++;
-                }
-                else
-                {
-                    loadedItem.Title = item.Title;
-                    loadedItem.Summary = item.Summary;
-                    loadedItem.PublishDate = item.PublishDate;
-                    loadedItem.Link = item.Link;
-                }
-            });
-
-            return updated;
         }
 
         #endregion

@@ -32,7 +32,7 @@ namespace DocBao.ApplicationServices
 
         public static string GA_ID = "UA-52115271-1";
         public static string GA_APP_NAME = "duyetbao";
-        public static string GA_APP_VERSION = "1.6";
+        public static string GA_APP_VERSION = "1.6.1";
 
         public static IDictionary<string, short> MaxItemStoredList;
         public static IDictionary<string, short> FeedCountPerBackgroundUpdateList;
@@ -223,6 +223,18 @@ namespace DocBao.ApplicationServices
             }
         }
 
+        public static bool DisAllowBackgroundInMidNight
+        {
+            get
+            {
+                return GetConfig<bool>(ConfigKey.DisAllowBackgroundInMidNight, true);
+            }
+            set
+            {
+                SetConfig<bool>(ConfigKey.DisAllowBackgroundInMidNight, value);
+            }
+        }
+
         #endregion
 
         #region private
@@ -293,7 +305,8 @@ namespace DocBao.ApplicationServices
         UseCustomView,
         AppUpdate,
         FeedDownloads,
-        ShowAllPublisher
+        ShowAllPublisher,
+        DisAllowBackgroundInMidNight
     }
 
     public enum UpdateVersion
