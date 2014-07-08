@@ -21,6 +21,7 @@ using Microsoft.Phone.Net.NetworkInformation;
 using DocBao.ApplicationServices.RssService;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
@@ -184,6 +185,7 @@ namespace DocBao.WP
                     //_feedManager.SetReading<Item, string>(item);
                     _lastItemId = item.Id;
                     var uri = string.Format("/ItemPage.xaml?feedId={0}&itemId={1}", item.FeedId, HttpUtility.UrlEncode(item.Id));
+                    UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }

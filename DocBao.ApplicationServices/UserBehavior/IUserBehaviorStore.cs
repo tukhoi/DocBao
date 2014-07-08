@@ -16,10 +16,7 @@ namespace DocBao.ApplicationServices.UserBehavior
         void FeedClick(Guid feedId, int value = 1);
         void ItemClick(Guid feedId, string itemId, int value = 1);
 
-        IDictionary<Guid, int> ScorePublishers();
-        IDictionary<Guid, int> ScoreFeeds();
-        IDictionary<KeyValuePair<Guid, string>, int> ScoreItems();
-
-        IList<Guid> GetFeedsToDownloadInBackground();
+        IDictionary<Guid, int> ScorePublishers(int pubCount = UserBehaviorStore.PUB_COUNT);
+        IDictionary<Guid, int> ScoreFeeds(int feedCount = UserBehaviorStore.FEED_COUNT);
     }
 }

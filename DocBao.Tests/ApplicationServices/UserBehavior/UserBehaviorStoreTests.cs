@@ -28,6 +28,11 @@ namespace DocBao.Tests.ApplicationServices.UserBehavior
                 {
                     Console.WriteLine(string.Format("{0}: {1}", r.Key, r.Value));
                 });
+
+            result.ForEach(r =>
+                { 
+                    
+                });
         }
 
         private void InitializeData(IUserBehaviorStore userBehavior, MockFeedManager feedManager)
@@ -37,21 +42,20 @@ namespace DocBao.Tests.ApplicationServices.UserBehavior
             for (int i = 0; i < 15; i++)
             {
                 var pubId = Guid.NewGuid();
-                var pubClicks = random.Next(1, 10);
-                //userBehavior.PublisherClick(pubId, pubClicks);
+                var pubClicks = random.Next(1, 5);
+                userBehavior.PublisherClick(pubId, pubClicks);
 
                 for (int j = 0; j < 10; j++)
                 {
                     var feedId = Guid.NewGuid();
-                    var feedClicks = random.Next(1, 50);
+                    var feedClicks = random.Next(1, 10);
                     userBehavior.FeedClick(feedId, feedClicks);
                     feedManager.AddFeed(pubId, feedId);
 
                     for (int k = 0; k < 20; k++)
                     {
                         var itemId = Guid.NewGuid().ToString();
-                        var itemClicks = random.Next(1, 10);
-                        userBehavior.ItemClick(feedId, itemId, itemClicks);
+                        userBehavior.ItemClick(feedId, itemId);
                         feedManager.AddItem(feedId, itemId);
                     }
                 }

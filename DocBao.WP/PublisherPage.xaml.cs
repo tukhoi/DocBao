@@ -16,6 +16,7 @@ using System.Windows.Data;
 using DocBao.WP.Helper;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
@@ -73,6 +74,7 @@ namespace DocBao.WP
                 {
                     _lastFeedId = feed.Id;
                     var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", feed.Id, feed.Publisher.Id);
+                    UserBehaviorStore.GetInstance().FeedClick(feed.Id);
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }

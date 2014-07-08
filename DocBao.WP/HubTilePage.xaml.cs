@@ -13,6 +13,7 @@ using DocBao.WP.Helper;
 using DocBao.WP.ViewModels;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Helpers;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
@@ -51,11 +52,11 @@ namespace DocBao.WP
 
             var publisher = publishersResult.Target.FirstOrDefault(p => p.Name.Equals(tileItem.Title, StringComparison.InvariantCultureIgnoreCase));
             if (publisher == null) return;
-
+            
             var uri = publisher.FeedIds.Count() > 1
                 ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
                 : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
-            
+            UserBehaviorStore.GetInstance().PublisherClick(publisher.Id);
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }
 

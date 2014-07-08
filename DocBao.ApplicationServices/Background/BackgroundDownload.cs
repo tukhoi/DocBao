@@ -11,6 +11,7 @@ using DocBao.ApplicationServices.Persistence;
 using Microsoft.Phone.Shell;
 using Davang.Utilities.Helpers;
 using DocBao.WP.Helper;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.ApplicationServices.Background
 {
@@ -24,23 +25,46 @@ namespace DocBao.ApplicationServices.Background
         /// <param name="subscribedFeeds"></param>
         public static void CreateFeedsToDownload(IDictionary<Guid, Feed> subscribedFeeds)
         {
-            var feedsToUpdate = new List<FeedDownload>();
-            subscribedFeeds
-                .OrderByDescending(f => f.Value.Items.Count)
-                .OrderBy(f => f.Value.LastUpdatedTime)
-                .Take(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND)
-                .ForEach(f => 
+            var topScoredFeeds = UserBehaviorStore.GetInstance().ScoreFeeds(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND);
+            var scoredFeedModels = new Dictionary<Feed, int>();
+            topScoredFeeds.ForEach(sf =>
+                {
+                    if (subscribedFeeds.ContainsKey(sf.Key))
+                        scoredFeedModels.Add(subscribedFeeds[sf.Key], sf.Value);
+                });
+
+            var feedsToDownload = new List<FeedDownload>();
+            scoredFeedModels.OrderByDescending(f => f.Value)
+                .ThenBy(f=>f.Key.LastUpdatedTime)
+                .ForEach(f =>
                     {
-                        feedsToUpdate.Add(new FeedDownload() 
+                        feedsToDownload.Add(new FeedDownload() 
                             {
-                                Id = f.Key,
-                                PublisherId = f.Value.Publisher.Id,
-                                LastUpdatedTime = f.Value.LastUpdatedTime,
-                                Link = f.Value.Link
+                                Id = f.Key.Id,
+                                PublisherId = f.Key.Publisher.Id,
+                                LastUpdatedTime = f.Key.LastUpdatedTime,
+                                Link = f.Key.Link
                             });
                     });
 
-            AppConfig.FeedDownloads = feedsToUpdate;
+            if (feedsToDownload.Count < AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND)
+            { 
+                subscribedFeeds
+                    .OrderBy(f => f.Value.LastUpdatedTime)
+                    .Take(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND - feedsToDownload.Count)
+                    .ForEach(f =>
+                        {
+                            feedsToDownload.Add(new FeedDownload()
+                                {
+                                    Id = f.Key,
+                                    PublisherId = f.Value.Publisher.Id,
+                                    LastUpdatedTime = f.Value.LastUpdatedTime,
+                                    Link = f.Value.Link
+                                });
+                        });
+            }
+
+            AppConfig.FeedDownloads = feedsToDownload;
         }
 
         public static async Task<IDictionary<Guid, int>> LoadDownloadedFeedsAsync(IDictionary<Guid, Feed> subscribedFeeds, IPersistentManager dbContext)

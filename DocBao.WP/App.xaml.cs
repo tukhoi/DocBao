@@ -23,6 +23,7 @@ using Davang.Utilities.Log;
 using Davang.Utilities;
 using DocBao.ApplicationServices.Background;
 using Davang.WP.Utilities;
+using DocBao.ApplicationServices.UserBehavior;
 #else
 using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
@@ -107,8 +108,7 @@ namespace DocBao.WP
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
-            FeedManager.GetInstance().Save();
-            FeedManager.GetInstance().CreateFeedsToUpdate();
+            SaveData();
             // Ensure that required application state is persisted here.
         }
 
@@ -116,15 +116,14 @@ namespace DocBao.WP
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            FeedManager.GetInstance().Save();
-            FeedManager.GetInstance().CreateFeedsToUpdate();
+            SaveData();
             GA.LogStartSession();
         }
 
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
-            FeedManager.GetInstance().Save();
+            SaveData();
 
             if (Debugger.IsAttached)
             {
@@ -138,7 +137,7 @@ namespace DocBao.WP
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
-            FeedManager.GetInstance().Save();
+            SaveData();
 
             if (Debugger.IsAttached)
             {
@@ -285,10 +284,6 @@ namespace DocBao.WP
                 new Uri("/Resources/message.png", UriKind.Relative),
                 new Uri("Images/background2.png", UriKind.Relative),
                 new SolidColorBrush(Colors.White));
-
-            var feeds = new List<KeyValuePair<Guid, DateTime>>();
-            feeds.Add(new KeyValuePair<Guid, DateTime>(Guid.NewGuid(), DateTime.Now));
-            feeds.Add(new KeyValuePair<Guid, DateTime>(Guid.NewGuid(), DateTime.Now));
         }
 
         private void InitializeBackgroundUpdater()
@@ -350,6 +345,13 @@ namespace DocBao.WP
 
             MockIAP.AddProductListing(AppConfig.PAID_VERSION, p);
 #endif
+        }
+
+        private void SaveData()
+        {
+            FeedManager.GetInstance().Save();
+            FeedManager.GetInstance().CreateFeedsToUpdate();
+            UserBehaviorStore.GetInstance().Save();
         }
     }
 }

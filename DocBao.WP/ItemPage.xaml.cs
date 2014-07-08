@@ -14,6 +14,7 @@ using Microsoft.Phone.Tasks;
 using Davang.Utilities.Helpers;
 using DocBao.WP.Helper;
 using Microsoft.Phone.Net.NetworkInformation;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
@@ -252,6 +253,8 @@ namespace DocBao.WP
             else 
                 _currentIndex++;
 
+            var item = _currentFeed.Items[_currentIndex];
+            UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
             Binding();
         }
 
@@ -262,6 +265,8 @@ namespace DocBao.WP
             else
                 _currentIndex--;
 
+            var item = _currentFeed.Items[_currentIndex];
+            UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
             Binding();
         }
 

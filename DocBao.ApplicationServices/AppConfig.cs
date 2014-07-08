@@ -307,7 +307,7 @@ namespace DocBao.ApplicationServices
         FeedDownloads,
         ShowAllPublisher,
         DisAllowBackgroundInMidNight,
-        PublisherClicks,
+        PubClicks,
         FeedClicks,
         ItemClicks
     }
