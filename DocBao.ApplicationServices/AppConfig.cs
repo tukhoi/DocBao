@@ -237,6 +237,19 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
+        internal static T GetPersistentConfig<T>(ConfigKey key, T defaultValue)
+        {
+            object value;
+            if (StorageHelper.LoadConfig(key.ToString(), out value))
+                return (T)value;
+            return defaultValue;
+        }
+
+        internal static void SetPersistentConfig<T>(ConfigKey key, T value)
+        {
+            StorageHelper.SaveConfig(key.ToString(), value);
+        }
+
         #region private
 
         private static T GetConfig<T>(ConfigKey key, T defaultValue)
@@ -250,14 +263,6 @@ namespace DocBao.ApplicationServices
             return (T)_memConfigs[key];
         }
 
-        private static T GetPersistentConfig<T>(ConfigKey key, T defaultValue)
-        {
-            object value;
-            if (StorageHelper.LoadConfig(key.ToString(), out value))
-                return (T)value;
-            return defaultValue;
-        }
-
         private static void SetConfig<T>(ConfigKey key, T value)
         {
             if (!_memConfigs.ContainsKey(key))
@@ -265,11 +270,6 @@ namespace DocBao.ApplicationServices
             else
                 _memConfigs[key] = value;
             SetPersistentConfig(key, value);
-        }
-
-        private static void SetPersistentConfig<T>(ConfigKey key, T value)
-        {
-            StorageHelper.SaveConfig(key.ToString(), value);
         }
 
         private static void InitializeConfigList()
@@ -306,7 +306,10 @@ namespace DocBao.ApplicationServices
         AppUpdate,
         FeedDownloads,
         ShowAllPublisher,
-        DisAllowBackgroundInMidNight
+        DisAllowBackgroundInMidNight,
+        PublisherClicks,
+        FeedClicks,
+        ItemClicks
     }
 
     public enum UpdateVersion

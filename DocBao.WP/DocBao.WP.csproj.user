@@ -11,6 +11,10 @@
     <CurrentDeployCmdId>256</CurrentDeployCmdId>
     <CurrentDeployID>30E884A8-265A-4089-B226-AD2326862248</CurrentDeployID>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <CurrentDeployCmdId>256</CurrentDeployCmdId>
+    <CurrentDeployID>30E884A8-265A-4089-B226-AD2326862248</CurrentDeployID>
+  </PropertyGroup>
   <ProjectExtensions>
     <VisualStudio>
       <FlavorProperties GUID="{C089C8C0-30E0-4E22-80C0-CE093F111A43}">
