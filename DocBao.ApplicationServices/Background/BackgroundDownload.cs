@@ -33,6 +33,8 @@ namespace DocBao.ApplicationServices.Background
                         scoredFeedModels.Add(subscribedFeeds[sf.Key], sf.Value);
                 });
 
+            //This group contains feeds which are scored
+            //They're prior than below group (UpdateTime=1 - odd number)
             var feedsToDownload = new List<FeedDownload>();
             scoredFeedModels.OrderByDescending(f => f.Value)
                 .ThenBy(f=>f.Key.LastUpdatedTime)
@@ -43,13 +45,18 @@ namespace DocBao.ApplicationServices.Background
                                 Id = f.Key.Id,
                                 PublisherId = f.Key.Publisher.Id,
                                 LastUpdatedTime = f.Key.LastUpdatedTime,
-                                Link = f.Key.Link
+                                Link = f.Key.Link,
+                                UpdateTime = 1
                             });
                     });
 
+            //There're not enough FeedDownload items so
+            //we're adding more to it base on last update time
+            //This group is lower prior than above group (UpdateTime=2 - even number)
             if (feedsToDownload.Count < AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND)
             { 
                 subscribedFeeds
+                    .Where(f => feedsToDownload.FirstOrDefault(fd => fd.Id.Equals(f.Key)) == null)
                     .OrderBy(f => f.Value.LastUpdatedTime)
                     .Take(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND - feedsToDownload.Count)
                     .ForEach(f =>
@@ -59,7 +66,8 @@ namespace DocBao.ApplicationServices.Background
                                     Id = f.Key,
                                     PublisherId = f.Value.Publisher.Id,
                                     LastUpdatedTime = f.Value.LastUpdatedTime,
-                                    Link = f.Value.Link
+                                    Link = f.Value.Link,
+                                    UpdateTime = 2
                                 });
                         });
             }
@@ -108,7 +116,7 @@ namespace DocBao.ApplicationServices.Background
             var feedDownloads = AppConfig.FeedDownloads;
             if (feedDownloads == null || feedDownloads.Count == 0) return null;
 
-            var feedsToDownload = feedDownloads.OrderBy(fd => fd.LastUpdatedTime).Take(AppConfig.FeedCountPerBackgroundUpdate).ToList();
+            var feedsToDownload = feedDownloads.OrderBy(fd => fd.UpdateTime).Take(AppConfig.FeedCountPerBackgroundUpdate).ToList();
             if (feedsToDownload == null || feedsToDownload.Count == 0) return null;
 
             var rssParserService = RssParserService.GetInstance();
@@ -137,6 +145,10 @@ namespace DocBao.ApplicationServices.Background
                     }
 
                     fd.LastUpdatedTime = DateTime.Now;
+                    //Group which is prior (UpdateTime is odd) should take small step forward (2)
+                    //Group which is lower (UpdateTime is even) should take longer step forward (4)
+                    //But we need to maintain their state (odd/even)
+                    fd.UpdateTime += fd.UpdateTime % 2 == 0 ? 4 : 2;
                 });
 
             AppConfig.FeedDownloads = feedDownloads;

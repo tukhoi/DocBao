@@ -243,6 +243,9 @@ namespace DocBao.WP
                     LoadNextItem();
                 else
                     LoadPreviousItem();
+
+                var item = _currentFeed.Items[_currentIndex];
+                UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
             }
         }
 
@@ -253,8 +256,6 @@ namespace DocBao.WP
             else 
                 _currentIndex++;
 
-            var item = _currentFeed.Items[_currentIndex];
-            UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
             Binding();
         }
 
@@ -265,8 +266,6 @@ namespace DocBao.WP
             else
                 _currentIndex--;
 
-            var item = _currentFeed.Items[_currentIndex];
-            UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
             Binding();
         }
 

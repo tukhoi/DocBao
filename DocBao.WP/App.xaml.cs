@@ -117,7 +117,7 @@ namespace DocBao.WP
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
             SaveData();
-            GA.LogStartSession();
+            GA.LogEndSession();
         }
 
         // Code to execute if a navigation fails

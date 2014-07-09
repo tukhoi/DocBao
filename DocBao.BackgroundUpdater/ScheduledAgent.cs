@@ -69,6 +69,9 @@ namespace DocBao.BackgroundUpdater
         /// 
         protected override void OnInvoke(ScheduledTask task)
         {
+#if DEBUG
+            MemoryDiagnostic.BeginRecording();
+#endif
             //TODO: Add code to perform your task in background
             try
             {
