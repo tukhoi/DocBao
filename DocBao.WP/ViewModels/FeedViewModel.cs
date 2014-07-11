@@ -14,11 +14,10 @@ using Davang.Utilities.Log;
 
 namespace DocBao.WP.ViewModels
 {
-    public class FeedViewModel : Feed, INotifyPropertyChanged
+    public class FeedViewModel : Feed
     {
         FeedManager _feedManager = FeedManager.GetInstance();
         private bool _isLoading = false;
-        public event PropertyChangedEventHandler PropertyChanged;
         private ObservableCollection<ItemViewModel> _itemViewModels { get; set; }
 
         #region View properties
@@ -57,7 +56,6 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
@@ -67,7 +65,6 @@ namespace DocBao.WP.ViewModels
             private set
             {
                 _itemViewModels = value;
-                //NotifyPropertyChanged("ItemViewModels");
             }
         }
 
@@ -80,11 +77,9 @@ namespace DocBao.WP.ViewModels
 
                 if (feedId.Equals(default(Guid)) || publisherId.Equals(default(Guid))) return 0;
 
-                //var feedResult = _feedManager.GetSubscribedFeeds(publisherId);
                 var feedResult = _feedManager.GetSubscribedFeed(feedId);
                 if (feedResult.HasError || !feedResult.Target.Publisher.Id.Equals(publisherId)) return 0;
 
-                //var feed = feedResult.Target.FirstOrDefault(f => f.Id.Equals(feedId));
                 if (FeedHelper.ShouldUpdateItems(feedResult.Target) || refresh)
                     try
                     {
@@ -140,16 +135,17 @@ namespace DocBao.WP.ViewModels
         {
             if (this.Items == null || this.Items.Count == 0) return;
 
-            this.Items.ForEach(r => {
-                var itemViewModel = _itemViewModels.FirstOrDefault(i => i.Id.Equals(r.Id));
-                if (itemViewModel != null)
+            this.Items.ForEach(r => 
                 {
-                    itemViewModel.Read = r.Read;
+                    var itemViewModel = _itemViewModels.FirstOrDefault(i => i.Id.Equals(r.Id));
+                    if (itemViewModel != null)
+                    {
+                        itemViewModel.Read = r.Read;
 
-                    if (excludeReadItems && itemViewModel.Read)
-                        _itemViewModels.Remove(itemViewModel);
-                }
-            });
+                        if (excludeReadItems && itemViewModel.Read)
+                            _itemViewModels.Remove(itemViewModel);
+                    }
+                });
         }
 
         public void UpdateFromDomainModel(Feed feed)
@@ -163,20 +159,9 @@ namespace DocBao.WP.ViewModels
             this.LastUpdatedTime = feed.LastUpdatedTime;
             this.Link = feed.Link;
             this.Items = feed.Items;
-            //this.Items = feed.Items.OrderByDescending(i => i.PublishDate).ToList();
-            //if (excludeReadItems) this.Items = this.Items.Where(i => !i.Read).ToList();
             this.Publisher = feed.Publisher;
 
             this.IsLoading = false;
-        }
-
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
         }
     }
 }

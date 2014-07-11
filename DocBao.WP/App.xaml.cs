@@ -29,6 +29,7 @@ using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities;
+using DocBao.ApplicationServices.UserBehavior;
 #endif
 
 namespace DocBao.WP
@@ -137,6 +138,18 @@ namespace DocBao.WP
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            if (e.ExceptionObject.GetType().Equals(typeof(System.OutOfMemoryException)))
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                var startUri = AppConfig.UseCustomView
+                ? new Uri("/CustomViewPage.xaml", UriKind.Relative)
+                : new Uri("/HubTilePage.xaml", UriKind.Relative);
+
+                RootFrame.Navigate(startUri);
+            }
+
             SaveData();
 
             if (Debugger.IsAttached)

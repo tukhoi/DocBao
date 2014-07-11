@@ -74,14 +74,12 @@ namespace DocBao.ApplicationServices
                 
                 _loaded = true;
             }
-
-            //return await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
         }
 
         public async Task<IDictionary<Guid, int>> LoadDownloadedFeeds()
         {
             var updated = await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
-            await SaveAsync();
+            //await SaveAsync();
             return updated;
         }
 
@@ -662,11 +660,12 @@ namespace DocBao.ApplicationServices
             {
                 _subscribedFeeds.Values
                     .Where(f => f.Publisher.Id.Equals(new Guid("455b6156-77ba-4023-a057-9c06c7f60849")))
-                    .ForEach(f => {
-                        var feedFromBank = FeedBank.Feeds.FirstOrDefault(ffb => ffb.Id.Equals(f.Id));
-                        if (feedFromBank != null)
-                            f.Link = feedFromBank.Link;
-                    });
+                    .ForEach(f => 
+                        {
+                            var feedFromBank = FeedBank.Feeds.FirstOrDefault(ffb => ffb.Id.Equals(f.Id));
+                            if (feedFromBank != null)
+                                f.Link = feedFromBank.Link;
+                        });
 
                 await SaveAsync();
                 return true;

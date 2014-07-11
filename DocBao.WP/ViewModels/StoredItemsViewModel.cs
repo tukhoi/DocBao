@@ -11,9 +11,8 @@ using Davang.Utilities.Extensions;
 
 namespace DocBao.WP.ViewModels
 {
-    public class StoredItemsViewModel : INotifyPropertyChanged
+    public class StoredItemsViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<ItemViewModel> ItemViewModels { get; set; }
         private bool _isLoading = false;
         FeedManager _feedManager = FeedManager.GetInstance();
@@ -31,7 +30,6 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
@@ -40,7 +38,6 @@ namespace DocBao.WP.ViewModels
             get
             {
                 return string.Format("đã đọc {0}/{1}", Items.Count(i => i.Read).ToString(), Items.Count().ToString());
-
             }
         }
 
@@ -78,15 +75,6 @@ namespace DocBao.WP.ViewModels
             finally
             {
                 this.IsLoading = false;
-            }
-        }
-
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

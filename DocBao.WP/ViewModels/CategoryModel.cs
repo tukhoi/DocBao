@@ -14,10 +14,9 @@ using Davang.Utilities.Log;
 
 namespace DocBao.WP.ViewModels
 {
-    public class CategoryModel : Category, INotifyPropertyChanged
+    public class CategoryModel : Category
     {
         FeedManager _feedManager = FeedManager.GetInstance();
-        public event PropertyChangedEventHandler PropertyChanged;
         private bool _isLoading = false;
         public List<Item> Items { get; set; }
         private ObservableCollection<ItemViewModel> _itemViewModels { get; set; }
@@ -34,7 +33,6 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
@@ -44,7 +42,6 @@ namespace DocBao.WP.ViewModels
             private set
             {
                 _itemViewModels = value;
-                //NotifyPropertyChanged("ItemViewModels");
             }
         }
 
@@ -110,15 +107,6 @@ namespace DocBao.WP.ViewModels
             finally
             {
                 this.IsLoading = false;
-            }
-        }
-
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
             }
         }
 

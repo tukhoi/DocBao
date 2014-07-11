@@ -11,11 +11,10 @@ using System.Threading.Tasks;
 
 namespace DocBao.WP.ViewModels
 {
-    public class PublisherViewModel : Publisher, INotifyPropertyChanged
+    public class PublisherViewModel : Publisher
     {
         FeedManager _feedManager = FeedManager.GetInstance();
         private bool _isLoading = false;
-        public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<FeedViewModel> FeedViewModels { get; set; }
 
         public bool IsLoading
@@ -24,7 +23,6 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
@@ -127,20 +125,12 @@ namespace DocBao.WP.ViewModels
 
         private void UpdateStats()
         {
-            this.FeedViewModels.ForEach(f => { 
-                var feedResult = _feedManager.GetSubscribedFeed(f.Id);
-                if (!feedResult.HasError)
-                    f.UpdateFromDomainModel(feedResult.Target);
-            });
-        }
-
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.FeedViewModels.ForEach(f => 
+                { 
+                    var feedResult = _feedManager.GetSubscribedFeed(f.Id);
+                    if (!feedResult.HasError)
+                        f.UpdateFromDomainModel(feedResult.Target);
+                });
         }
     }
 }
