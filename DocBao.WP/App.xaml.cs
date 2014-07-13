@@ -138,18 +138,6 @@ namespace DocBao.WP
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
-            if (e.ExceptionObject.GetType().Equals(typeof(System.OutOfMemoryException)))
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                var startUri = AppConfig.UseCustomView
-                ? new Uri("/CustomViewPage.xaml", UriKind.Relative)
-                : new Uri("/HubTilePage.xaml", UriKind.Relative);
-
-                RootFrame.Navigate(startUri);
-            }
-
             SaveData();
 
             if (Debugger.IsAttached)
@@ -294,8 +282,8 @@ namespace DocBao.WP
             GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, AppConfig.GA_APP_VERSION);
 
             Messenger.Initialize(AppResources.ApplicationTitle, 
-                new Uri("/Resources/message.png", UriKind.Relative),
-                new Uri("Images/background2.png", UriKind.Relative),
+                "/Resources/message.png",
+                "Images/background2.png",
                 new SolidColorBrush(Colors.White));
         }
 
@@ -364,7 +352,7 @@ namespace DocBao.WP
         {
             FeedManager.GetInstance().Save();
             FeedManager.GetInstance().CreateFeedsToUpdate();
-            UserBehaviorStore.GetInstance().Save();
+            UserBehaviorManager.GetInstance().Save();
         }
     }
 }

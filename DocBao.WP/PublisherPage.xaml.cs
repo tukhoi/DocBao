@@ -17,6 +17,7 @@ using DocBao.WP.Helper;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
 using DocBao.ApplicationServices.UserBehavior;
+using System.Diagnostics;
 
 namespace DocBao.WP
 {
@@ -74,7 +75,7 @@ namespace DocBao.WP
                 {
                     _lastFeedId = feed.Id;
                     var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", feed.Id, feed.Publisher.Id);
-                    UserBehaviorStore.GetInstance().FeedClick(feed.Id);
+                    UserBehaviorManager.GetInstance().Log(UserAction.FeedClick, feed.Id.ToString());
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }
@@ -112,6 +113,12 @@ namespace DocBao.WP
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this.BackToPreviousPage();
+        }
+
+        ~PublisherPage()
+        {
+            _viewModel = null;
+            Debug.WriteLine("~PublisherPage");
         }
     }
 }

@@ -15,6 +15,7 @@ using Davang.Utilities.Helpers;
 using DocBao.WP.Helper;
 using Microsoft.Phone.Net.NetworkInformation;
 using DocBao.ApplicationServices.UserBehavior;
+using System.Diagnostics;
 
 namespace DocBao.WP
 {
@@ -23,14 +24,11 @@ namespace DocBao.WP
         Feed _currentFeed;
         int _currentIndex=-1;
         private bool _webLoaded = false;
-        //private bool _comeFromFeedPage = false;
         private PreviousPage _previousPage = PreviousPage.FeedPage;
 
         public ItemPage()
         {
             InitializeComponent();
-
-            adControl.StartAds();
 
             if (LicenseHelper.Purchased(AppConfig.PAID_VERSION))
                 adControl.Visibility = System.Windows.Visibility.Collapsed;
@@ -39,6 +37,12 @@ namespace DocBao.WP
                 adControl.Visibility = System.Windows.Visibility.Visible;
                 adControl.StartAds();
             }
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            adControl.StopAds();
+            base.OnNavigatedFrom(e);
         }
 
         protected override async void OnNavigatedTo(NavigationEventArgs e)
@@ -61,27 +65,6 @@ namespace DocBao.WP
                 _previousPage = PreviousPage.CategoryPage;
 
             BindItemListToFlick(feedId, categoryId);
-
-            //if (_comeFromFeedPage)
-            //{
-            //    var feedResult = _feedManager.GetSubscribedFeed(feedId);
-            //    if (feedResult.HasError)
-            //    {
-            //        Messenger.ShowToast("không tìm thấy báo");
-            //        return;
-            //    }
-
-            //    _currentFeed = feedResult.Target;
-            //}
-            //else
-            //{
-            //    var storedItemsResult = _feedManager.GetStoredItems();
-            //    if (!storedItemsResult.HasError)
-            //    {
-            //        _currentFeed = new Feed();
-            //        _currentFeed.Items = storedItemsResult.Target;
-            //    }
-            //}
 
             _currentIndex = _currentIndex == -1 ? _currentFeed.Items.IndexOf(_currentFeed.Items.FirstOrDefault(i => i.Id.Equals(itemId))) : _currentIndex;
             if (_currentIndex == -1 && _currentFeed.Items.Count > 0)
@@ -144,14 +127,10 @@ namespace DocBao.WP
         private void emailButton_Click(object sender, EventArgs e)
         {
             var item = _currentFeed.Items[_currentIndex];
-
             EmailComposeTask emailComposeTask = new EmailComposeTask();
-
             emailComposeTask.Subject = "Gởi từ app duyệt báo: " + item.Title;
             emailComposeTask.Body = item.Link;
-            
             emailComposeTask.Show();
-
         }
 
         private void copyLinkButton_Click(object sender, EventArgs e)
@@ -245,7 +224,7 @@ namespace DocBao.WP
                     LoadPreviousItem();
 
                 var item = _currentFeed.Items[_currentIndex];
-                UserBehaviorStore.GetInstance().ItemClick(item.FeedId, item.Id);
+                UserBehaviorManager.GetInstance().Log(UserAction.ItemClick, item.FeedId.ToString());
             }
         }
 
@@ -323,21 +302,6 @@ namespace DocBao.WP
             ApplicationBar.MenuItems.Add(facebookMenuItem);
             ApplicationBar.MenuItems.Add(showTitleMenuItem);
         }
-
-        //private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        //{
-        //    this.BackToPreviousPage(2);
-        //}
-
-        //private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        //{
-        //    this.BackToPreviousPage(1);
-        //}
-
-        //private void txtFeedName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        //{
-        //    this.BackToPreviousPage();
-        //}
 
         private void BindingNavigationBar(Item item)
         {
@@ -417,6 +381,14 @@ namespace DocBao.WP
                     }
                     break;
             }
+        }
+
+        ~ItemPage()
+        {
+            _currentFeed = null;
+            wbsContent = null;
+            adControl.Dispose();
+            Debug.WriteLine("~ItemPage");
         }
     }
 

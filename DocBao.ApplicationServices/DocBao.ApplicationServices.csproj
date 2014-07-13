@@ -101,7 +101,9 @@
     <Compile Include="Bank\FeedBank.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="RssService\RssParserService.cs" />
-    <Compile Include="UserBehavior\IUserBehaviorStore.cs" />
+    <Compile Include="UserBehavior\BasicScoring.cs" />
+    <Compile Include="UserBehavior\IScoring.cs" />
+    <Compile Include="UserBehavior\UserBehaviorManager.cs" />
     <Compile Include="UserBehavior\UserBehaviorStore.cs" />
   </ItemGroup>
   <ItemGroup>

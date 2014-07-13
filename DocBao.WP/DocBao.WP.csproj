@@ -112,6 +112,7 @@
     </Compile>
     <Compile Include="Helper\AppResultExtensions.cs" />
     <Compile Include="Helper\DBBasePage.cs" />
+    <Compile Include="Helper\DBMainPage.cs" />
     <Compile Include="HubTilePage.xaml.cs">
       <DependentUpon>HubTilePage.xaml</DependentUpon>
     </Compile>
@@ -196,8 +197,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
-    <None Include="DocBao.WP_2014_07_12_07_56_27.sap" />
-    <None Include="DocBao.WP_2014_07_12_08_31_41.sap" />
+    <None Include="DocBao.WP_2014_07_13_10_01_08.sap" />
     <None Include="packages.config" />
     <None Include="Properties\AppManifest.xml" />
     <None Include="Properties\WMAppManifest.xml">

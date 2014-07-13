@@ -25,7 +25,7 @@ namespace DocBao.ApplicationServices.Background
         /// <param name="subscribedFeeds"></param>
         public static void CreateFeedsToDownload(IDictionary<Guid, Feed> subscribedFeeds)
         {
-            var topScoredFeeds = UserBehaviorStore.GetInstance().ScoreFeeds(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND);
+            var topScoredFeeds = UserBehaviorManager.GetInstance().ScoreFeeds(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND);
             var scoredFeedModels = new Dictionary<Feed, int>();
             topScoredFeeds.ForEach(sf =>
                 {

@@ -17,7 +17,7 @@ using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
-    public partial class HubTilePage : DBBasePage
+    public partial class HubTilePage : DBMainPage
     {
         public HubTilePage()
         {
@@ -56,7 +56,7 @@ namespace DocBao.WP
             var uri = publisher.FeedIds.Count() > 1
                 ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
                 : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
-            UserBehaviorStore.GetInstance().PublisherClick(publisher.Id);
+            UserBehaviorManager.GetInstance().Log(UserAction.PubClick, publisher.Id.ToString());
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }
 

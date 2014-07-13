@@ -307,9 +307,7 @@ namespace DocBao.ApplicationServices
         FeedDownloads,
         ShowAllPublisher,
         DisAllowBackgroundInMidNight,
-        PubClicks,
-        FeedClicks,
-        ItemClicks
+        UserBehavior
     }
 
     public enum UpdateVersion
