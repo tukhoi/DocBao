@@ -42,7 +42,7 @@ namespace DocBao.WP.Helper
                     message = "tin này chưa đọc";
                     break;
                 case ErrorCode.LicenseRequired:
-                    var subscribedFeedResult = FeedManager.GetInstance().AllSubscribedFeedCount();
+                    var subscribedFeedResult = FeedManager.Instance.AllSubscribedFeedCount();
                     message = "bản miễn phí không hỗ trợ lưu tin và giới hạn 90 mục. Vui lòng mua bản trả tiền ở mục giới thiệu...";
                     break;
                 case ErrorCode.CouldNotLoadStoredItem:

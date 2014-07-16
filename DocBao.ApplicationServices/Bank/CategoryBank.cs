@@ -35,7 +35,7 @@ namespace DocBao.ApplicationServices.Bank
 
         private static IList<Category> GetPredefinedCategories()
         {
-            var feedManager = FeedManager.GetInstance();
+            var feedManager = FeedManager.Instance;
             return new List<Category>
             {
                 new Category() { 

@@ -1,4 +1,4 @@
-﻿<docbao:BasePage
+﻿<docbao:DBMainPage
     x:Class="DocBao.WP.CustomViewPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -22,7 +22,7 @@
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/save.png" Text="tin lưu" Click="savedItemButton_Click"/>
             <shell:ApplicationBarIconButton IconUri="/Assets/AppBar/favs.png" Text="giới thiệu" Click="aboutButton_Click"/>
             <shell:ApplicationBar.MenuItems>
-                <shell:ApplicationBarMenuItem Text="xem theo báo" Click="mnuSwitchView_Click"/>
+                <shell:ApplicationBarMenuItem Text="xem theo báo (thành trang chủ)" Click="mnuSwitchView_Click"/>
             </shell:ApplicationBar.MenuItems>
         </shell:ApplicationBar>
     </phone:PhoneApplicationPage.ApplicationBar>
@@ -114,4 +114,4 @@
         </Grid>
     </Grid>
 
-</docbao:BasePage>
+</docbao:DBMainPage>

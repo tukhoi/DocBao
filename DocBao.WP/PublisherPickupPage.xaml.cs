@@ -12,13 +12,15 @@ using DocBao.ApplicationServices;
 using DocBao.WP.Helper;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
+using System.Threading.Tasks;
 
 namespace DocBao.WP
 {
-    public partial class PublisherPickupPage : BasePage
+    public partial class PublisherPickupPage : DBBasePage
     {
         PublisherPickupViewModel _viewModel;
-        PublisherBankViewModel _lastItem;
+        Guid _lastPublisherId;
 
         public PublisherPickupPage()
         {
@@ -28,42 +30,41 @@ namespace DocBao.WP
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             await MyOnNavigatedTo();
+            CreateAppBar();
             Binding();
             base.OnNavigatedTo(e);
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            llmsPublisher.ItemsSource = null;
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            llmsPublisher.ItemsSource = null;
+            llmsPublisher.ItemTemplate = null;
+            base.OnRemovedFromJournal(e);
+        }
+
         private void Binding()
         {
-            _viewModel = new PublisherPickupViewModel();
+            _viewModel = new PublisherPickupViewModel(AppConfig.ShowAllPublisher);
 
             txtPickupName.Text = "chọn báo";
+            txtGuid.Text = AppConfig.ShowAllPublisher ? "Chạm vào từng báo để cài hay gỡ..." : "Chỉ đang hiện những báo chưa cài. Chạm vào từng báo để cài hay gỡ...";
             firstNextIcon.Visibility = System.Windows.Visibility.Visible;
             txtStats.Text = PublisherHelper.GetAllStatsString();
             this.llmsPublisher.ItemsSource = _viewModel.PublisherBankViewModels;
 
-            if (_lastItem != null)
-                ScrollTo(_lastItem);
-        }
-
-        private void ScrollTo(PublisherBankViewModel item)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llmsPublisher.ItemsSource.Count && !item.Id.Equals((llmsPublisher.ItemsSource[i] as PublisherBankViewModel).Id))
-                    i++;
-                if (i < llmsPublisher.ItemsSource.Count)
-                    llmsPublisher.ScrollTo(llmsPublisher.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
+            llmsPublisher.ScrollTo<Guid>(_lastPublisherId);
         }
 
         private async void OnItemContentTap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             PublisherBankViewModel publisher = ((FrameworkElement)sender).DataContext as PublisherBankViewModel;
-            _lastItem = publisher;
+            _lastPublisherId = publisher.Id;
             if (publisher != null)
             {
                 var message = string.Format("đang {0} {1}...", publisher.Subscribed ? "gỡ" : "cài", publisher.Name);
@@ -88,6 +89,25 @@ namespace DocBao.WP
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this.BackToPreviousPage();
+        }
+
+        private void CreateAppBar()
+        {
+            ApplicationBar = new ApplicationBar();
+            ApplicationBar.Mode = ApplicationBarMode.Default;
+
+            var showAllMenuItem = new ApplicationBarMenuItem();
+            showAllMenuItem.Text = AppConfig.ShowAllPublisher ? "chỉ hiện báo chưa cài" : "hiện hết báo";
+            showAllMenuItem.Click += new EventHandler(showAllButton_Click);
+
+            ApplicationBar.MenuItems.Add(showAllMenuItem);
+        }
+
+        private void showAllButton_Click(object sender, EventArgs e)
+        {
+            AppConfig.ShowAllPublisher = !AppConfig.ShowAllPublisher;
+            Binding();
+            CreateAppBar();
         }
     }
 }

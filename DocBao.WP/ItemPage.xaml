@@ -1,4 +1,4 @@
-﻿<docbao:BasePage 
+﻿<docbao:DBBasePage 
     x:Class="DocBao.WP.ItemPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -45,10 +45,6 @@
     
     <!--LayoutRoot is the root grid where all page content is placed-->
     <Grid x:Name="LayoutRoot">
-        
-        <toolkit:GestureService.GestureListener>
-            <toolkit:GestureListener Flick="OnFlick"/>
-        </toolkit:GestureService.GestureListener>
 
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -107,25 +103,40 @@
                     Grid.Row="1"
                     x:Name="itemNextIcon"
                     Source="/Resources/next.png"/>
-                
-            <TextBlock Grid.Column="1"
-                        Grid.Row="1"
-                Text="" x:Name="txtItemTitle" 
+            
+            <Border Grid.Column="1" Grid.Row="1">
+                <toolkit:GestureService.GestureListener>
+                    <toolkit:GestureListener Flick="OnFlick"/>
+                </toolkit:GestureService.GestureListener>
+
+                <TextBlock
+                    Text="" x:Name="txtItemTitle" 
                     Foreground="White"
                     Style="{StaticResource PhoneTextNormalStyle}"
                     FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                    TextWrapping="Wrap"/>
+                    TextWrapping="Wrap">
 
-            <phone:WebBrowser 
+                </TextBlock>
+
+            </Border>
+            
+            <!--<phone:WebBrowser 
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Margin="12,12,12,12"
                 IsScriptEnabled="True" 
-                x:Name="wbsContent" 
+                x:Name="wbsContent"
                 Navigating="wbsContent_Navigating"
-                Navigated="wbsContent_Navigated"/>
+                Loaded="wbsContent_Loaded"/>-->
+            <Border
+                x:Name="WBContainer"
+                Grid.Row="2"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="12,12,12,12"
+                />
         </Grid>
     </Grid>
 
-</docbao:BasePage>
+</docbao:DBBasePage>

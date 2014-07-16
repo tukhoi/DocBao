@@ -15,10 +15,13 @@ using DocBao.WP.ViewModels;
 using System.Windows.Data;
 using DocBao.WP.Helper;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
+using DocBao.ApplicationServices.UserBehavior;
+using System.Diagnostics;
 
 namespace DocBao.WP
 {
-    public partial class PublisherPage : BasePage
+    public partial class PublisherPage : DBBasePage
     {
         PublisherViewModel _viewModel;
         int _pageNumber = 0;
@@ -43,11 +46,18 @@ namespace DocBao.WP
             base.OnNavigatedTo(e);
         }
 
-        //protected override void OnNavigatedFrom(NavigationEventArgs e)
-        //{
-        //    _pageNumber--;
-        //    base.OnNavigatedFrom(e);
-        //}
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            llsFeedList.ItemsSource = null;
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            llsFeedList.ItemsSource = null;
+            llsFeedList.ItemTemplate = null;
+            base.OnRemovedFromJournal(e);
+        }
 
         private void Binding()
         {
@@ -65,73 +75,24 @@ namespace DocBao.WP
             txtStats.Text = PublisherHelper.GetStatsString(_viewModel.Id);
             this.llsFeedList.ItemsSource = _viewModel.FeedViewModels;
 
-            //var readingFeed = _feedManager.GetReading<FeedViewModel, Guid>(_viewModel.FeedViewModels);
-            //if (readingFeed != null)
-            //    ScrollTo(readingFeed);
-
-            if (_lastFeedId != null)
-                ScrollTo(_lastFeedId);
+            llsFeedList.ScrollTo<Guid>(_lastFeedId);
         }
-
-        private void ScrollTo(Guid lastFeedId)
-        { 
-            try
-            {
-                int i = 0;
-                while (i < llsFeedList.ItemsSource.Count && !lastFeedId.Equals((llsFeedList.ItemsSource[i] as FeedViewModel).Id))
-                    i++;
-                if (i < llsFeedList.ItemsSource.Count)
-                    llsFeedList.ScrollTo(llsFeedList.ItemsSource[i]);
-            }
-            catch (Exception ex)
-            {
-                GA.LogException(ex);
-            }
-        }
-
-        //private void ScrollTo(Feed readingFeed)
-        //{
-        //    try
-        //    {
-        //        int i = 0;
-        //        while (i < llsFeedList.ItemsSource.Count && !readingFeed.Id.Equals((llsFeedList.ItemsSource[i] as FeedViewModel).Id))
-        //            i++;
-        //        if (i < llsFeedList.ItemsSource.Count)
-        //            llsFeedList.ScrollTo(llsFeedList.ItemsSource[i]);
-        //    }
-        //    catch (Exception)
-        //    { }
-        //}
 
         private void llsFeedList_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             FrameworkElement fe = sender as FrameworkElement;
             if (fe != null)
             {
-                var feed = fe.DataContext as Feed;
+                var feed = fe.DataContext as FeedViewModel;
                 if (feed != null)
                 {
-                    //_feedManager.SetReading<Feed, Guid>(feed);
                     _lastFeedId = feed.Id;
                     var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", feed.Id, feed.Publisher.Id);
+                    UserBehaviorManager.Instance.Log(UserAction.FeedClick, feed.Id.ToString());
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }
         }
-
-        //private void Page_Loaded(object sender, RoutedEventArgs e)
-        //{
-        //    var progressIndicator = SystemTray.ProgressIndicator;
-        //    if (progressIndicator != null) return;
-
-        //    progressIndicator = new ProgressIndicator();
-        //    SystemTray.SetProgressIndicator(this, progressIndicator);
-        //    Binding binding = new Binding("IsLoading") { Source = _viewModel };
-        //    BindingOperations.SetBinding(progressIndicator, ProgressIndicator.IsVisibleProperty, binding);
-        //    binding = new Binding("IsLoading") { Source = _viewModel };
-        //    BindingOperations.SetBinding(progressIndicator, ProgressIndicator.IsIndeterminateProperty, binding);
-        //    progressIndicator.Text = "tải thêm kênh...";
-        //}
 
         private void llsFeedList_ItemRealized(object sender, ItemRealizationEventArgs e)
         {
@@ -139,7 +100,7 @@ namespace DocBao.WP
                 && llsFeedList.ItemsSource != null 
                 && llsFeedList.ItemsSource.Count >= AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING
                 && e.ItemKind == LongListSelectorItemKind.Item)
-                if ((e.Container.Content as Feed).Equals(llsFeedList.ItemsSource[llsFeedList.ItemsSource.Count - AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING]))
+                if ((e.Container.Content as FeedViewModel).Equals(llsFeedList.ItemsSource[llsFeedList.ItemsSource.Count - AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING]))
                 {
                     this.SetProgressIndicator(true, "tải thêm kênh...");
 
@@ -165,6 +126,12 @@ namespace DocBao.WP
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this.BackToPreviousPage();
+        }
+
+        ~PublisherPage()
+        {
+            _viewModel = null;
+            Debug.WriteLine("----->~PublisherPage");
         }
     }
 }

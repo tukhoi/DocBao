@@ -11,17 +11,17 @@ using Davang.Utilities.Extensions;
 
 namespace DocBao.WP.ViewModels
 {
-    public class StoredItemsViewModel : INotifyPropertyChanged
+    public class StoredItemsViewModel
     {
-        public event PropertyChangedEventHandler PropertyChanged;
-        public ObservableCollection<ItemViewModel> ItemViewModels { get; set; }
+        public ObservableCollection<ItemViewModel> PagedItemViewModels { get; set; }
         private bool _isLoading = false;
-        FeedManager _feedManager = FeedManager.GetInstance();
-        public IList<Item> Items { get; private set; }
+        FeedManager _feedManager = FeedManager.Instance;
+        public IList<ItemViewModel> AllItemViewModels { get; private set; }
 
         public StoredItemsViewModel()
         {
-            ItemViewModels = new ObservableCollection<ItemViewModel>();
+            PagedItemViewModels = new ObservableCollection<ItemViewModel>();
+            AllItemViewModels = new List<ItemViewModel>();
             Initialize();
         }
 
@@ -31,7 +31,6 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
@@ -39,8 +38,7 @@ namespace DocBao.WP.ViewModels
         {
             get
             {
-                return string.Format("đã đọc {0}/{1}", Items.Count(i => i.Read).ToString(), Items.Count().ToString());
-
+                return string.Format("đã đọc {0}/{1}", AllItemViewModels.Count(i => i.Read).ToString(), AllItemViewModels.Count().ToString());
             }
         }
 
@@ -48,7 +46,7 @@ namespace DocBao.WP.ViewModels
         {
             var savedResult = _feedManager.GetStoredItems();
             if (!savedResult.HasError)
-                Items = savedResult.Target;
+                savedResult.Target.ForEach(i => AllItemViewModels.Add(new ItemViewModel(i)));
         }
 
         public void LoadPage(int pageNumber, bool excludeReadItems)
@@ -59,17 +57,17 @@ namespace DocBao.WP.ViewModels
 
                 UpdateReadItems(excludeReadItems);
 
-                if (ItemViewModels.Count >= pageNumber * AppConfig.ITEM_COUNT_PER_FEED)
+                if (PagedItemViewModels.Count >= pageNumber * AppConfig.ITEM_COUNT_PER_FEED)
                     return;
 
-                if (pageNumber == 1) ItemViewModels.Clear();
+                if (pageNumber == 1) PagedItemViewModels.Clear();
 
                 int skip = (pageNumber - 1) * AppConfig.ITEM_COUNT_PER_FEED;
                 var itemPage = excludeReadItems ?
-                    Items.Where(i => !i.Read).Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList()
-                    : Items.Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList();
+                    AllItemViewModels.Where(i => !i.Read).Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList()
+                    : AllItemViewModels.Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList();
 
-                itemPage.ForEach(i => ItemViewModels.Add(new ItemViewModel(i)));
+                itemPage.ForEach(i => PagedItemViewModels.Add(i));
             }
             catch (Exception ex)
             {
@@ -81,28 +79,19 @@ namespace DocBao.WP.ViewModels
             }
         }
 
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
-        }
-
         public void UpdateReadItems(bool excludeReadItems)
         {
-            if (Items == null || Items.Count == 0) return;
+            if (AllItemViewModels == null || AllItemViewModels.Count == 0) return;
 
-            Items.ForEach(r =>
+            AllItemViewModels.ForEach(r =>
             {
-                var itemViewModel = ItemViewModels.FirstOrDefault(i => i.Id.Equals(r.Id));
+                var itemViewModel = PagedItemViewModels.FirstOrDefault(i => i.Id.Equals(r.Id));
                 if (itemViewModel != null)
                 {
                     itemViewModel.Read = r.Read;
 
                     if (excludeReadItems && itemViewModel.Read)
-                        ItemViewModels.Remove(itemViewModel);
+                        PagedItemViewModels.Remove(itemViewModel);
                 }
             });
         }

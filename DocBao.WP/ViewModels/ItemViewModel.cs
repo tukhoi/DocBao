@@ -1,5 +1,6 @@
 ﻿
 using Davang.Parser.Dto;
+using Davang.Utilities.ApplicationServices;
 using DocBao.ApplicationServices;
 using System;
 using System.Collections.Generic;
@@ -11,8 +12,17 @@ using System.Windows.Media;
 
 namespace DocBao.WP.ViewModels
 {
-    public class ItemViewModel : Item
+    public class ItemViewModel : BaseEntity<string>
     {
+        //public string Id { get; set; }
+        public Guid FeedId { get; set; }
+        public bool Read { get; set; }
+
+        public DateTime PublishDate { get; set; }
+        public string Title { get; set; }
+        public string Summary { get; set; }
+        public string Link { get; set; }
+
         public string MarkReadTitle {
             get
             {

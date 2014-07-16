@@ -69,26 +69,34 @@ namespace DocBao.BackgroundUpdater
         /// 
         protected override void OnInvoke(ScheduledTask task)
         {
+#if DEBUG
+            //MemoryDiagnostic.BeginRecording();
+#endif
             //TODO: Add code to perform your task in background
             try
             {
                 if (!NetworkInterface.GetIsNetworkAvailable()
                         || !AppConfig.AllowBackgroundUpdate
-                        || AppConfig.AppRunning
+                        || (AppConfig.DisAllowBackgroundInMidNight && IsMidNight())
                         || (AppConfig.JustUpdateOverWifi && (!AppConfig.JustUpdateOverWifi || NetworkInterface.NetworkInterfaceType != NetworkInterfaceType.Wireless80211)))
                 {
-                    var reason = string.Format("Exit - User allows: {0} - AppRuning: {1} - WifiOnly: {2} - CurrentNework: {3}",
+                    var reason = string.Format("Exit - User allows: {0} - WifiOnly: {1} - CurrentNework: {2} - DisAllowInMidNight: {3} - CurrentTime: {4}",
                         AppConfig.AllowBackgroundUpdate,
-                        AppConfig.AppRunning,
                         AppConfig.JustUpdateOverWifi,
-                        NetworkInterface.NetworkInterfaceType.ToString());
+                        NetworkInterface.NetworkInterfaceType.ToString(),
+                        AppConfig.DisAllowBackgroundInMidNight,
+                        DateTime.Now.TimeOfDay.ToString());
                     GA.LogBackgroundAgent(reason, 0);
                     return;
                 }
             
                 var feedsDownloaded = BackgroundDownload.DownloadFeeds();
-                BackgroundDownload.PostDownload(feedsDownloaded);
-                GA.LogBackgroundAgent("Downloaded completed", feedsDownloaded.Sum(f => f.Items.Count));
+                if (feedsDownloaded != null && feedsDownloaded.Count > 0)
+                {
+                    BackgroundDownload.PostDownload(feedsDownloaded);
+                    BackgroundDownload.CleanOldFiles();
+                    GA.LogBackgroundAgent("Downloaded completed", feedsDownloaded.Sum(f => f.Items.Count));
+                }
             }
             catch (OutOfMemoryException)
             {
@@ -101,6 +109,22 @@ namespace DocBao.BackgroundUpdater
             {
                 NotifyComplete();
             }
+        }
+
+        bool IsMidNight()
+        {
+            return IsMidNight(DateTime.Now.TimeOfDay);
+        }
+
+        bool IsMidNight(TimeSpan now)
+        {
+            var midNightStart = new TimeSpan(23, 0, 0);
+            var midNightEnd = new TimeSpan(6, 0, 0);
+
+            if (midNightStart < midNightEnd)
+                return midNightStart <= now && now <= midNightEnd;
+
+            return !(midNightEnd < now && now < midNightStart);
         }
     }
 }

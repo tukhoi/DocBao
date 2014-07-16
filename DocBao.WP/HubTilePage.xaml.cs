@@ -13,10 +13,12 @@ using DocBao.WP.Helper;
 using DocBao.WP.ViewModels;
 using Davang.Utilities.Extensions;
 using Davang.Utilities.Helpers;
+using DocBao.ApplicationServices.UserBehavior;
+using System.Diagnostics;
 
 namespace DocBao.WP
 {
-    public partial class HubTilePage : BasePage
+    public partial class HubTilePage : DBMainPage
     {
         public HubTilePage()
         {
@@ -37,6 +39,20 @@ namespace DocBao.WP
             base.OnNavigatedTo(e);
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            tileList.ItemsSource = null;
+
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            tileList.ItemsSource = null;
+            tileList.ItemTemplate = null;
+            base.OnRemovedFromJournal(e);
+        }
+
         private void HubTile_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             var tileItem = sender as HubTile;
@@ -51,11 +67,11 @@ namespace DocBao.WP
 
             var publisher = publishersResult.Target.FirstOrDefault(p => p.Name.Equals(tileItem.Title, StringComparison.InvariantCultureIgnoreCase));
             if (publisher == null) return;
-
+            
             var uri = publisher.FeedIds.Count() > 1
                 ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
                 : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
-            
+            UserBehaviorManager.Instance.Log(UserAction.PubClick, publisher.Id.ToString());
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }
 
@@ -118,6 +134,11 @@ namespace DocBao.WP
 
             var uri = new Uri("/CustomViewPage.xaml", UriKind.Relative);
             NavigationService.Navigate(uri);
+        }
+
+        ~HubTilePage()
+        {
+            Debug.WriteLine("----->~HubTilePage");
         }
     }
 }

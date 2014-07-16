@@ -6,21 +6,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Davang.Utilities.Extensions;
+using Davang.Utilities.Log;
+using DocBao.WP.Helper;
 
 namespace DocBao.ApplicationServices.RssService
 {
     public class RssParserService : RssParser
     {
-        private static RssParserService _instance;
+        private static Lazy<RssParserService> _lazyInstance = new Lazy<RssParserService>(() => new RssParserService());
+        public static RssParserService Instance { get { return _lazyInstance.Value; } }
         
-        public static RssParserService GetInstance()
-        {
-            if (_instance == null)
-                _instance = new RssParserService();
-
-            return _instance;
-        }
-
         #region Public
 
         public async Task<int> UpdateItemsAsync(Feed feed)
@@ -31,11 +26,11 @@ namespace DocBao.ApplicationServices.RssService
                 if (updatedFeed == null || updatedFeed.Items.Count == 0) return 0;
                 updatedFeed.Publisher.Id = feed.Publisher.Id;
                 TailorFeed(updatedFeed);
-                return UpdateFeedItems(feed, updatedFeed.Items);
+                return FeedHelper.UpdateFeedItems(feed, updatedFeed.Items);
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new ApplicationException("feedUrl: " + feed.Link, ex);
             }
         }
 
@@ -51,35 +46,8 @@ namespace DocBao.ApplicationServices.RssService
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw new ApplicationException("feedUrl: " + feedUrl, ex);
             }
-        }
-
-        #endregion
-
-        #region Static
-
-        internal static int UpdateFeedItems(Feed feed, IList<Item> items)
-        {
-            int updated = 0;
-            items.OrderBy(i=>i.PublishDate).ToList().ForEach(item => 
-            {
-                var loadedItem = feed.Items.FirstOrDefault(i => i.Id.Equals(item.Id));
-                if (loadedItem == null)
-                {
-                    if (feed.AddItem(item))
-                        updated++;
-                }
-                else
-                {
-                    loadedItem.Title = item.Title;
-                    loadedItem.Summary = item.Summary;
-                    loadedItem.PublishDate = item.PublishDate;
-                    loadedItem.Link = item.Link;
-                }
-            });
-
-            return updated;
         }
 
         #endregion

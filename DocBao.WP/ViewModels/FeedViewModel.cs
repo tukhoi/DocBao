@@ -11,15 +11,25 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using DocBao.WP.Helper;
 using Davang.Utilities.Log;
+using Davang.Utilities.ApplicationServices;
 
 namespace DocBao.WP.ViewModels
 {
-    public class FeedViewModel : Feed, INotifyPropertyChanged
+    public class FeedViewModel : BaseEntity<Guid>, IDisposable
     {
-        FeedManager _feedManager = FeedManager.GetInstance();
+        FeedManager _feedManager = FeedManager.Instance;
         private bool _isLoading = false;
-        public event PropertyChangedEventHandler PropertyChanged;
-        private ObservableCollection<ItemViewModel> _itemViewModels { get; set; }
+        private ObservableCollection<ItemViewModel> _pagedItemViewModel { get; set; }
+
+        //public Guid Id { get; set; }
+        public string Name { get; set; }
+        public PublisherViewModel Publisher { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public DateTime LastUpdatedTime { get; set; }
+        public string Link { get; set; }
+
+        public IList<ItemViewModel> AllItemViewModels { get; set; }
 
         #region View properties
 
@@ -48,7 +58,8 @@ namespace DocBao.WP.ViewModels
 
         public FeedViewModel()
         {
-            _itemViewModels = new ObservableCollection<ItemViewModel>();
+            _pagedItemViewModel = new ObservableCollection<ItemViewModel>();
+            AllItemViewModels = new List<ItemViewModel>();
         }
 
         public bool IsLoading
@@ -57,21 +68,19 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
-        public ObservableCollection<ItemViewModel> ItemViewModels
+        public ObservableCollection<ItemViewModel> PagedItemViewModels
         {
-            get { return _itemViewModels; }
+            get { return _pagedItemViewModel; }
             private set
             {
-                _itemViewModels = value;
-                NotifyPropertyChanged("ItemViewModels");
+                _pagedItemViewModel = value;
             }
         }
 
-        public async Task<int> Initialize(Guid feedId, Guid publisherId, bool refresh)
+        public async Task<int> RefreshLatestData(Guid feedId, Guid publisherId, bool refresh)
         {
             try
             {
@@ -80,11 +89,9 @@ namespace DocBao.WP.ViewModels
 
                 if (feedId.Equals(default(Guid)) || publisherId.Equals(default(Guid))) return 0;
 
-                //var feedResult = _feedManager.GetSubscribedFeeds(publisherId);
                 var feedResult = _feedManager.GetSubscribedFeed(feedId);
                 if (feedResult.HasError || !feedResult.Target.Publisher.Id.Equals(publisherId)) return 0;
 
-                //var feed = feedResult.Target.FirstOrDefault(f => f.Id.Equals(feedId));
                 if (FeedHelper.ShouldUpdateItems(feedResult.Target) || refresh)
                     try
                     {
@@ -93,7 +100,8 @@ namespace DocBao.WP.ViewModels
                     }
                     catch (Exception ex) 
                     {
-                        throw ex;
+                        updated = -1;
+                        GA.LogException(ex);
                     }
 
                 UpdateFromDomainModel(feedResult.Target);
@@ -103,7 +111,6 @@ namespace DocBao.WP.ViewModels
             catch (Exception ex)
             {
                 IsLoading = false;
-                GA.LogException(ex);
                 throw ex;
             }
         }
@@ -116,20 +123,19 @@ namespace DocBao.WP.ViewModels
 
                 UpdateReadItems(excludeReadItems);
 
-                if (_itemViewModels.Count >= pageNumber * AppConfig.ITEM_COUNT_PER_FEED)
-                    return;
+                if (_pagedItemViewModel.Count >= pageNumber * AppConfig.ITEM_COUNT_PER_FEED) return;
+                if (_pagedItemViewModel.Count >= this.AllItemViewModels.Count) return; 
 
-                if (pageNumber == 1) _itemViewModels.Clear();
+                if (pageNumber == 1) _pagedItemViewModel.Clear();
 
                 int skip = (pageNumber - 1) * AppConfig.ITEM_COUNT_PER_FEED;
                 var items = excludeReadItems ?
-                    this.Items.Where(i=>!i.Read).Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList()
-                    : this.Items.Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList();
-                items.ForEach(i => _itemViewModels.Add(new ItemViewModel(i)));
+                    this.AllItemViewModels.Where(i=>!i.Read).Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList()
+                    : this.AllItemViewModels.Skip(skip).Take(AppConfig.ITEM_COUNT_PER_FEED).ToList();
+                items.ForEach(i => _pagedItemViewModel.Add(i));
             }
             catch (Exception ex)
             {
-                GA.LogException(ex);
                 throw ex;
             }
             finally
@@ -140,18 +146,19 @@ namespace DocBao.WP.ViewModels
 
         public void UpdateReadItems(bool excludeReadItems)
         {
-            if (this.Items == null || this.Items.Count == 0) return;
+            if (this.AllItemViewModels == null || this.AllItemViewModels.Count == 0) return;
 
-            this.Items.ForEach(r => {
-                var itemViewModel = _itemViewModels.FirstOrDefault(i => i.Id.Equals(r.Id));
-                if (itemViewModel != null)
+            this.AllItemViewModels.ForEach(r => 
                 {
-                    itemViewModel.Read = r.Read;
+                    var itemViewModel = _pagedItemViewModel.FirstOrDefault(i => i.Id.Equals(r.Id));
+                    if (itemViewModel != null)
+                    {
+                        itemViewModel.Read = r.Read;
 
-                    if (excludeReadItems && itemViewModel.Read)
-                        _itemViewModels.Remove(itemViewModel);
-                }
-            });
+                        if (excludeReadItems && itemViewModel.Read)
+                            _pagedItemViewModel.Remove(itemViewModel);
+                    }
+                });
         }
 
         public void UpdateFromDomainModel(Feed feed)
@@ -164,21 +171,19 @@ namespace DocBao.WP.ViewModels
             this.Description = feed.Description;
             this.LastUpdatedTime = feed.LastUpdatedTime;
             this.Link = feed.Link;
-            this.Items = feed.Items;
-            //this.Items = feed.Items.OrderByDescending(i => i.PublishDate).ToList();
-            //if (excludeReadItems) this.Items = this.Items.Where(i => !i.Read).ToList();
-            this.Publisher = feed.Publisher;
+            this.AllItemViewModels.Clear();
+            feed.Items.ForEach(i => this.AllItemViewModels.Add(new ItemViewModel(i)));
+            var pubViewModel = new PublisherViewModel();
+            pubViewModel.UpdateFromDomainModel(feed.Publisher);
+            this.Publisher = pubViewModel;
 
             this.IsLoading = false;
         }
 
-        private void NotifyPropertyChanged(String propertyName)
+        public void Dispose()
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.PagedItemViewModels = null;
+            this.AllItemViewModels = null;
         }
     }
 }

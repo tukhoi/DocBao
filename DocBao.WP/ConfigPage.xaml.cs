@@ -16,7 +16,7 @@ using Davang.Utilities.Log;
 
 namespace DocBao.WP
 {
-    public partial class ConfigPage : BasePage
+    public partial class ConfigPage : DBBasePage
     {
         public ConfigPage()
         {
@@ -61,6 +61,7 @@ namespace DocBao.WP
                 chkShowItemTitle.IsChecked = AppConfig.ShowItemTitle;
                 chkShowUnreadItemOnly.IsChecked = AppConfig.ShowUnreadItemOnly;
                 chkAllowBackgroundUpdate.IsChecked = AppConfig.AllowBackgroundUpdate;
+                chkDisAllowBackgroundInMidnight.IsChecked = AppConfig.DisAllowBackgroundInMidNight;
                 lpkMaxItemStored.SelectedItem = AppConfig.MaxItemStoredList.FirstOrDefault(kv => kv.Value.Equals(AppConfig.MaxItemStored)).Key;
                 lpkFeedCountPerBackgroundUpdate.SelectedItem = AppConfig.FeedCountPerBackgroundUpdateList.FirstOrDefault(kv => kv.Value == AppConfig.FeedCountPerBackgroundUpdate).Key;
                 chkShowBackgroundUpdateResult.IsChecked = AppConfig.ShowBackgroundUpdateResult;
@@ -98,6 +99,12 @@ namespace DocBao.WP
                 chkAllowBackgroundUpdate.IsChecked.Value : true;
 
             SetBackgroundUpdateStuff(AppConfig.AllowBackgroundUpdate);
+        }
+
+        private void chkDisAllowBackgroundInMidnight_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            AppConfig.DisAllowBackgroundInMidNight = chkDisAllowBackgroundInMidnight.IsChecked.HasValue ?
+                chkDisAllowBackgroundInMidnight.IsChecked.Value : true;
         }
 
         private void SetBackgroundUpdateStuff(bool enabled)

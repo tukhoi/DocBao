@@ -16,7 +16,7 @@ using Davang.Utilities.Helpers;
 
 namespace DocBao.WP
 {
-    public partial class CustomViewPage : BasePage
+    public partial class CustomViewPage : DBMainPage
     {
         public CustomViewPage()
         {
@@ -28,20 +28,26 @@ namespace DocBao.WP
             await MyOnNavigatedTo();
 
             this.SetProgressIndicator(true, "đang mở...");
-            var updatedFeeds = await _feedManager.LoadAsync();
             Binding();
             HubTileService.UnfreezeGroup("Publishers");
             this.SetProgressIndicator(false);
 
             this.SetMainPage();
 
-            if (updatedFeeds != null && updatedFeeds.Count > 0)
-            {
-                var message = FeedHelper.BuildUpdateStatus(updatedFeeds);
-                Messenger.ShowToast(message);
-            }
-
             base.OnNavigatedTo(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            tileList.ItemsSource = null;
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            tileList.ItemsSource = null;
+            tileList.ItemTemplate = null;
+            base.OnRemovedFromJournal(e);
         }
 
         public void Binding()

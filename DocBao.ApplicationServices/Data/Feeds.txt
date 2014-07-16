@@ -618,3 +618,73 @@ af399800-6857-4a61-9212-f387c89737b7,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Thi �
 ab0930f2-abf9-4fa7-ad38-893b2aa1498f,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Du lịch NLĐ, http://nld.com.vn/rss/du-lich, 1, 0
 8bbd4b1f-b0d4-4b13-8e61-353323ca8a3a,7c13fa56-c25e-42b5-8887-03c59dfacd0e, Tuyển sinh NLĐ, http://nld.com.vn/rss/tuyen-sinh-nld, 1, 0
 bf3c9a97-2fdf-4cd7-b437-a0af2fd195ee,7c13fa56-c25e-42b5-8887-03c59dfacd0e, World Cup 2014, http://nld.com.vn/rss/world-cup-2014, 1, 0
+30b6badd-2347-4868-a6ba-7dc079644d46, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Chính trị, http://vov.vn/rss/chinh-tri-209.rss,1,1
+d6149f4a-69d5-4f11-8b47-dce820749fed, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Đời sống,http://vov.vn/rss/doi-song-218.rss,1,0
+74d1db60-5b58-48e1-b5f7-350743d3e327, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Thế giới,http://vov.vn/rss/thegioi-213.rss,1,1
+6e00dc47-c13c-4a77-8135-2d35daa6a015, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Kinh tế,http://vov.vn/rss/kinh-te-212.rss,1,0
+982fb67c-475b-46ce-87c6-7c2f6a299b5b, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Xã hội,http://vov.vn/rss/xa-hoi-314.rss,1,1
+f577b05a-32ef-451b-a5da-f2ca2e6490ff, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Pháp luật, http://vov.vn/rss/phap-luat-237.rss,1,0
+11e6c464-71fe-46d7-913d-60e64ad8c194, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Thể thao, http://vov.vn/rss/the-thao-214.rss,1,1
+2f6aecc7-27a3-469c-bf68-497182708036, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Văn hóa, http://vov.vn/rss/van-hoa-215.rss,1,1
+fd6bb040-8674-49fc-9e5d-53db5b54ef91, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Người Việt, http://vov.vn/rss/nguoi-viet-287.rss,1,0
+40c17e5b-aa08-46cc-b165-6d32f7e32d47, 662d0f68-d2ff-4880-82dc-bb47fb1654de,Sức khỏe, http://vov.vn/rss/suc-khoe-311.rss,1,0
+5971a95b-eded-4985-97b7-5ae5e33221a0, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Blog,http://vov.vn/rss/blog-394.rss,1,0
+f5880c43-16c1-4e04-9072-bba3e384e27f, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Games, http://vov.vn/rss/games-417.rss,1,0
+a4294857-2622-447a-89d5-6ded470db936, 662d0f68-d2ff-4880-82dc-bb47fb1654de, Ô tô - Xe máy, http://vov.vn/rss/oto-xe-may-423.rss,1,0
+a43c1c9a-1c4d-40e0-8e39-2524dde773e7, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Thời sự - Chính trị,http://www.cand.com.vn/vi-VN/thoisu.rss, 1, 1
+9187c86f-ec88-461e-8050-008fc2d50b42, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Xã hội, http://www.cand.com.vn/vi-VN/xahoi.rss, 1, 1
+e373d564-56c6-4f25-b9c0-0771d06a7b51, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Công an trong lòng dân,http://www.cand.com.vn/vi-VN/trongmatdan.rss, 1, 0
+b8a69bd1-c3ef-47b0-b4b6-4b25fd5aecb1, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Nhịp cầu nhân ái, http://www.cand.com.vn/vi-VN/nhanai.rss, 1, 0
+9faa3014-ee38-4701-b363-a90177881557, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Tội phạm A-Z,http://www.cand.com.vn/vi-VN/toiphama-z.rss, 1, 1
+f78ca4ee-a408-49dc-9e95-b519241ca0fa, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Pháp luật - Bạn đọc, http://www.cand.com.vn/vi-VN/bandoc.rss, 1, 0
+cf8c33bb-5dc5-4d2d-82d3-aeac139bc160, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Văn hóa - Thể thao,http://www.cand.com.vn/vi-VN/vanhoa.rss, 1, 1
+15029806-90f5-4642-a5d0-06f2c4bac740, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Kinh tế,http://www.cand.com.vn/vi-VN/kinhte.rss, 1, 0
+326d35f9-ddb5-44d8-9742-72e703ec8b68, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Quốc tế,http://www.cand.com.vn/vi-VN/quocte.rss, 1, 1
+8ade8e11-e1a3-49b8-8f60-3922ebbbaeed, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Khoa học - Công nghệ,http://www.cand.com.vn/vi-VN/khcn.rss, 1, 0
+09920545-3828-42fd-8618-75f9fb8cb7d0, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Thế giới phương tiện, http://www.cand.com.vn/vi-VN/tgptien.rss, 1, 0
+36fcf361-e4db-4522-8741-ce3cb2fdc466, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, World Cup 2014,http://www.cand.com.vn/vi-VN/thethao.rss, 1, 0
+8eb516b8-b228-44bb-b73d-b6c2b74602d6, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Phóng sự - Tư liệu,http://www.cand.com.vn/vi-VN/phongsu.rss, 1, 0
+66597bef-b385-45cc-b3d0-fa07e6f43bd4, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Sự kiện - Bình luận, http://www.cand.com.vn/vi-VN/binhluan.rss, 1, 0
+7e815207-7b61-406f-86ea-df33705c89fd, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Ý kiến bạn đọc, http://www.cand.com.vn/vi-VN/ykienbandoc.rss, 1, 0
+b658f163-e0e6-4eb3-a0f4-ce6e61471d08, 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Giao lưu trực tuyến, http://www.cand.com.vn/vi-VN/giaoluutt.rss, 1, 0
+9b9e513c-73d8-4958-8e6a-0d070f5b3ea7, fcbc7304-612f-477c-af10-554d46abdffa, Trang chủ, http://www.qdnd.vn/qdndsite/rss.aspx?cul=vi-vn, 1, 1
+81fc4359-e1ab-43d8-80fa-2538d17c4247, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Xã hội,  http://www.tienphong.vn/rss/xa-hoi-2.rss, 1, 1
+492e8969-891f-48f6-a99d-70b14f13234d, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Tin tức, http://www.tienphong.vn/rss/xa-hoi-tin-tuc-104.rss, 1, 1
+bb61e330-5786-4c71-8c76-84e3a422ecdb, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Trà nóng - Trà đá, http://www.tienphong.vn/rss/xa-hoi-tra-nong-tra-da-114.rss,1 , 0
+8fc3b6bb-25e3-49f5-889a-4142a1ff6d42, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Chuyện hôm nay, http://www.tienphong.vn/rss/xa-hoi-chuyen-hom-nay-18.rss,1 , 0
+620f01ba-a4cc-4448-b128-ab27c604956e, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Phóng sự, http://www.tienphong.vn/rss/xa-hoi-phong-su-13.rss,1 , 0
+df759752-bbe3-46ee-b5a9-7b15b9c3406f, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Kinh tế, http://www.tienphong.vn/rss/kinh-te-3.rss,1 , 1
+3b573557-30ca-4a14-be66-044a4763d537, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Thị trường, http://www.tienphong.vn/rss/kinh-te-thi-truong-24.rss,1 , 0
+f3223853-4a5a-4050-a444-34bbd60460fb, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Doanh nghiệp, http://www.tienphong.vn/rss/kinh-te-doanh-nghiep-22.rss,1 , 0
+a9cbbd6a-3e7d-406e-98c2-910072a66154, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Doanh nhân, http://www.tienphong.vn/rss/kinh-te-doanh-nhan-165.rss,1 , 0
+4591f88c-d15a-40cc-8f37-fb428a5ddc89, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Chứng khoán, http://www.tienphong.vn/rss/kinh-te-chung-khoan-105.rss,1 , 0
+caa8d4f7-fa62-4c39-9922-fe6093033445, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Địa ốc, http://www.tienphong.vn/rss/dia-oc-166.rss,1 , 0
+d5e87688-999a-49d8-bba6-551e56a373ed, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Thế giới, http://www.tienphong.vn/rss/the-gioi-5.rss,1 , 1
+68353934-0241-4d59-85ea-9f704c6e3b4e, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Phân tích - Bình luận, http://www.tienphong.vn/rss/the-gioi-phan-tich-binh-luan-31.rss,1 , 0
+a9f2480a-1094-4051-821e-4505b627f378, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Người Việt năm châu, http://www.tienphong.vn/rss/the-gioi-nguoi-viet-nam-chau-183.rss,1 , 0
+d7e6c748-09ba-4a36-9bc4-a60af56943f1, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Chuyện lạ, http://www.tienphong.vn/rss/chuyen-la-32.rss,1 , 0
+447a22f0-de40-4a3c-a147-c24f237d8b73, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Giới trẻ, http://www.tienphong.vn/rss/gioi-tre-4.rss,1 , 1
+05781b24-d82f-40e0-a90b-39c241c633fe, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Nhịp sống, http://www.tienphong.vn/rss/gioi-tre-nhip-song-27.rss,1 , 0
+36f78a1b-a94c-4e6b-bebc-024d27caf566, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Việc làm, http://www.tienphong.vn/rss/gioi-tre-viec-lam-102.rss,1 , 0
+4bee9d79-3784-4b41-83ad-8dfaae4d122c, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Đoàn và tuổi trẻ, http://www.tienphong.vn/rss/gioi-tre-doan-tuoi-tre-25.rss,1 , 0
+8a0797c9-7dcc-478d-adff-d047f8bab568, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Pháp luật, http://www.tienphong.vn/rss/phap-luat-12.rss,1 , 0
+40811e04-7b69-49a2-a580-3885dc499bdb, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Bản tin 113, http://www.tienphong.vn/rss/ban-tin-113-231.rss,1 , 0
+fa008cc0-dfe4-4264-a60b-3f0493df8593, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Pháp đình, http://www.tienphong.vn/rss/phap-luat-chuyen-toa-173.rss,1 , 0
+31057d8e-fdea-4044-86d0-38b9f3eaa6e5, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Thể thao, http://www.tienphong.vn/rss/the-thao-11.rss,1 , 1
+c5a9fed5-d090-4dca-91f7-479076426048, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Bóng đá, http://www.tienphong.vn/rss/the-thao-bong-da-49.rss,1 , 1
+1ae0bc86-9bab-4d28-8ac2-6346dc35c233, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Hậu trường thể thao, http://www.tienphong.vn/rss/the-thao-hau-truong-111.rss,1 , 1
+488b35bf-91e8-4139-8eae-c17c534ff216, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, World Cup, http://www.tienphong.vn/rss/world-cup-23.rss,1 , 0
+57b4f0e6-507d-47ba-ad88-915b154bb8bb, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Văn nghệ, http://www.tienphong.vn/rss/van-nghe-7.rss,1 , 0
+1fb81110-5fb1-41ae-a28d-23f93229f10a, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Giải trí, http://www.tienphong.vn/rss/giai-tri-36.rss,1 , 1
+e3c5cbcc-2db0-4c7e-8380-94015918ef25, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Sao, http://www.tienphong.vn/rss/giai-tri-sao-35.rss,1 , 1
+bb046cd6-66ec-44d2-91d0-666cffcc7e0e, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Hậu trường, http://www.tienphong.vn/rss/giai-tri-hau-truong-168.rss,1 , 1
+4f30a1fd-ced0-4b8c-a5f8-04c80d112851, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Giáo dục, http://www.tienphong.vn/rss/giao-duc-71.rss,1 , 0
+df652d09-1cb0-44ed-b775-b7aaf4e182ba, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Tuyển sinh, http://www.tienphong.vn/rss/tuyen-sinh2011-163.rss,1 , 0
+cf2c0cf3-41df-420e-9810-2c36aa40522c, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Du học, http://www.tienphong.vn/rss/giao-duc-du-hoc-40.rss,1 , 0
+4a639ce3-7219-4bcc-9395-b8a916e78884, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Khoa học, http://www.tienphong.vn/rss/cong-nghe-45.rss,1 , 0
+6418c139-6e42-4a7b-98b5-51eeb6561cdb, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Công nghệ, http://www.tienphong.vn/rss/cong-nghe-khoa-hoc-46.rss,1 , 1
+50e52fc7-67e2-4bb1-96f0-240ceae197eb, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Vi tính, http://www.tienphong.vn/rss/cong-nghe-vi-tinh-170.rss,1 , 0
+fbc16f82-6fdb-4f1c-8339-78fcd5f5ed6b, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Điện thoại, http://www.tienphong.vn/rss/cong-nghe-dien-thoai-171.rss,1 , 0
+aa2a53ca-9e49-413e-901e-777e70cf2ffa, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Xe, http://www.tienphong.vn/rss/xe-113.rss,1 , 0
+03eed8e6-0301-4ce7-92ba-46dcbbad08a3, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Người lính, http://www.tienphong.vn/rss/hanh-trang-nguoi-linh-182.rss,1 , 0
+bc112140-e477-43d1-915a-cb39132a8dd8, 3ffb9ef7-30a3-4a5e-b0cc-662bd514d23a, Trang chủ, http://vtc.vn/RssCate.aspx, 1, 1

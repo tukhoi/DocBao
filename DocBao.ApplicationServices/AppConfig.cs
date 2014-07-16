@@ -32,14 +32,15 @@ namespace DocBao.ApplicationServices
 
         public static string GA_ID = "UA-52115271-1";
         public static string GA_APP_NAME = "duyetbao";
-        public static string GA_APP_VERSION = "1.5";
+        public static string GA_APP_VERSION = "1.6.1";
 
         public static IDictionary<string, short> MaxItemStoredList;
         public static IDictionary<string, short> FeedCountPerBackgroundUpdateList;
 
         public static short MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND = 50;
         public static string TEMP_DOWNLOAD_FILE_PATTERN = "temp-download";
-        public static short MAX_NEW_UPDATE_MESSENGER_WAIT = 10;
+        public static short MAX_NEW_FEED_UPDATED_SHOW = 10;
+        public static short MAX_FILE_DOWNLOAD_ALLOW = 72;
 
         private static IDictionary<ConfigKey, object> _memConfigs;
 
@@ -186,18 +187,6 @@ namespace DocBao.ApplicationServices
             }
         }
 
-        public static bool AppRunning
-        {
-            get
-            {
-                return GetConfig<bool>(ConfigKey.AppRunning, true);
-            }
-            set
-            {
-                SetConfig<bool>(ConfigKey.AppRunning, value);
-            }
-        }
-
         public static UpdateVersion AppUpdate
         {
             get
@@ -222,7 +211,44 @@ namespace DocBao.ApplicationServices
             }
         }
 
+        public static bool ShowAllPublisher
+        {
+            get
+            {
+                return GetConfig<bool>(ConfigKey.ShowAllPublisher, false);
+            }
+            set
+            {
+                SetConfig<bool>(ConfigKey.ShowAllPublisher, value);
+            }
+        }
+
+        public static bool DisAllowBackgroundInMidNight
+        {
+            get
+            {
+                return GetConfig<bool>(ConfigKey.DisAllowBackgroundInMidNight, true);
+            }
+            set
+            {
+                SetConfig<bool>(ConfigKey.DisAllowBackgroundInMidNight, value);
+            }
+        }
+
         #endregion
+
+        internal static T GetPersistentConfig<T>(ConfigKey key, T defaultValue)
+        {
+            object value;
+            if (StorageHelper.LoadConfig(key.ToString(), out value))
+                return (T)value;
+            return defaultValue;
+        }
+
+        internal static void SetPersistentConfig<T>(ConfigKey key, T value)
+        {
+            StorageHelper.SaveConfig(key.ToString(), value);
+        }
 
         #region private
 
@@ -237,14 +263,6 @@ namespace DocBao.ApplicationServices
             return (T)_memConfigs[key];
         }
 
-        private static T GetPersistentConfig<T>(ConfigKey key, T defaultValue)
-        {
-            object value;
-            if (StorageHelper.LoadConfig(key.ToString(), out value))
-                return (T)value;
-            return defaultValue;
-        }
-
         private static void SetConfig<T>(ConfigKey key, T value)
         {
             if (!_memConfigs.ContainsKey(key))
@@ -252,11 +270,6 @@ namespace DocBao.ApplicationServices
             else
                 _memConfigs[key] = value;
             SetPersistentConfig(key, value);
-        }
-
-        private static void SetPersistentConfig<T>(ConfigKey key, T value)
-        {
-            StorageHelper.SaveConfig(key.ToString(), value);
         }
 
         private static void InitializeConfigList()
@@ -290,15 +303,18 @@ namespace DocBao.ApplicationServices
         ShowBackgroundUpdateResult,
         JustUpdateOverWifi,
         UseCustomView,
-        AppRunning, //private only
         AppUpdate,
-        FeedDownloads
+        FeedDownloads,
+        ShowAllPublisher,
+        DisAllowBackgroundInMidNight,
+        UserBehavior
     }
 
     public enum UpdateVersion
     { 
         NotSet = 0,
         V1_4,
-        V1_5
+        V1_5,
+        V1_6
     }
 }

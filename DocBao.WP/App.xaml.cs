@@ -22,10 +22,14 @@ using Store = MockIAPLib;
 using Davang.Utilities.Log;
 using Davang.Utilities;
 using DocBao.ApplicationServices.Background;
+using Davang.WP.Utilities;
+using DocBao.ApplicationServices.UserBehavior;
 #else
 using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities;
+using DocBao.ApplicationServices.UserBehavior;
 #endif
 
 namespace DocBao.WP
@@ -89,15 +93,14 @@ namespace DocBao.WP
         // This code will not execute when the application is reactivated
         private void Application_Launching(object sender, LaunchingEventArgs e)
         {
-            AppConfig.AppRunning = true;
             InitializeBackgroundUpdater();
+            GA.LogStartSession();
         }
 
         // Code to execute when the application is activated (brought to foreground)
         // This code will not execute when the application is first launched
         private void Application_Activated(object sender, ActivatedEventArgs e)
         {
-            AppConfig.AppRunning = true;
             if (!e.IsApplicationInstancePreserved)
                 InitializeApp();
         }
@@ -106,10 +109,7 @@ namespace DocBao.WP
         // This code will not execute when the application is closing
         private void Application_Deactivated(object sender, DeactivatedEventArgs e)
         {
-            FeedManager.GetInstance().Save();
-            FeedManager.GetInstance().CreateFeedsToUpdate();
-
-            AppConfig.AppRunning = false;
+            SaveData();
             // Ensure that required application state is persisted here.
         }
 
@@ -117,15 +117,15 @@ namespace DocBao.WP
         // This code will not execute when the application is deactivated
         private void Application_Closing(object sender, ClosingEventArgs e)
         {
-            FeedManager.GetInstance().Save();
-            FeedManager.GetInstance().CreateFeedsToUpdate();
-
-            AppConfig.AppRunning = false;
+            SaveData();
+            GA.LogEndSession();
         }
 
         // Code to execute if a navigation fails
         private void RootFrame_NavigationFailed(object sender, NavigationFailedEventArgs e)
         {
+            SaveData();
+
             if (Debugger.IsAttached)
             {
                 // A navigation has failed; break into the debugger
@@ -138,6 +138,8 @@ namespace DocBao.WP
         // Code to execute on Unhandled Exceptions
         private void Application_UnhandledException(object sender, ApplicationUnhandledExceptionEventArgs e)
         {
+            SaveData();
+
             if (Debugger.IsAttached)
             {
                 // An unhandled exception has occurred; break into the debugger
@@ -275,16 +277,14 @@ namespace DocBao.WP
 
         private void InitializeApp()
         {
+            BasePage.Initialize(mainPage:AppConfig.UseCustomView ? "CustomViewPage.xaml" : "HubTilePage.xaml");
+
             GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, AppConfig.GA_APP_VERSION);
 
             Messenger.Initialize(AppResources.ApplicationTitle, 
-                new Uri("/Resources/message.png", UriKind.Relative),
-                new Uri("Images/background2.png", UriKind.Relative),
+                "/Resources/message.png",
+                "Images/background2.png",
                 new SolidColorBrush(Colors.White));
-
-            var feeds = new List<KeyValuePair<Guid, DateTime>>();
-            feeds.Add(new KeyValuePair<Guid, DateTime>(Guid.NewGuid(), DateTime.Now));
-            feeds.Add(new KeyValuePair<Guid, DateTime>(Guid.NewGuid(), DateTime.Now));
         }
 
         private void InitializeBackgroundUpdater()
@@ -346,6 +346,13 @@ namespace DocBao.WP
 
             MockIAP.AddProductListing(AppConfig.PAID_VERSION, p);
 #endif
+        }
+
+        private void SaveData()
+        {
+            FeedManager.Instance.Save();
+            FeedManager.Instance.CreateFeedsToUpdate();
+            UserBehaviorManager.Instance.Save();
         }
     }
 }

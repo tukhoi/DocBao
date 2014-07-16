@@ -1,4 +1,4 @@
-﻿<docbao:BasePage
+﻿<docbao:DBBasePage
     x:Class="DocBao.WP.FeedPickupPage"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -140,4 +140,4 @@
         </Grid>
     </Grid>
 
-</docbao:BasePage>
+</docbao:DBBasePage>

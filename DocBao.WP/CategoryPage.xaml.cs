@@ -18,10 +18,11 @@ using Microsoft.Phone.Net.NetworkInformation;
 using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class CategoryPage : BasePage
+    public partial class CategoryPage : DBBasePage
     {
         int _pageNumber = 0;
         string _lastItemId;
@@ -64,6 +65,19 @@ namespace DocBao.WP
             base.OnNavigatedTo(e);
         }
 
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            llsItemList.ItemsSource = null;
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            llsItemList.ItemsSource = null;
+            llsItemList.ItemTemplate = null;
+            base.OnRemovedFromJournal(e);
+        }
+
         private async Task<int> Binding(bool refresh = false, bool gobackOnFail = true)
         {
             try
@@ -86,7 +100,7 @@ namespace DocBao.WP
                     refresh = false;
                 }
 
-                updated = await _viewModel.Initialize(currentCategory.Id, refresh);
+                updated = await _viewModel.RefreshLatestData(currentCategory.Id, refresh);
                 _feedManager.SetLastId<Guid>(currentCategory.Id.ToString());
 
                 if (_viewModel.Items.Count == 0)
@@ -97,16 +111,23 @@ namespace DocBao.WP
                     return 0;
                 }
 
+                if (updated > 0)
+                {
+                    _viewModel.ItemViewModels.Clear();
+                    _pageNumber = 1;
+                }
+
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
                 
                 UpdateItemReadCount();
                 UpdateViewTitle();
                 this.llsItemList.DataContext = _viewModel;
-
                 CreateAppBar();
 
-                if (_lastItemId != null)
-                    ScrollTo(_lastItemId);
+                if (updated > 0)
+                    llsItemList.ScrollToTop();
+                else
+                    llsItemList.ScrollTo<string>(_lastItemId);
 
                 this.SetProgressIndicator(false);
 
@@ -141,7 +162,7 @@ namespace DocBao.WP
             FrameworkElement fe = sender as FrameworkElement;
             if (fe != null)
             {
-                var item = fe.DataContext as Item;
+                var item = fe.DataContext as ItemViewModel;
                 if (item != null)
                 {
                     _feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
@@ -158,13 +179,13 @@ namespace DocBao.WP
                 && llsItemList.ItemsSource != null
                 && llsItemList.ItemsSource.Count >= AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING
                 && e.ItemKind == LongListSelectorItemKind.Item)
-                if ((e.Container.Content as Item).Equals(llsItemList.ItemsSource[llsItemList.ItemsSource.Count - AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING]))
+                if ((e.Container.Content as ItemViewModel).Equals(llsItemList.ItemsSource[llsItemList.ItemsSource.Count - AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING]))
                 {
                     this.SetProgressIndicator(true, "tải thêm tin...");
 
                     _pageNumber++;
                     var maxPageNumber = _viewModel.Items.GetMaxPageNumber(AppConfig.ITEM_COUNT_PER_FEED);
-                    if (_pageNumber < maxPageNumber)
+                    if (_pageNumber <= maxPageNumber)
                         _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
                     else
                         _pageNumber = maxPageNumber;
@@ -382,21 +403,6 @@ namespace DocBao.WP
                 _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Collapsed);
             else
                 _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Visible);
-        }
-
-        private void ScrollTo(string lastItemId)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llsItemList.ItemsSource.Count && !lastItemId.Equals((llsItemList.ItemsSource[i] as ItemViewModel).Id))
-                    i++;
-                if (i < llsItemList.ItemsSource.Count)
-                    llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
         }
 
         #endregion

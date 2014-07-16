@@ -111,13 +111,9 @@
       <DependentUpon>FeedPickupPage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helper\AppResultExtensions.cs" />
-    <Compile Include="Helper\BasePage.cs" />
-    <Compile Include="Helper\CategoryHelper.cs" />
-    <Compile Include="Helper\FeedHelper.cs" />
-    <Compile Include="Helper\Messenger.cs" />
-    <Compile Include="Helper\BasePageExtensions.cs" />
-    <Compile Include="Helper\PublisherHelper.cs" />
-    <Compile Include="Helper\WebBrowserHelper.cs" />
+    <Compile Include="Helper\DBBasePage.cs" />
+    <Compile Include="Helper\DBMainPage.cs" />
+    <Compile Include="Helper\WebBrowserManager.cs" />
     <Compile Include="HubTilePage.xaml.cs">
       <DependentUpon>HubTilePage.xaml</DependentUpon>
     </Compile>
@@ -238,6 +234,7 @@
     <Content Include="Images\publishers\bongda.png" />
     <Content Include="Images\publishers\cafebiz.png" />
     <Content Include="Images\publishers\cafef.png" />
+    <Content Include="Images\publishers\cand.png" />
     <Content Include="Images\publishers\congan.png" />
     <Content Include="Images\publishers\dantri.png" />
     <Content Include="Images\publishers\dspl.png" />
@@ -249,12 +246,16 @@
     <Content Include="Images\publishers\linkhay.png" />
     <Content Include="Images\publishers\ngoisao.png" />
     <Content Include="Images\publishers\nld.png" />
+    <Content Include="Images\publishers\qdnd.png" />
     <Content Include="Images\publishers\thanhnien.png" />
     <Content Include="Images\publishers\tinhte.png" />
+    <Content Include="Images\publishers\TP.png" />
     <Content Include="Images\publishers\ttvh.png" />
     <Content Include="Images\publishers\tuoitre.png" />
     <Content Include="Images\publishers\vietnamnet.png" />
     <Content Include="Images\publishers\vnexpress.png" />
+    <Content Include="Images\publishers\vov.png" />
+    <Content Include="Images\publishers\vtc.png" />
     <Content Include="Images\publishers\wpv.png" />
     <Content Include="Images\publishers\wtt.png" />
     <Content Include="Images\publishers\yan.png" />
@@ -308,6 +309,10 @@
     <ProjectReference Include="..\..\DaVang\DaVang.Utilities\Davang.Utilities.csproj">
       <Project>{99E59374-E551-4A32-B5B1-50BB76C28371}</Project>
       <Name>Davang.Utilities</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Davang\Davang.WP.Utilities\Davang.WP.Utilities.csproj">
+      <Project>{5A896732-6D0F-4F35-B22C-C0294A6CD114}</Project>
+      <Name>Davang.WP.Utilities</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Davang\MockIAPLib\MockIAPLib.csproj">
       <Project>{015E3DFE-EB56-429F-95EF-BAB5D41B23BE}</Project>

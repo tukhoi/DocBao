@@ -14,7 +14,7 @@ using DocBao.WP.Helper;
 
 namespace DocBao.WP
 {
-    public partial class AboutPage : BasePage
+    public partial class AboutPage : DBBasePage
     {
         public AboutPage()
         {
@@ -25,6 +25,7 @@ namespace DocBao.WP
         {
             await MyOnNavigatedTo();
             Binding();
+            txtClientId.Text = AppConfig.ClientId.ToString();
             base.OnNavigatedTo(e);
         }
 

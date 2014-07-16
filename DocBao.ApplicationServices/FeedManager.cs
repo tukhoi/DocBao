@@ -19,19 +19,23 @@ namespace DocBao.ApplicationServices
     {
         #region Static
 
-        private static FeedManager _feedManager;
+        //private static FeedManager _feedManager;
+        private static readonly Lazy<FeedManager> _lazyInstance = new Lazy<FeedManager>
+            (() => new FeedManager());
         private static bool _loaded = false;
 
         private static string _lastItemId;
         private static string _lastFeedId;
 
-        public static FeedManager GetInstance()
-        {
-            if (_feedManager == null)
-                _feedManager = new FeedManager();
+        //public static FeedManager GetInstance()
+        //{
+        //    if (_feedManager == null)
+        //        _feedManager = new FeedManager();
 
-            return _feedManager;
-        }
+        //    return _feedManager;
+        //}
+
+        public static FeedManager Instance { get { return _lazyInstance.Value; } }
 
         private FeedManager()
         {
@@ -42,7 +46,7 @@ namespace DocBao.ApplicationServices
 
         #endregion
 
-        public async Task<IDictionary<Guid, int>> LoadAsync()
+        public async Task LoadAsync()
         {
             if (!_loaded)
             {
@@ -74,8 +78,13 @@ namespace DocBao.ApplicationServices
                 
                 _loaded = true;
             }
+        }
 
-            return await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
+        public async Task<IDictionary<Guid, int>> LoadDownloadedFeeds()
+        {
+            var updated = await BackgroundDownload.LoadDownloadedFeedsAsync(_subscribedFeeds, _dbContext);
+            //await SaveAsync();
+            return updated;
         }
 
         public async Task VersionChecking()
@@ -88,6 +97,9 @@ namespace DocBao.ApplicationServices
 
             if (AppConfig.AppUpdate == UpdateVersion.V1_4)
                 AppConfig.AppUpdate = UpdateVersion.V1_5;
+
+            if (AppConfig.AppUpdate == UpdateVersion.V1_5)
+                AppConfig.AppUpdate = UpdateVersion.V1_6;
         }
 
         private IDictionary<Guid, Feed> _subscribedFeeds;
@@ -143,6 +155,11 @@ namespace DocBao.ApplicationServices
             return AppResult(_subscribedFeeds.Values.Where(f => f.Publisher.Id.Equals(publisherId))
                 .OrderBy(f=>f.Order)
                 .ToList());
+        }
+
+        public IDictionary<Guid, Feed> GetSubscribedFeedsAsDictionary()
+        {
+            return _subscribedFeeds;
         }
 
         public AppResult<Feed> GetFeed(Guid feedId)
@@ -496,7 +513,7 @@ namespace DocBao.ApplicationServices
                             if (!result.HasError)
                                 updatedItemCount += result.Target;
                         }
-                        catch (Exception ex) 
+                        catch (ApplicationException ex) 
                         {
                             GA.LogException(ex);
                         }
@@ -647,11 +664,12 @@ namespace DocBao.ApplicationServices
             {
                 _subscribedFeeds.Values
                     .Where(f => f.Publisher.Id.Equals(new Guid("455b6156-77ba-4023-a057-9c06c7f60849")))
-                    .ForEach(f => {
-                        var feedFromBank = FeedBank.Feeds.FirstOrDefault(ffb => ffb.Id.Equals(f.Id));
-                        if (feedFromBank != null)
-                            f.Link = feedFromBank.Link;
-                    });
+                    .ForEach(f => 
+                        {
+                            var feedFromBank = FeedBank.Feeds.FirstOrDefault(ffb => ffb.Id.Equals(f.Id));
+                            if (feedFromBank != null)
+                                f.Link = feedFromBank.Link;
+                        });
 
                 await SaveAsync();
                 return true;

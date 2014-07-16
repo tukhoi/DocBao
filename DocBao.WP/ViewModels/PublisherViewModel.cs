@@ -11,12 +11,18 @@ using System.Threading.Tasks;
 
 namespace DocBao.WP.ViewModels
 {
-    public class PublisherViewModel : Publisher, INotifyPropertyChanged
+    public class PublisherViewModel
     {
-        FeedManager _feedManager = FeedManager.GetInstance();
+        FeedManager _feedManager = FeedManager.Instance;
         private bool _isLoading = false;
-        public event PropertyChangedEventHandler PropertyChanged;
         public ObservableCollection<FeedViewModel> FeedViewModels { get; set; }
+
+        public Guid Id { get; set; }
+        public string Name { get; set; }
+        public string Link { get; set; }
+        public IList<Guid> FeedIds { get; set; }
+        public Uri ImageUri { get; set; }
+        //public int Order { get; set; }
 
         public bool IsLoading
         {
@@ -24,13 +30,13 @@ namespace DocBao.WP.ViewModels
             set
             {
                 _isLoading = value;
-                NotifyPropertyChanged("IsLoading");
             }
         }
 
         public PublisherViewModel()
         {
             FeedViewModels = new ObservableCollection<FeedViewModel>();
+            FeedIds = new List<Guid>();
         }
 
         public void Initialize(Guid publisherId)
@@ -74,8 +80,8 @@ namespace DocBao.WP.ViewModels
 
                 UpdateStats();
 
-                if (FeedViewModels.Count >= pageNumber * AppConfig.FEED_COUNT_PER_PUBLISHER)
-                    return;
+                if (FeedViewModels.Count >= pageNumber * AppConfig.FEED_COUNT_PER_PUBLISHER) return;
+                if (FeedViewModels.Count >= this.FeedIds.Count) return;
 
                 if (pageNumber == 1) FeedViewModels.Clear();
 
@@ -116,7 +122,7 @@ namespace DocBao.WP.ViewModels
         //    });
         //}
 
-        private void UpdateFromDomainModel(Publisher publisher)
+        public void UpdateFromDomainModel(Publisher publisher)
         {
             this.Name = publisher.Name;
             this.Id = publisher.Id;
@@ -127,20 +133,12 @@ namespace DocBao.WP.ViewModels
 
         private void UpdateStats()
         {
-            this.FeedViewModels.ForEach(f => { 
-                var feedResult = _feedManager.GetSubscribedFeed(f.Id);
-                if (!feedResult.HasError)
-                    f.UpdateFromDomainModel(feedResult.Target);
-            });
-        }
-
-        private void NotifyPropertyChanged(String propertyName)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (null != handler)
-            {
-                handler(this, new PropertyChangedEventArgs(propertyName));
-            }
+            this.FeedViewModels.ForEach(f => 
+                { 
+                    var feedResult = _feedManager.GetSubscribedFeed(f.Id);
+                    if (!feedResult.HasError)
+                        f.UpdateFromDomainModel(feedResult.Target);
+                });
         }
     }
 }

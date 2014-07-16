@@ -16,10 +16,11 @@ using Microsoft.Phone.Net.NetworkInformation;
 using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
 using Davang.Utilities.Log;
+using Davang.WP.Utilities.Extensions;
 
 namespace DocBao.WP
 {
-    public partial class StoredItemsPage : BasePage
+    public partial class StoredItemsPage : DBBasePage
     {
         StoredItemsViewModel _viewModel;
         string _lastItemId;
@@ -35,7 +36,7 @@ namespace DocBao.WP
             await MyOnNavigatedTo();
 
             _viewModel = new StoredItemsViewModel();
-            if (_viewModel.Items.Count == 0)
+            if (_viewModel.AllItemViewModels.Count == 0)
             {
                 Messenger.ShowToast("chưa có tin nào được lưu", completedAction: () => this.BackToPreviousPage());
                 return;
@@ -47,6 +48,19 @@ namespace DocBao.WP
 
              Binding();
              base.OnNavigatedTo(e);
+        }
+
+        protected override void OnNavigatedFrom(NavigationEventArgs e)
+        {
+            llsItemList.ItemsSource = null;
+            base.OnNavigatedFrom(e);
+        }
+
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            llsItemList.ItemsSource = null;
+            llsItemList.ItemTemplate = null;
+            base.OnRemovedFromJournal(e);
         }
 
         private void Binding()
@@ -65,9 +79,7 @@ namespace DocBao.WP
                 this.llsItemList.DataContext = _viewModel;
 
                 CreateAppBar();
-
-                if (_lastItemId != null)
-                    ScrollTo(_lastItemId);
+                llsItemList.ScrollTo<string>(_lastItemId);
 
                 this.SetProgressIndicator(false);
             }
@@ -94,7 +106,6 @@ namespace DocBao.WP
                 var item = fe.DataContext as Item;
                 if (item != null)
                 {
-                    //_feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
                      _feedManager.MarkStoredItemAsRead(item.Id, true);
                     _lastItemId = item.Id;
                     var uri = string.Format("/ItemPage.xaml?feedId={0}&itemId={1}", item.FeedId, HttpUtility.UrlEncode(item.Id));
@@ -103,27 +114,12 @@ namespace DocBao.WP
             }
         }
 
-        private void ScrollTo(string lastItemId)
-        {
-            try
-            {
-                int i = 0;
-                while (i < llsItemList.ItemsSource.Count && !lastItemId.Equals((llsItemList.ItemsSource[i] as ItemViewModel).Id))
-                    i++;
-                if (i < llsItemList.ItemsSource.Count)
-                    llsItemList.ScrollTo(llsItemList.ItemsSource[i]);
-            }
-            catch (Exception ex) {
-                GA.LogException(ex);
-            }
-        }
-
         private void UpdateViewTitle()
         {
             if (AppConfig.ShowTitleOnly)
-                _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Collapsed);
+                _viewModel.PagedItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Collapsed);
             else
-                _viewModel.ItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Visible);
+                _viewModel.PagedItemViewModels.ForEach(i => i.SummaryVisibility = System.Windows.Visibility.Visible);
         }
 
         #region AppBar
@@ -131,9 +127,9 @@ namespace DocBao.WP
         private async void readAllButton_Click(object sender, EventArgs e)
         {
             this.SetProgressIndicator(true, "đang đánh dấu...");
-            await Task.Run(() => _viewModel.Items.ForEach(i => _feedManager.MarkStoredItemAsRead(i.Id, true)));
+            await Task.Run(() => _viewModel.AllItemViewModels.ForEach(i => _feedManager.MarkStoredItemAsRead(i.Id, true)));
             _pageNumber = 1;
-            _viewModel.ItemViewModels.Clear();
+            _viewModel.PagedItemViewModels.Clear();
             _lastItemId = null;
             Binding();
             this.SetProgressIndicator(false);
@@ -143,7 +139,7 @@ namespace DocBao.WP
         {
             AppConfig.ShowTitleOnly = !AppConfig.ShowTitleOnly;
             _pageNumber = 1;
-            _viewModel.ItemViewModels.Clear();
+            _viewModel.PagedItemViewModels.Clear();
             _lastItemId = null;
             Binding();
         }
@@ -152,7 +148,7 @@ namespace DocBao.WP
         {
             AppConfig.ShowUnreadItemOnly = !AppConfig.ShowUnreadItemOnly;
             _pageNumber = 1;
-            _viewModel.ItemViewModels.Clear();
+            _viewModel.PagedItemViewModels.Clear();
             _lastItemId = null;
             Binding();
 
@@ -271,12 +267,12 @@ namespace DocBao.WP
                 && llsItemList.ItemsSource != null
                 && llsItemList.ItemsSource.Count >= AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING
                 && e.ItemKind == LongListSelectorItemKind.Item)
-                if ((e.Container.Content as Item).Equals(llsItemList.ItemsSource[llsItemList.ItemsSource.Count - AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING]))
+                if ((e.Container.Content as ItemViewModel).Equals(llsItemList.ItemsSource[llsItemList.ItemsSource.Count - AppConfig.ITEM_COUNT_BEFORE_NEXT_LOADING]))
                 {
                     this.SetProgressIndicator(true, "tải thêm tin...");
 
                     _pageNumber++;
-                    var maxPageNumber = _viewModel.Items.GetMaxPageNumber(AppConfig.ITEM_COUNT_PER_FEED);
+                    var maxPageNumber = _viewModel.AllItemViewModels.GetMaxPageNumber(AppConfig.ITEM_COUNT_PER_FEED);
                     if (_pageNumber < maxPageNumber)
                         _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
                     else

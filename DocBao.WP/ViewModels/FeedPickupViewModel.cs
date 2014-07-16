@@ -15,7 +15,7 @@ namespace DocBao.WP.ViewModels
 {
     public class FeedPickupViewModel
     {
-        FeedManager _feedManager = FeedManager.GetInstance();
+        FeedManager _feedManager = FeedManager.Instance;
 
         public string Name { get; set; }
         public ObservableCollection<FeedBankViewModel> FeedBankViewModels { get; set; }
@@ -54,7 +54,7 @@ namespace DocBao.WP.ViewModels
 
     public class FeedBankViewModel : Feed
     {
-        FeedManager _feedManager = FeedManager.GetInstance();
+        FeedManager _feedManager = FeedManager.Instance;
 
         public bool Subscribed
         {
