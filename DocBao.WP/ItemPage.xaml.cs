@@ -17,6 +17,9 @@ using Microsoft.Phone.Net.NetworkInformation;
 using DocBao.ApplicationServices.UserBehavior;
 using System.Diagnostics;
 using DocBao.WP.ViewModels;
+using System.Windows.Input;
+using Davang.WP.Utilities.Helper;
+using SOMAWP8;
 
 namespace DocBao.WP
 {
@@ -27,19 +30,14 @@ namespace DocBao.WP
         private bool _webLoaded = false;
         private PreviousPage _previousPage = PreviousPage.FeedPage;
         WebBrowser _wbContent;
+        SomaAdViewer _adViewer;
 
         public ItemPage()
         {
             InitializeComponent();
 
-            _wbContent = WebBrowserManager.WebBrowser;
-            _wbContent.Navigating += wbsContent_Navigating;
-            _wbContent.Navigated += wbsContent_Navigated;
-            //_wbContent.Loaded += wbsContent_Loaded;
-            _wbContent.Width = WBContainer.Width;
-            _wbContent.Height = WBContainer.Height;
-
-            WBContainer.Child = _wbContent;
+            //BindingAdViewer();
+            BindingWebBrowser();
 
             if (LicenseHelper.Purchased(AppConfig.PAID_VERSION))
                 adControl.Visibility = System.Windows.Visibility.Collapsed;
@@ -53,7 +51,6 @@ namespace DocBao.WP
         protected override async void OnNavigatedTo(NavigationEventArgs e)
         {
             await MyOnNavigatedTo();
-
             if (_webLoaded)
                 return;
 
@@ -83,44 +80,50 @@ namespace DocBao.WP
 
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
-            _wbContent.Navigating -= wbsContent_Navigating;
-            _wbContent.Navigated -= wbsContent_Navigated;
-            //_wbContent.Loaded -= wbsContent_Loaded;
-            _wbContent.NavigateToString("<html></html>");
-            WBContainer.Child = null;
-            _itemContainer.Dispose();
-            adControl.StopAds();
-            adControl.Dispose();
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                _wbContent.Navigating -= wbsContent_Navigating;
+                _wbContent.Navigated -= wbsContent_Navigated;
+                _wbContent.Loaded -= wbsContent_Loaded;
+                _wbContent.NavigateToString("<html></html>");
+                WBContainer.Child = null;
+                _itemContainer.Dispose();
+                adControl.StopAds();
+                adControl.Dispose();
+            }
+                        
             base.OnNavigatingFrom(e);
         }
 
-        //protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
-        //{
-        //    _itemContainer.Dispose();
-        //    //adControl.StopAds();
-        //    //adControl.Dispose();
-        //    wbsContent = null;
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            //_wbContent.Navigating -= wbsContent_Navigating;
+            //_wbContent.Navigated -= wbsContent_Navigated;
+            //_wbContent.Loaded -= wbsContent_Loaded;
+            //_wbContent.NavigateToString("<html></html>");
+            //WBContainer.Child = null;
+            //_itemContainer.Dispose();
+            //adControl.StopAds();
+            //adControl.Dispose();
 
-        //    base.OnRemovedFromJournal(e);
-        //}
+            base.OnRemovedFromJournal(e);
+        }
 
         void wbsContent_Navigating(object sender, NavigatingEventArgs e)
         {
-            this.SetProgressIndicator(true, "đang tải...");
+            this.SetProgressIndicator(true, "đang tìm...");
         }
 
         void wbsContent_Navigated(object sender, NavigationEventArgs e)
         {
-            _webLoaded = true;
             this.SetProgressIndicator(false);
         }
 
-        //void wbsContent_Loaded(object sender, System.Windows.RoutedEventArgs e)
-        //{
-        //    //wbsContent.load
-        //    this.SetProgressIndicator(false);
-        //    _webLoaded = true;
-        //}
+        void wbsContent_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        {
+            this.SetProgressIndicator(message: "đang tải...");
+            _webLoaded = true;
+        }
 
         void Binding()
         {
@@ -140,9 +143,28 @@ namespace DocBao.WP
                     _feedManager.MarkStoredItemAsRead(item.Id, true);
                 CreateAppBar();
                 _feedManager.SetLastId<string>(item.Id);
+                
                 _wbContent.Navigate(new Uri(item.Link, UriKind.Absolute));
             }
         }
+
+        private void BindingWebBrowser()
+        {
+            _wbContent = WebBrowserManager.WebBrowser;
+            _wbContent.Navigating += wbsContent_Navigating;
+            _wbContent.Navigated += wbsContent_Navigated;
+            _wbContent.Loaded += wbsContent_Loaded;
+            _wbContent.Width = WBContainer.Width;
+            _wbContent.Height = WBContainer.Height;
+
+            WBContainer.Child = _wbContent;
+        }
+
+        //private void BindingAdViewer()
+        //{
+        //    _adViewer = AdViewerManager.AdViewer;
+        //    AdContainer.Child = _adViewer;
+        //}
 
         private void ieButton_Click(object sender, EventArgs e)
         {
@@ -247,13 +269,18 @@ namespace DocBao.WP
             this.SetProgressIndicator(false);
         }
 
-        private void OnFlick(object sender, FlickGestureEventArgs e)
+        private void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
             if (_itemContainer.AllItemViewModels.Count == 1) return;
 
-            if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
+            Point transformedVelocity = GestureHelper.GetTransformNoTranslation(transform).Transform(e.FinalVelocities.LinearVelocity);
+            double horizontalVelocity = transformedVelocity.X;
+            double verticalVelocity = transformedVelocity.Y;
+
+            var direction = GestureHelper.GetDirection(horizontalVelocity, verticalVelocity);
+            if (direction == System.Windows.Controls.Orientation.Horizontal)
             {
-                if (e.HorizontalVelocity < 0)
+                if (horizontalVelocity < 0)
                     LoadNextItem();
                 else
                     LoadPreviousItem();
@@ -261,6 +288,17 @@ namespace DocBao.WP
                 var item = _itemContainer.AllItemViewModels[_currentIndex];
                 UserBehaviorManager.Instance.Log(UserAction.ItemClick, item.FeedId.ToString());
             }
+
+            //if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
+            //{
+            //    if (e.HorizontalVelocity < 0)
+            //        LoadNextItem();
+            //    else
+            //        LoadPreviousItem();
+
+            //    var item = _itemContainer.AllItemViewModels[_currentIndex];
+            //    UserBehaviorManager.Instance.Log(UserAction.ItemClick, item.FeedId.ToString());
+            //}
         }
 
         private void LoadNextItem()
@@ -422,6 +460,11 @@ namespace DocBao.WP
         ~ItemPage()
         {
             Debug.WriteLine("----->~ItemPage");
+        }
+
+        private void Border_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            this.OnFlick(sender, e);
         }
     }
 

@@ -73,6 +73,7 @@ namespace DocBao.ApplicationServices.Background
             }
 
             AppConfig.FeedDownloads = feedsToDownload;
+            feedsToDownload = null;
         }
 
         public static async Task<IDictionary<Guid, int>> LoadDownloadedFeedsAsync(IDictionary<Guid, Feed> subscribedFeeds, IPersistentManager dbContext)

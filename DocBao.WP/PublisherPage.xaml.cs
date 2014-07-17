@@ -48,16 +48,19 @@ namespace DocBao.WP
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            if (e.NavigationMode == NavigationMode.Back)
+                llsFeedList.ItemTemplate = null;
+
             llsFeedList.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
 
-        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
-        {
-            llsFeedList.ItemsSource = null;
-            llsFeedList.ItemTemplate = null;
-            base.OnRemovedFromJournal(e);
-        }
+        //protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        //{
+        //    llsFeedList.ItemsSource = null;
+        //    llsFeedList.ItemTemplate = null;
+        //    base.OnRemovedFromJournal(e);
+        //}
 
         private void Binding()
         {

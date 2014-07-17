@@ -27,14 +27,6 @@ namespace DocBao.ApplicationServices
         private static string _lastItemId;
         private static string _lastFeedId;
 
-        //public static FeedManager GetInstance()
-        //{
-        //    if (_feedManager == null)
-        //        _feedManager = new FeedManager();
-
-        //    return _feedManager;
-        //}
-
         public static FeedManager Instance { get { return _lazyInstance.Value; } }
 
         private FeedManager()

@@ -17,7 +17,7 @@ namespace DocBao.WP.Helper
 {
     public abstract class DBMainPage : DBBasePage
     {
-        Popup popUpNewVersion = new Popup();
+        Popup popUpNewVersion;
 
         protected override async Task MyOnNavigatedTo()
         {
@@ -30,7 +30,7 @@ namespace DocBao.WP.Helper
             {
                 this.IsEnabled = false;
                 ApplicationBar.IsVisible = false;
-                PopUpNewVersion();
+                ShowPopUp();
                 popUpNewVersion.IsOpen = true;
             }
 
@@ -67,10 +67,12 @@ namespace DocBao.WP.Helper
             }
         }
 
-        private void PopUpNewVersion()
+        private void ShowPopUp()
         {
             try
             {
+                popUpNewVersion = new Popup();
+
                 Border border = new Border();
                 border.BorderBrush = new SolidColorBrush(Colors.Green);
                 border.BorderThickness = new Thickness(2);
@@ -181,6 +183,10 @@ namespace DocBao.WP.Helper
             {
                 GA.LogException(ex);
                 ClearPopUpError();
+            }
+            finally
+            {
+                popUpNewVersion = null;
             }
         }
     }

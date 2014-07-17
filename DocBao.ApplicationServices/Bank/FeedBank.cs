@@ -30,6 +30,7 @@ namespace DocBao.ApplicationServices.Bank
                 return _feeds.Where(f => f.Enabled).ToList(); 
             } 
         }
+
         public static IList<Publisher> Publishers { 
             get 
             {

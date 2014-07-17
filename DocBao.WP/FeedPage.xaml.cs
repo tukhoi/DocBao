@@ -23,6 +23,9 @@ using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
 using DocBao.ApplicationServices.UserBehavior;
 using System.Diagnostics;
+using System.Windows.Input;
+using System.Windows.Media;
+using Davang.WP.Utilities.Helper;
 
 namespace DocBao.WP
 {
@@ -81,16 +84,23 @@ namespace DocBao.WP
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
+            if (e.NavigationMode == NavigationMode.Back)
+            {
+                llsItemList.ItemTemplate = null;
+                _viewModel.Dispose();
+            }
+
             llsItemList.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
 
-        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
-        {
-            llsItemList.ItemsSource = null;
-            llsItemList.ItemTemplate = null;
-            base.OnRemovedFromJournal(e);
-        }
+        //protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        //{
+        //    llsItemList.ItemsSource = null;
+        //    llsItemList.ItemTemplate = null;
+        //    _viewModel.Dispose();
+        //    base.OnRemovedFromJournal(e);
+        //}
 
         private async Task<int> Binding(bool requireUpdate = false, bool goBackOnFail = true)
         {
@@ -375,16 +385,21 @@ namespace DocBao.WP
 
         #region Flick
 
-        private async void OnFlick(object sender, FlickGestureEventArgs e)
+        private async void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
             if (_currentPubisher.FeedIds.Count == 1) return;
 
-            if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
+            Point transformedVelocity = GestureHelper.GetTransformNoTranslation(transform).Transform(e.FinalVelocities.LinearVelocity);
+            double horizontalVelocity = transformedVelocity.X;
+            double verticalVelocity = transformedVelocity.Y;
+
+            var direction = GestureHelper.GetDirection(horizontalVelocity, verticalVelocity);
+            if (direction == System.Windows.Controls.Orientation.Horizontal)
             {
                 _pageNumber = 0;
                 _viewModel.PagedItemViewModels.Clear();
 
-                if (e.HorizontalVelocity < 0)
+                if (horizontalVelocity < 0)
                     await LoadNextFeed();
                 else
                     await LoadPreviousFeed();
@@ -392,7 +407,42 @@ namespace DocBao.WP
                 _lastItemId = string.Empty;
                 _feedManager.SetLastId<string>(string.Empty);
             }
+
+
+            //if (_currentPubisher.FeedIds.Count == 1) return;
+            //if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
+            //{
+            //    _pageNumber = 0;
+            //    _viewModel.PagedItemViewModels.Clear();
+
+            //    if (e.HorizontalVelocity < 0)
+            //        await LoadNextFeed();
+            //    else
+            //        await LoadPreviousFeed();
+
+            //    _lastItemId = string.Empty;
+            //    _feedManager.SetLastId<string>(string.Empty);
+            //}
         }
+
+        //private GeneralTransform GetTransformNoTranslation(CompositeTransform transform)
+        //{
+        //    CompositeTransform newTransform = new CompositeTransform();
+        //    newTransform.Rotation = transform.Rotation;
+        //    newTransform.ScaleX = transform.ScaleX;
+        //    newTransform.ScaleY = transform.ScaleY;
+        //    newTransform.CenterX = transform.CenterX;
+        //    newTransform.CenterY = transform.CenterY;
+        //    newTransform.TranslateX = 0;
+        //    newTransform.TranslateY = 0;
+
+        //    return newTransform;
+        //}
+
+        //private Orientation GetDirection(double x, double y)
+        //{
+        //    return Math.Abs(x) >= Math.Abs(y) ? System.Windows.Controls.Orientation.Horizontal : System.Windows.Controls.Orientation.Vertical;
+        //}
 
         private async Task LoadNextFeed()
         {
@@ -434,6 +484,12 @@ namespace DocBao.WP
         {
             adControl = null;
             Debug.WriteLine("----->~FeedPage");
+        }
+
+        private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            if (e.IsInertial)
+                this.OnFlick(sender, e);
         }
     }
 }

@@ -7,9 +7,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:toolkit="clr-namespace:Microsoft.Phone.Controls;assembly=Microsoft.Phone.Controls.Toolkit"
-    xmlns:SOMAWP8="clr-namespace:SOMAWP8;assembly=SOMAWP8" 
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:docbao="clr-namespace:DocBao.WP.Helper"
+    xmlns:SOMAWP8="clr-namespace:SOMAWP8;assembly=SOMAWP8"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -97,18 +97,26 @@
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
                 Margin="12,0,12,12"/>
-            
+
+            <!--<Border
+                x:Name="AdContainer"
+                Grid.Row="0"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="12,0,12,12"
+                />-->
+
             <Image Grid.Column="0"
                    Margin="12, 0,0,0"
                     Grid.Row="1"
                     x:Name="itemNextIcon"
                     Source="/Resources/next.png"/>
             
-            <Border Grid.Column="1" Grid.Row="1">
-                <toolkit:GestureService.GestureListener>
-                    <toolkit:GestureListener Flick="OnFlick"/>
-                </toolkit:GestureService.GestureListener>
-
+            <Border Grid.Column="1" Grid.Row="1" ManipulationCompleted="Border_ManipulationCompleted">
+                <Border.RenderTransform>
+                    <CompositeTransform x:Name="transform" />
+                </Border.RenderTransform>
+                
                 <TextBlock
                     Text="" x:Name="txtItemTitle" 
                     Foreground="White"

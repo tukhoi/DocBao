@@ -239,8 +239,8 @@ namespace DocBao.ApplicationServices
 
         internal static T GetPersistentConfig<T>(ConfigKey key, T defaultValue)
         {
-            object value;
-            if (StorageHelper.LoadConfig(key.ToString(), out value))
+            object value = StorageHelper.LoadConfig(key.ToString());
+            if (value != null)
                 return (T)value;
             return defaultValue;
         }
