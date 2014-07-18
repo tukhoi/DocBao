@@ -68,9 +68,11 @@ namespace DocBao.WP
             var publisher = publishersResult.Target.FirstOrDefault(p => p.Name.Equals(tileItem.Title, StringComparison.InvariantCultureIgnoreCase));
             if (publisher == null) return;
             
-            var uri = publisher.FeedIds.Count() > 1
-                ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
-                : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
+            //var uri = publisher.FeedIds.Count() > 1
+            //    ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
+            //    : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
+
+            var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
             UserBehaviorManager.Instance.Log(UserAction.PubClick, publisher.Id.ToString());
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }

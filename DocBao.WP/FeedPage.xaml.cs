@@ -311,6 +311,12 @@ namespace DocBao.WP
             this.SetProgressIndicator(false);
         }
 
+        private void feedPickUpButton_Click(object sender, EventArgs e)
+        {
+            var uri = new Uri("/FeedPickupPage.xaml?publisherId=" + _viewModel.Publisher.Id, UriKind.Relative);
+            NavigationService.Navigate(uri);
+        }
+
         private async void titleOnlyMenuItem_Click(object sender, EventArgs e)
         {
             AppConfig.ShowTitleOnly = !AppConfig.ShowTitleOnly;
@@ -345,6 +351,11 @@ namespace DocBao.WP
             readAllButton.IconUri = new Uri("/Assets/AppBar/check.png", UriKind.Relative);
             readAllButton.Click += new EventHandler(readAllButton_Click);
 
+            var feedPickUpButton = new ApplicationBarIconButton();
+            feedPickUpButton.Text = "chọn mục";
+            feedPickUpButton.IconUri = new Uri("/Assets/AppBar/folder.png", UriKind.Relative);
+            feedPickUpButton.Click += new EventHandler(feedPickUpButton_Click);
+
             var titleOnlyMenuItem = new ApplicationBarMenuItem();
             titleOnlyMenuItem.Text = AppConfig.ShowTitleOnly ? "hiện tóm tắt" : "chỉ hiện tiêu đề";
             titleOnlyMenuItem.Click += new EventHandler(titleOnlyMenuItem_Click);
@@ -355,6 +366,7 @@ namespace DocBao.WP
 
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(readAllButton);
+            ApplicationBar.Buttons.Add(feedPickUpButton);
             ApplicationBar.MenuItems.Add(titleOnlyMenuItem);
             ApplicationBar.MenuItems.Add(unreadItemOnly);
         }

@@ -235,6 +235,7 @@ namespace DocBao.WP
         {
             AppConfig.ShowItemTitle = !AppConfig.ShowItemTitle;
             txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
+            brdTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;            
             itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
             CreateAppBar();
         }
