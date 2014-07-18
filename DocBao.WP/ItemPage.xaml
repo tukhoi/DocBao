@@ -111,21 +111,18 @@
                     Grid.Row="1"
                     x:Name="itemNextIcon"
                     Source="/Resources/next.png"/>
-            
-            <Border Grid.Column="1" Grid.Row="1" ManipulationCompleted="Border_ManipulationCompleted">
-                <Border.RenderTransform>
-                    <CompositeTransform x:Name="transform" />
-                </Border.RenderTransform>
-                
+
+            <Border Grid.Column="1" Grid.Row="1" x:Name="brdTitle" ManipulationCompleted="Border_ManipulationCompleted">                                
                 <TextBlock
                     Text="" x:Name="txtItemTitle" 
                     Foreground="White"
                     Style="{StaticResource PhoneTextNormalStyle}"
                     FontFamily="{StaticResource PhoneFontFamilySemiBold}"
                     TextWrapping="Wrap">
-
                 </TextBlock>
-
+                <Border.RenderTransform>
+                    <CompositeTransform x:Name="transform" />
+                </Border.RenderTransform>
             </Border>
             
             <!--<phone:WebBrowser 

@@ -52,15 +52,25 @@ namespace DocBao.WP
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            llsItemList.ItemsSource = null;
+            if (e.NavigationMode == NavigationMode.Back)
+                DisposeAll();
+            else
+                llsItemList.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
 
         protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
         {
+            DisposeAll();
+            base.OnRemovedFromJournal(e);
+        }
+
+        void DisposeAll()
+        {
             llsItemList.ItemsSource = null;
             llsItemList.ItemTemplate = null;
-            base.OnRemovedFromJournal(e);
+            llsItemList.ItemRealized -= llsItemList_ItemRealized;
+            ActionOnChildControls<Grid>(llsItemList, Grid.NameProperty, "grdItem", ((c) => ContextMenuService.SetContextMenu(c, null)));
         }
 
         private void Binding()

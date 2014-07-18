@@ -30,7 +30,6 @@ namespace DocBao.WP
         private bool _webLoaded = false;
         private PreviousPage _previousPage = PreviousPage.FeedPage;
         WebBrowser _wbContent;
-        SomaAdViewer _adViewer;
 
         public ItemPage()
         {
@@ -81,47 +80,43 @@ namespace DocBao.WP
         protected override void OnNavigatingFrom(NavigatingCancelEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
-            {
-                _wbContent.Navigating -= wbsContent_Navigating;
-                _wbContent.Navigated -= wbsContent_Navigated;
-                _wbContent.Loaded -= wbsContent_Loaded;
-                _wbContent.NavigateToString("<html></html>");
-                WBContainer.Child = null;
-                _itemContainer.Dispose();
-                adControl.StopAds();
-                adControl.Dispose();
-            }
+                DisposeAll();
                         
             base.OnNavigatingFrom(e);
         }
 
         protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
         {
-            //_wbContent.Navigating -= wbsContent_Navigating;
-            //_wbContent.Navigated -= wbsContent_Navigated;
-            //_wbContent.Loaded -= wbsContent_Loaded;
-            //_wbContent.NavigateToString("<html></html>");
-            //WBContainer.Child = null;
-            //_itemContainer.Dispose();
-            //adControl.StopAds();
-            //adControl.Dispose();
-
+            DisposeAll();
             base.OnRemovedFromJournal(e);
         }
 
-        void wbsContent_Navigating(object sender, NavigatingEventArgs e)
+        private void DisposeAll()
         {
-            this.SetProgressIndicator(true, "đang tìm...");
+            _wbContent.Navigating -= wbContent_Navigating;
+            _wbContent.Navigated -= wbsContent_Navigated;
+            _wbContent.LoadCompleted -= wbContent_LoadCompleted;
+            _wbContent.NavigateToString("<html></html>");
+            WBContainer.Child = null;
+            brdTitle.ManipulationCompleted -= Border_ManipulationCompleted;
+            _itemContainer.Dispose();
+            adControl.StopAds();
+            adControl.Dispose();
+        }
+
+        void wbContent_Navigating(object sender, NavigatingEventArgs e)
+        {
+            this.SetProgressIndicator(true, "đang mở...");
         }
 
         void wbsContent_Navigated(object sender, NavigationEventArgs e)
         {
-            this.SetProgressIndicator(false);
+            this.SetProgressIndicator(true, "đang tải...");
         }
 
-        void wbsContent_Loaded(object sender, System.Windows.RoutedEventArgs e)
+        void wbContent_LoadCompleted(object sender, NavigationEventArgs e)
         {
-            this.SetProgressIndicator(message: "đang tải...");
+            this.SetProgressIndicator(false);
             _webLoaded = true;
         }
 
@@ -151,9 +146,9 @@ namespace DocBao.WP
         private void BindingWebBrowser()
         {
             _wbContent = WebBrowserManager.WebBrowser;
-            _wbContent.Navigating += wbsContent_Navigating;
+            _wbContent.Navigating += wbContent_Navigating;
             _wbContent.Navigated += wbsContent_Navigated;
-            _wbContent.Loaded += wbsContent_Loaded;
+            _wbContent.LoadCompleted += wbContent_LoadCompleted;
             _wbContent.Width = WBContainer.Width;
             _wbContent.Height = WBContainer.Height;
 
@@ -455,11 +450,6 @@ namespace DocBao.WP
                     }
                     break;
             }
-        }
-
-        ~ItemPage()
-        {
-            Debug.WriteLine("----->~ItemPage");
         }
 
         private void Border_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)

@@ -15,10 +15,11 @@ namespace DocBao.ApplicationServices.UserBehavior
 
         public static UserBehaviorManager Instance { get { return _lazyInstance.Value; } }
 
-        public UserBehaviorManager(IScoring scorer = null)
+        private UserBehaviorManager(IScoring scorer = null)
         {
             _scorer = scorer ?? new BasicScoring();
             _userBehavior = new Dictionary<KeyValuePair<UserAction, string>, int>();
+            Load();
         }
 
         protected virtual void Clear()

@@ -19,6 +19,8 @@ using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
+using Davang.WP.Utilities.Helper;
+using System.Windows.Input;
 
 namespace DocBao.WP
 {
@@ -67,15 +69,27 @@ namespace DocBao.WP
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
-            llsItemList.ItemsSource = null;
+            if (e.NavigationMode == NavigationMode.Back)
+                DisposeAll();
+            else
+                llsItemList.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
 
         protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
         {
+            DisposeAll();
+            base.OnRemovedFromJournal(e);
+        }
+
+        void DisposeAll()
+        {
+            ActionOnChildControls<Grid>(llsItemList, Grid.NameProperty, "grdItem", ((c) => ContextMenuService.SetContextMenu(c, null)));
             llsItemList.ItemsSource = null;
             llsItemList.ItemTemplate = null;
-            base.OnRemovedFromJournal(e);
+            llsItemList.ItemRealized -= llsItemList_ItemRealized;
+            ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
+            adControl = null;
         }
 
         private async Task<int> Binding(bool refresh = false, bool gobackOnFail = true)
@@ -206,14 +220,20 @@ namespace DocBao.WP
 
         #region Flick
 
-        private async void OnFlick(object sender, FlickGestureEventArgs e)
+        private async void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
-            if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
+            Point transformedVelocity = GestureHelper.GetTransformNoTranslation(transform).Transform(e.FinalVelocities.LinearVelocity);
+            double horizontalVelocity = transformedVelocity.X;
+            double verticalVelocity = transformedVelocity.Y;
+
+            var direction = GestureHelper.GetDirection(horizontalVelocity, verticalVelocity);
+
+            if (direction == System.Windows.Controls.Orientation.Horizontal)
             {
                 _pageNumber = 0;
                 _viewModel.ItemViewModels.Clear();
 
-                if (e.HorizontalVelocity < 0)
+                if (horizontalVelocity < 0)
                     await LoadNextCategory();
                 else
                     await LoadPreviousCategory();
@@ -406,5 +426,11 @@ namespace DocBao.WP
         }
 
         #endregion
+
+        private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            if (e.IsInertial)
+                this.OnFlick(sender, e);
+        }
     }
 }

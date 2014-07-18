@@ -49,18 +49,24 @@ namespace DocBao.WP
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
-                llsFeedList.ItemTemplate = null;
-
-            llsFeedList.ItemsSource = null;
+                DisposeAll();
+            else
+                llsFeedList.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
 
-        //protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
-        //{
-        //    llsFeedList.ItemsSource = null;
-        //    llsFeedList.ItemTemplate = null;
-        //    base.OnRemovedFromJournal(e);
-        //}
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            DisposeAll();
+            base.OnRemovedFromJournal(e);
+        }
+
+        void DisposeAll()
+        {
+            llsFeedList.ItemsSource = null;
+            llsFeedList.ItemTemplate = null;
+            llsFeedList.ItemRealized -= llsFeedList_ItemRealized;
+        }
 
         private void Binding()
         {
@@ -129,12 +135,6 @@ namespace DocBao.WP
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
             this.BackToPreviousPage();
-        }
-
-        ~PublisherPage()
-        {
-            _viewModel = null;
-            Debug.WriteLine("----->~PublisherPage");
         }
     }
 }

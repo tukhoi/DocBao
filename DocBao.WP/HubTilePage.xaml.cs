@@ -135,10 +135,5 @@ namespace DocBao.WP
             var uri = new Uri("/CustomViewPage.xaml", UriKind.Relative);
             NavigationService.Navigate(uri);
         }
-
-        ~HubTilePage()
-        {
-            Debug.WriteLine("----->~HubTilePage");
-        }
     }
 }

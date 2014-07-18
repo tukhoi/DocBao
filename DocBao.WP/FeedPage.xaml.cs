@@ -85,22 +85,30 @@ namespace DocBao.WP
         protected override void OnNavigatedFrom(NavigationEventArgs e)
         {
             if (e.NavigationMode == NavigationMode.Back)
-            {
-                llsItemList.ItemTemplate = null;
-                _viewModel.Dispose();
-            }
-
-            llsItemList.ItemsSource = null;
+                DisposeAll();
+            else
+                llsItemList.ItemsSource = null;
             base.OnNavigatedFrom(e);
         }
 
-        //protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
-        //{
-        //    llsItemList.ItemsSource = null;
-        //    llsItemList.ItemTemplate = null;
-        //    _viewModel.Dispose();
-        //    base.OnRemovedFromJournal(e);
-        //}
+        protected override void OnRemovedFromJournal(JournalEntryRemovedEventArgs e)
+        {
+            DisposeAll();
+            base.OnRemovedFromJournal(e);
+        }
+
+        private void DisposeAll()
+        {
+            ActionOnChildControls<Grid>(llsItemList, Grid.NameProperty, "grdItem", ((c) => ContextMenuService.SetContextMenu(c, null)));
+            llsItemList.ItemsSource = null;
+            llsItemList.ItemTemplate = null;
+            _viewModel.Dispose();
+            llsItemList.ItemRealized -= llsItemList_ItemRealized;
+            ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
+            
+            
+            adControl = null;
+        }
 
         private async Task<int> Binding(bool requireUpdate = false, bool goBackOnFail = true)
         {
@@ -478,12 +486,6 @@ namespace DocBao.WP
         {
             if (_currentPubisher.FeedIds.Count == 1) return;
             this.BackToPreviousPage();
-        }
-
-        ~FeedPage()
-        {
-            adControl = null;
-            Debug.WriteLine("----->~FeedPage");
         }
 
         private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
