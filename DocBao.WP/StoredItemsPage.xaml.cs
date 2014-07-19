@@ -36,12 +36,6 @@ namespace DocBao.WP
             await MyOnNavigatedTo();
 
             _viewModel = new StoredItemsViewModel();
-            if (_viewModel.AllItemViewModels.Count == 0)
-            {
-                Messenger.ShowToast("chưa có tin nào được lưu", completedAction: () => this.BackToPreviousPage());
-                return;
-            }
-
             var lastItemId = _feedManager.GetLastId<string>();
             if (!string.IsNullOrEmpty(lastItemId))
                 _lastItemId = lastItemId;
@@ -82,11 +76,18 @@ namespace DocBao.WP
                     _pageNumber = 1;
 
                 _viewModel.Initialize();
+
+                if (_viewModel.AllItemViewModels.Count == 0)
+                {
+                    Messenger.ShowToast("chưa có tin nào được lưu", completedAction: () => this.BackToPreviousPage());
+                    return;
+                }
+
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
                 firstNextIcon.Visibility = System.Windows.Visibility.Visible;
                 UpdateViewTitle();
                 UpdateItemReadCount();
-                this.llsItemList.DataContext = _viewModel;
+                this.llsItemList.ItemsSource = _viewModel.PagedItemViewModels;
 
                 CreateAppBar();
                 llsItemList.ScrollTo<string>(_lastItemId);
@@ -113,7 +114,7 @@ namespace DocBao.WP
             FrameworkElement fe = sender as FrameworkElement;
             if (fe != null)
             {
-                var item = fe.DataContext as Item;
+                var item = fe.DataContext as ItemViewModel;
                 if (item != null)
                 {
                      _feedManager.MarkStoredItemAsRead(item.Id, true);
@@ -258,10 +259,10 @@ namespace DocBao.WP
                 Messenger.ShowToast("không tìm thấy link");
         }
 
-        private Item GetItemFromContextMenu(object sender)
+        private ItemViewModel GetItemFromContextMenu(object sender)
         {
             var dataContext = (sender as MenuItem).DataContext;
-            return dataContext as Item;
+            return dataContext as ItemViewModel;
         }
 
         #endregion

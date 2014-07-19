@@ -15,21 +15,19 @@ using System.Threading.Tasks;
 using System.Windows.Media;
 using Microsoft.Phone.Scheduler;
 using DocBao.WP.Helper;
+using Davang.WP.Utilities;
+using DocBao.ApplicationServices.UserBehavior;
+using Davang.Utilities.Log;
+using Davang.Utilities;
 
 #if DEBUG
 using MockIAPLib;
 using Store = MockIAPLib;
-using Davang.Utilities.Log;
-using Davang.Utilities;
 using DocBao.ApplicationServices.Background;
-using Davang.WP.Utilities;
-using DocBao.ApplicationServices.UserBehavior;
+
 #else
 using Windows.ApplicationModel.Store;
 using Store = Windows.ApplicationModel.Store;
-using Davang.Utilities.Log;
-using Davang.WP.Utilities;
-using DocBao.ApplicationServices.UserBehavior;
 #endif
 
 namespace DocBao.WP
@@ -341,6 +339,7 @@ namespace DocBao.WP
                 Keywords = new string[] { "phiên bản trả tiền" },
                 Description = "app duyệt báo - phiên bản trả tiền",
                 FormattedPrice = "1.0",
+                
                 Tag = string.Empty
             };
 

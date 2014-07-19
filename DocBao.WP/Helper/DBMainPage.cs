@@ -48,11 +48,8 @@ namespace DocBao.WP.Helper
             if (updatedFeeds != null && updatedFeeds.Count > 0)
             {
                 var message = FeedHelper.BuildUpdateStatus(updatedFeeds);
-                var count = updatedFeeds.Count > AppConfig.MAX_NEW_FEED_UPDATED_SHOW
-                    ? AppConfig.MAX_NEW_FEED_UPDATED_SHOW
-                    : updatedFeeds.Count;
-
-                Messenger.ShowToast(message, miliSecondsUntilHidden: count * 2000);
+                int count = updatedFeeds.OrderByDescending(f => f.Value).Take(AppConfig.MAX_NEW_FEED_UPDATED_SHOW).Count();
+                Messenger.ShowToast(message, miliSecondsUntilHidden: count * 1500);
 
                 StandardTileData tile = new StandardTileData()
                 {

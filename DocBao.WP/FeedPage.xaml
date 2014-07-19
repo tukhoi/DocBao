@@ -55,29 +55,29 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,12,0,12">
+        <StackPanel Grid.Row="0" Margin="12,12,0,12" Orientation="Vertical">
             <StackPanel Orientation="Horizontal">
                 <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
-                           x:Name="txtAppName" 
-                           Style="{StaticResource PhoneTextNormalStyle}" 
-                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                           Foreground="White" 
-                           Tap="txtAppName_Tap"/>
+                            x:Name="txtAppName" 
+                            Style="{StaticResource PhoneTextNormalStyle}" 
+                            FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                            Foreground="White" 
+                            Tap="txtAppName_Tap"/>
                 <Image x:Name="firstNextIcon" Source="/Resources/next.png" 
-                       Visibility="Collapsed"/>
+                        Visibility="Collapsed"/>
                 <TextBlock Text="" x:Name ="txtPublisherName" 
-                           Style="{StaticResource PhoneTextNormalStyle}" 
-                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                           Foreground="White" 
-                           Tap="txtPublisherName_Tap"/>
+                            Style="{StaticResource PhoneTextNormalStyle}" 
+                            FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                            Foreground="White"/>
                 <Image x:Name="secondNextIcon" Source="/Resources/next.png" 
-                       Visibility="Collapsed"/>
+                        Visibility="Collapsed"/>
                 <TextBlock Text="" x:Name="txtFeedName" 
-                           Style="{StaticResource PhoneTextNormalStyle}" 
-                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                           Foreground="White"/>
+                            Style="{StaticResource PhoneTextNormalStyle}" 
+                            FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                            Foreground="White"/>
             </StackPanel>
-            <TextBlock Text="" x:Name="txtReadCount" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
+            <TextBlock Text="" x:Name="txtReadCount" HorizontalAlignment="Left" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
+            <TextBlock Text="" x:Name="txtLastUpdated" HorizontalAlignment="Left" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -93,7 +93,7 @@
 
                 <adduplex:AdControl Grid.Row="0"
                     x:Name="adControl"
-                    Margin="12,-7,12,12"
+                    Margin="12,0,12,12"
                     AppId="105923"/>
 
                 <phone:LongListSelector x:Name="llsItemList"

@@ -135,7 +135,7 @@ namespace DocBao.WP
                 
                 UpdateItemReadCount();
                 UpdateViewTitle();
-                this.llsItemList.DataContext = _viewModel;
+                this.llsItemList.ItemsSource = _viewModel.ItemViewModels;
                 CreateAppBar();
 
                 if (updated > 0)
@@ -415,6 +415,7 @@ namespace DocBao.WP
         private void UpdateItemReadCount()
         {
             txtReadCount.Text = _viewModel.ReadStats;
+            txtLastUpdated.Text = CategoryHelper.GetUpdateStats(_viewModel.Id);
         }
 
         private void UpdateViewTitle()

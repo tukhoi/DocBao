@@ -52,8 +52,7 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,12,0,12">
-            <StackPanel Orientation="Horizontal">
+        <StackPanel Grid.Row="0" Margin="12,12,0,12" Orientation="Horizontal">
                 <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
                            x:Name="txtAppName" 
                            Style="{StaticResource PhoneTextNormalStyle}" 
@@ -71,7 +70,6 @@
                            Style="{StaticResource PhoneTextNormalStyle}" 
                            FontFamily="{StaticResource PhoneFontFamilySemiBold}"
                            Foreground="White"/>
-            </StackPanel>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -87,32 +85,16 @@
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
 
-            <SOMAWP8:SomaAdViewer Grid.Row="0"
-                PopupAd="True"
-                Pub="923880017"
-                Adspace="65836846"
-                AdInterval="30000"
-                PopupAdDuration="20000"
-                x:Name="adControl"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="12,0,12,12"/>
-
-            <!--<Border
-                x:Name="AdContainer"
-                Grid.Row="0"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="12,0,12,12"
-                />-->
-
             <Image Grid.Column="0"
                    Margin="12, 0,0,0"
-                    Grid.Row="1"
+                    Grid.Row="0"
                     x:Name="itemNextIcon"
                     Source="/Resources/next.png"/>
 
-            <Border Grid.Column="1" Grid.Row="1" x:Name="brdTitle" ManipulationCompleted="Border_ManipulationCompleted">                                
+            <Border Grid.Column="1" Grid.Row="0" 
+                    Margin="12,0,0,0"
+                    x:Name="brdTitle" 
+                    ManipulationCompleted="Border_ManipulationCompleted">                                
                 <TextBlock
                     Text="" x:Name="txtItemTitle" 
                     Foreground="White"
@@ -124,7 +106,18 @@
                     <CompositeTransform x:Name="transform" />
                 </Border.RenderTransform>
             </Border>
-            
+
+            <SOMAWP8:SomaAdViewer Grid.Row="1"
+                PopupAd="True"
+                Pub="923880017"
+                Adspace="65836846"
+                AdInterval="30000"
+                PopupAdDuration="20000"
+                x:Name="adControl"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="12,12,12,0"/>
+
             <!--<phone:WebBrowser 
                 Grid.Row="2"
                 Grid.Column="0"

@@ -22,7 +22,6 @@ namespace DocBao.WP.ViewModels
         {
             PagedItemViewModels = new ObservableCollection<ItemViewModel>();
             AllItemViewModels = new List<ItemViewModel>();
-            Initialize();
         }
 
         public bool IsLoading
@@ -44,6 +43,7 @@ namespace DocBao.WP.ViewModels
 
         public void Initialize()
         {
+            AllItemViewModels.Clear();
             var savedResult = _feedManager.GetStoredItems();
             if (!savedResult.HasError)
                 savedResult.Target.ForEach(i => AllItemViewModels.Add(new ItemViewModel(i)));

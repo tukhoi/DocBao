@@ -88,6 +88,7 @@ namespace DocBao.WP
                 DisposeAll();
             else
                 llsItemList.ItemsSource = null;
+
             base.OnNavigatedFrom(e);
         }
 
@@ -185,6 +186,7 @@ namespace DocBao.WP
         private void UpdateItemReadCount()
         {
             txtReadCount.Text = _viewModel.ReadStats;
+            txtLastUpdated.Text = FeedHelper.GetUpdateStats(_viewModel.Id);
         }
 
         private void UpdateViewTitle()
@@ -351,9 +353,8 @@ namespace DocBao.WP
             readAllButton.IconUri = new Uri("/Assets/AppBar/check.png", UriKind.Relative);
             readAllButton.Click += new EventHandler(readAllButton_Click);
 
-            var feedPickUpButton = new ApplicationBarIconButton();
-            feedPickUpButton.Text = "chọn mục";
-            feedPickUpButton.IconUri = new Uri("/Assets/AppBar/folder.png", UriKind.Relative);
+            var feedPickUpButton = new ApplicationBarMenuItem();
+            feedPickUpButton.Text = "cài/gỡ chuyên mục";
             feedPickUpButton.Click += new EventHandler(feedPickUpButton_Click);
 
             var titleOnlyMenuItem = new ApplicationBarMenuItem();
@@ -366,7 +367,7 @@ namespace DocBao.WP
 
             ApplicationBar.Buttons.Add(refreshButton);
             ApplicationBar.Buttons.Add(readAllButton);
-            ApplicationBar.Buttons.Add(feedPickUpButton);
+            ApplicationBar.MenuItems.Add(feedPickUpButton);
             ApplicationBar.MenuItems.Add(titleOnlyMenuItem);
             ApplicationBar.MenuItems.Add(unreadItemOnly);
         }
@@ -488,17 +489,19 @@ namespace DocBao.WP
 
         private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         {
-            if (_currentPubisher.FeedIds.Count == 1)
-                this.BackToPreviousPage();
-            else
-                this.BackToPreviousPage(1);
+            //if (_currentPubisher.FeedIds.Count == 1)
+            //    this.BackToPreviousPage();
+            //else
+            //    this.BackToPreviousPage(1);
+
+            this.BackToMainPage();
         }
 
-        private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            if (_currentPubisher.FeedIds.Count == 1) return;
-            this.BackToPreviousPage();
-        }
+        //private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        //{
+        //    if (_currentPubisher.FeedIds.Count == 1) return;
+        //    this.BackToPreviousPage();
+        //}
 
         private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
         {

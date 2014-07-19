@@ -377,10 +377,12 @@ namespace DocBao.WP
             if (item == null) return;
             txtItemTitle.Text = item.Title;
 
-            if (_previousPage == PreviousPage.FeedPage)
-                txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(2));
-            else
-                txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
+            //if (_previousPage == PreviousPage.FeedPage)
+            //    txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(2));
+            //else
+            //    txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
+
+            txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
 
             switch (_previousPage)
             { 
@@ -395,13 +397,14 @@ namespace DocBao.WP
                     break;
             }
 
-            if (_previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1)
-                txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
-            else
+            //if (_previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1)
+            //    txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
+            //else
                 txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(0));
 
             txtFeedName.Visibility = _previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1 ? Visibility.Visible : Visibility.Collapsed;
             txtFeedName.Text = _previousPage == PreviousPage.FeedPage ? _itemContainer.Name : string.Empty;
+            txtFeedName.Text = _itemContainer.Name;
 
             if (_previousPage == PreviousPage.FeedPage)
                 txtFeedName.Tap += ((sender, e) => this.BackToPreviousPage());

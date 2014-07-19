@@ -63,6 +63,7 @@
                            Foreground="White"/>
             </StackPanel>
             <TextBlock Text="" x:Name="txtReadCount" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
+            <TextBlock Text="" x:Name="txtLastUpdated" HorizontalAlignment="Left" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
@@ -79,7 +80,7 @@
 
                 <adduplex:AdControl Grid.Row="0"
                     x:Name="adControl"
-                    Margin="12,-7,12,12"
+                    Margin="12,0,12,12"
                     AppId="105923"/>
 
                 <phone:LongListSelector x:Name="llsItemList"
