@@ -382,37 +382,37 @@ namespace DocBao.WP
             //else
             //    txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
 
-            txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
+            //txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
 
             switch (_previousPage)
             { 
                 case PreviousPage.FeedPage:
-                    txtPublisherName.Text = _itemContainer.Publisher.Name;
+                    txtPublisherName.Text = "duyệt báo " + _itemContainer.Publisher.Name;
                     break;
                 case PreviousPage.StoredItemsPage:
-                    txtPublisherName.Text = _itemContainer.Name;
+                    txtPublisherName.Text = "duyệt báo";
                     break;
                 case PreviousPage.CategoryPage:
-                    txtPublisherName.Text = _itemContainer.Name;
+                    txtPublisherName.Text = "duyệt báo";
                     break;
             }
 
             //if (_previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1)
             //    txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
             //else
-                txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(0));
+                txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
 
-            txtFeedName.Visibility = _previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1 ? Visibility.Visible : Visibility.Collapsed;
+            //txtFeedName.Visibility = _previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1 ? Visibility.Visible : Visibility.Collapsed;
             txtFeedName.Text = _previousPage == PreviousPage.FeedPage ? _itemContainer.Name : string.Empty;
             txtFeedName.Text = _itemContainer.Name;
 
-            if (_previousPage == PreviousPage.FeedPage)
+            //if (_previousPage == PreviousPage.FeedPage)
                 txtFeedName.Tap += ((sender, e) => this.BackToPreviousPage());
 
             txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
             itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
 
-            firstNextIcon.Visibility = System.Windows.Visibility.Visible;
+            //firstNextIcon.Visibility = System.Windows.Visibility.Visible;
             secondNextIcon.Visibility = txtFeedName.Visibility;
 
             txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;

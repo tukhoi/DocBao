@@ -150,9 +150,9 @@ namespace DocBao.WP
                 this.txtFeedName.Visibility = _viewModel.Publisher.FeedIds.Count() == 1
                     ? System.Windows.Visibility.Collapsed
                     : System.Windows.Visibility.Visible;
-                txtPublisherName.Text = _viewModel.Publisher.Name;
+                txtPublisherName.Text = "duyệt báo " + _viewModel.Publisher.Name;
                 txtFeedName.Text = _viewModel.Name;
-                firstNextIcon.Visibility = System.Windows.Visibility.Visible;
+                //firstNextIcon.Visibility = System.Windows.Visibility.Visible;
                 secondNextIcon.Visibility = txtFeedName.Visibility;
                 UpdateItemReadCount();
                 UpdateViewTitle();
@@ -487,21 +487,21 @@ namespace DocBao.WP
 
         #endregion
 
-        private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            //if (_currentPubisher.FeedIds.Count == 1)
-            //    this.BackToPreviousPage();
-            //else
-            //    this.BackToPreviousPage(1);
-
-            this.BackToMainPage();
-        }
-
-        //private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        //private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
         //{
-        //    if (_currentPubisher.FeedIds.Count == 1) return;
-        //    this.BackToPreviousPage();
+        //    //if (_currentPubisher.FeedIds.Count == 1)
+        //    //    this.BackToPreviousPage();
+        //    //else
+        //    //    this.BackToPreviousPage(1);
+
+        //    this.BackToMainPage();
         //}
+
+        private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            //if (_currentPubisher.FeedIds.Count == 1) return;
+            this.BackToPreviousPage();
+        }
 
         private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
         {
