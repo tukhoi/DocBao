@@ -35,7 +35,6 @@ namespace DocBao.WP
         {
             InitializeComponent();
 
-            //BindingAdViewer();
             BindingWebBrowser();
 
             if (LicenseHelper.Purchased(AppConfig.PAID_VERSION))
@@ -72,6 +71,7 @@ namespace DocBao.WP
                 _currentIndex = 0;
 
             Binding();
+            BindingNavBar();
             CreateAppBar();
 
             base.OnNavigatedTo(e);
@@ -131,7 +131,7 @@ namespace DocBao.WP
             var item = _itemContainer.AllItemViewModels[_currentIndex];
             if (item != null)
             {
-                BindingNavigationBar(item);
+                txtItemTitle.Text = item.Title;
                 if (_previousPage == PreviousPage.FeedPage || _previousPage == PreviousPage.CategoryPage)
                     _feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
                 else
@@ -142,6 +142,51 @@ namespace DocBao.WP
                 _wbContent.Navigate(new Uri(item.Link, UriKind.Absolute));
             }
         }
+        private void BindingNavBar()
+        {
+            var navBarViewModel = new NavBarViewModel();
+            var item = _itemContainer.AllItemViewModels[_currentIndex];
+
+            var subscribedPublisher = _feedManager.GetSubscribedPublishers();
+            subscribedPublisher.Target.ForEach(p =>
+            {
+                navBarViewModel.FirstBrothers.Add(new Brother()
+                {
+                    Id = p.Id.ToString(),
+                    Name = p.Name,
+                    ImageUri = p.ImageUri.ToString().StartsWith("/") ? p.ImageUri : new Uri("/" + p.ImageUri.ToString(), UriKind.Relative),
+                    Stats = PublisherHelper.GetStatsString(p.Id),
+                    Selected = p.Id.Equals(_itemContainer.Publisher.Id),
+                    NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", p.Id, p.FeedIds[0]), UriKind.Relative)
+                });
+            });
+
+
+            _itemContainer.Publisher.FeedIds.ForEach(f =>
+            {
+                var feedResult = _feedManager.GetSubscribedFeed(f);
+                if (feedResult.HasError) return;
+
+                navBarViewModel.SecondBrothers.Add(new Brother()
+                {
+                    Id = f.ToString(),
+                    Name = feedResult.Target.Name,
+                    ImageUri = null,
+                    Stats = FeedHelper.GetStatsString(f),
+                    Selected = f.Equals(_itemContainer.Id),
+                    NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", _itemContainer.Publisher.Id, f), UriKind.Relative)
+                });
+            });
+
+            NavBar.Binding(navBarViewModel);
+            NavBar.Navigation = ((uri) =>
+                {
+                    DisposeAll();
+                    NavigationService.Navigate(uri);
+                });
+            NavBar.NavigateHome = (() => this.BackToMainPage());
+        }
+
 
         private void BindingWebBrowser()
         {
@@ -243,7 +288,6 @@ namespace DocBao.WP
         private void unreadButton_Click(object sender, EventArgs e)
         {
             var item = _itemContainer.AllItemViewModels[_currentIndex];
-
             var message = item.Read ? "đang đánh dấu chưa đọc..." : "đang đánh dấu đã đọc...";
             this.SetProgressIndicator(true, message);
 
@@ -370,53 +414,6 @@ namespace DocBao.WP
             ApplicationBar.MenuItems.Add(copyLinkMenuItem);
             ApplicationBar.MenuItems.Add(facebookMenuItem);
             ApplicationBar.MenuItems.Add(showTitleMenuItem);
-        }
-
-        private void BindingNavigationBar(ItemViewModel item)
-        {
-            if (item == null) return;
-            txtItemTitle.Text = item.Title;
-
-            //if (_previousPage == PreviousPage.FeedPage)
-            //    txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(2));
-            //else
-            //    txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
-
-            //txtAppName.Tap += ((sender, e) => this.BackToPreviousPage(1));
-
-            switch (_previousPage)
-            { 
-                case PreviousPage.FeedPage:
-                    txtPublisherName.Text = "duyệt báo " + _itemContainer.Publisher.Name;
-                    break;
-                case PreviousPage.StoredItemsPage:
-                    txtPublisherName.Text = "duyệt báo";
-                    break;
-                case PreviousPage.CategoryPage:
-                    txtPublisherName.Text = "duyệt báo";
-                    break;
-            }
-
-            //if (_previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1)
-            //    txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
-            //else
-                txtPublisherName.Tap += ((sender, e) => this.BackToPreviousPage(1));
-
-            //txtFeedName.Visibility = _previousPage == PreviousPage.FeedPage && _itemContainer.Publisher.FeedIds.Count() > 1 ? Visibility.Visible : Visibility.Collapsed;
-            txtFeedName.Text = _previousPage == PreviousPage.FeedPage ? _itemContainer.Name : string.Empty;
-            txtFeedName.Text = _itemContainer.Name;
-
-            //if (_previousPage == PreviousPage.FeedPage)
-                txtFeedName.Tap += ((sender, e) => this.BackToPreviousPage());
-
-            txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
-            itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
-
-            //firstNextIcon.Visibility = System.Windows.Visibility.Visible;
-            secondNextIcon.Visibility = txtFeedName.Visibility;
-
-            txtItemTitle.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
-            itemNextIcon.Visibility = AppConfig.ShowItemTitle ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void BindItemListToFlick(Guid feedId, Guid categoryId)

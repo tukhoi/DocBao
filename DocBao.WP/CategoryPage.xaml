@@ -10,6 +10,7 @@
     xmlns:adduplex="clr-namespace:AdDuplex;assembly=AdDuplex.WindowsPhone"
     xmlns:docbao="clr-namespace:DocBao.WP.Helper"
     xmlns:cxi="clr-namespace:Davang.WP.Utilities.Helper;assembly=Davang.WP.Utilities"
+    xmlns:local="clr-namespace:DocBao.WP"
     FontFamily="{StaticResource PhoneFontFamilyNormal}"
     FontSize="{StaticResource PhoneFontSizeNormal}"
     Foreground="{StaticResource PhoneForegroundBrush}"
@@ -46,22 +47,8 @@
         </Grid.RowDefinitions>
 
         <!--TitlePanel contains the name of the application and page title-->
-        <StackPanel Grid.Row="0" Margin="12,12,0,12">
-            <StackPanel Orientation="Horizontal">
-                <TextBlock Text="{Binding Path=LocalizedResources.ApplicationTitle, Source={StaticResource LocalizedStrings}}" 
-                           x:Name="txtAppName" 
-                           Style="{StaticResource PhoneTextNormalStyle}" 
-                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                           Foreground="White" 
-                           Tap="txtAppName_Tap"/>
-                <Image x:Name="firstNextIcon" 
-                       Source="/Resources/next.png" 
-                       Visibility="Visible"/>
-                <TextBlock Text="" x:Name ="txtCategoryName" 
-                           Style="{StaticResource PhoneTextNormalStyle}" 
-                           FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                           Foreground="White"/>
-            </StackPanel>
+        <StackPanel Grid.Row="0" Margin="12,12,0,12" Orientation="Vertical">
+            <local:NavBar x:Name="NavBar" SecondLPKVisibility="Collapsed"/>
             <TextBlock Text="" x:Name="txtReadCount" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
             <TextBlock Text="" x:Name="txtLastUpdated" HorizontalAlignment="Left" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
         </StackPanel>

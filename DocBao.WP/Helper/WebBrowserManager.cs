@@ -12,7 +12,12 @@ namespace DocBao.WP.Helper
         private static readonly Lazy<WebBrowser> _instance = 
             new Lazy<WebBrowser>(() => new WebBrowser());
 
-        public static WebBrowser WebBrowser { get { return _instance.Value; } }
+        public static WebBrowser WebBrowser { 
+            get 
+            {
+                return _instance.Value; 
+            } 
+        }
 
         private WebBrowserManager()
         { }

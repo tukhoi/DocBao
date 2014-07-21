@@ -61,6 +61,7 @@ namespace DocBao.WP
                 _currentIndex = 0;
 
             var newItemCount = await Binding();
+            BindingNavBar();
             if (newItemCount > 0)
                 Messenger.ShowToast(newItemCount + " tin mới");
 
@@ -104,9 +105,6 @@ namespace DocBao.WP
                 this.SetProgressIndicator(true, "đang cập nhật từ " + publisherCount + " báo...");
                 if (_pageNumber == 0)
                     _pageNumber = 1;
-
-                txtCategoryName.Text = currentCategory.Name;
-                firstNextIcon.Visibility = System.Windows.Visibility.Visible;
 
                 if (refresh && !NetworkInterface.GetIsNetworkAvailable())
                 {
@@ -159,6 +157,29 @@ namespace DocBao.WP
                 GA.LogException(ex);
                 return 0;
             }
+        }
+
+        private void BindingNavBar()
+        {
+            var navBarViewModel = new NavBarViewModel();
+
+            var categories = _feedManager.GetCategories();
+            categories.ForEach(c =>
+            {
+                navBarViewModel.FirstBrothers.Add(new Brother()
+                {
+                    Id = c.Id.ToString(),
+                    Name = c.Name,
+                    ImageUri = c.ImageUri.ToString().StartsWith("/") ? c.ImageUri : new Uri("/" + c.ImageUri.ToString(), UriKind.Relative),
+                    Stats = CategoryHelper.GetStatsString(c.Id),
+                    Selected = c.Id.Equals(_viewModel.Id),
+                    NavigateUri = new Uri(string.Format("/CategoryPage.xaml?categoryId={0}", c.Id), UriKind.Relative)
+                });
+            });
+
+            NavBar.Binding(navBarViewModel);
+            NavBar.Navigation = ((uri) => NavigationService.Navigate(uri));
+            NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 
         #endregion

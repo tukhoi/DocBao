@@ -74,10 +74,17 @@ namespace DocBao.WP
                 _currentIndex = 0;
 
             var newItemCount = await Binding();
+            BindingNavBar();
             if (newItemCount > 0)
                 Messenger.ShowToast(newItemCount + " tin mới");
             if (newItemCount == -1)
                 Messenger.ShowToast("lấy tin mới bị lỗi...");
+
+            //var previousPage = NavigationService.BackStack.First().Source;
+            //if (previousPage.ToString().Contains("FeedPage.xaml") || previousPage.ToString().Contains("ItemPage.xaml"))
+            //    NavigationService.RemoveBackEntry(); 
+
+            SetSecondPage();
 
             base.OnNavigatedTo(e);
         }
@@ -106,8 +113,7 @@ namespace DocBao.WP
             _viewModel.Dispose();
             llsItemList.ItemRealized -= llsItemList_ItemRealized;
             ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
-            
-            
+
             adControl = null;
         }
 
@@ -147,16 +153,8 @@ namespace DocBao.WP
 
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
 
-                this.txtFeedName.Visibility = _viewModel.Publisher.FeedIds.Count() == 1
-                    ? System.Windows.Visibility.Collapsed
-                    : System.Windows.Visibility.Visible;
-                txtPublisherName.Text = "duyệt báo " + _viewModel.Publisher.Name;
-                txtFeedName.Text = _viewModel.Name;
-                //firstNextIcon.Visibility = System.Windows.Visibility.Visible;
-                secondNextIcon.Visibility = txtFeedName.Visibility;
                 UpdateItemReadCount();
                 UpdateViewTitle();
-                //this.llsItemList.DataContext = _viewModel;
                 this.llsItemList.ItemsSource = _viewModel.PagedItemViewModels;
 
                 CreateAppBar();
@@ -183,10 +181,51 @@ namespace DocBao.WP
             }
         }
 
+        private void BindingNavBar()
+        {
+            var navBarViewModel = new NavBarViewModel();
+
+            var subscribedPublisher = _feedManager.GetSubscribedPublishers();
+            subscribedPublisher.Target.ForEach(p =>
+                {
+                    navBarViewModel.FirstBrothers.Add(new Brother()
+                        {
+                            Id = p.Id.ToString(),
+                            Name = p.Name,
+                            ImageUri = p.ImageUri.ToString().StartsWith("/") ? p.ImageUri : new Uri("/" + p.ImageUri.ToString(), UriKind.Relative),
+                            Stats = PublisherHelper.GetStatsString(p.Id),
+                            Selected = p.Id.Equals(_viewModel.Publisher.Id),
+                            NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", p.Id, p.FeedIds[0]), UriKind.Relative)
+                        });
+                });
+
+            _currentPubisher.FeedIds.ForEach(f =>
+                {
+                    var feedResult = _feedManager.GetSubscribedFeed(f);
+                    if (feedResult.HasError) return;
+
+                    navBarViewModel.SecondBrothers.Add(new Brother() 
+                        {
+                            Id = f.ToString(),
+                            Name = feedResult.Target.Name,
+                            ImageUri = null,
+                            Stats = FeedHelper.GetStatsString(f),
+                            Selected = f.Equals(_viewModel.Id),
+                            NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", feedResult.Target.Publisher.Id, f), UriKind.Relative)
+                        });
+                });
+
+            //NavBar.SelectedFirstBrotherId = _currentPubisher.Id.ToString();
+            //NavBar.SelectedSecondBrotherId = _viewModel.Id.ToString();
+            NavBar.Binding(navBarViewModel);
+            NavBar.Navigation = ((uri) => NavigationService.Navigate(uri));
+            NavBar.NavigateHome = (() => this.BackToMainPage());
+        }
+
         private void UpdateItemReadCount()
         {
             txtReadCount.Text = _viewModel.ReadStats;
-            txtLastUpdated.Text = FeedHelper.GetUpdateStats(_viewModel.Id);
+            //txtLastUpdated.Text = FeedHelper.GetUpdateStats(_viewModel.Id);
         }
 
         private void UpdateViewTitle()

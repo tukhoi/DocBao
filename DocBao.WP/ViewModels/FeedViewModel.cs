@@ -176,7 +176,6 @@ namespace DocBao.WP.ViewModels
             var pubViewModel = new PublisherViewModel();
             pubViewModel.UpdateFromDomainModel(feed.Publisher);
             this.Publisher = pubViewModel;
-
             this.IsLoading = false;
         }
 
