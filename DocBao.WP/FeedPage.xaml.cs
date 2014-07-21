@@ -113,6 +113,7 @@ namespace DocBao.WP
             _viewModel.Dispose();
             llsItemList.ItemRealized -= llsItemList_ItemRealized;
             ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
+            NavBar.Dispose();
 
             adControl = null;
         }

@@ -18,7 +18,7 @@
         
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
 
         <TextBlock x:Name="txtHome"
@@ -33,10 +33,13 @@
             <toolkit:ListPicker Name="lpkFirstBrothers" 
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
-                                Width="190">
+                                Width="180">
+                <toolkit:ListPicker.Background>
+                    <ImageBrush ImageSource="/Images/background.png"/>
+                </toolkit:ListPicker.Background>
                 <toolkit:ListPicker.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}"
+                        <TextBlock Text="{Binding Name}" x:Name="txtName"
                                     Style="{StaticResource PhoneTextNormalStyle}" 
                                     FontFamily="{StaticResource PhoneFontFamilySemiBold}"
                                     Foreground="White"/>
@@ -45,46 +48,66 @@
                 <toolkit:ListPicker.FullModeItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="/Images/background.png"/>
+                            </Grid.Background>
+
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="210"/>
                                 <RowDefinition Height="15"/>
                             </Grid.RowDefinitions>
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="210"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
                             
-                            <Image Width="210"
+
+                            <Grid Grid.Row="0">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="/Images/background2.png"/>
+                                </Grid.Background>
+
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="210"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+
+                                <Image Width="210"
                                    Height="210"
                                    Source="{Binding ImageUri}" 
                                    Grid.Row="0"
-                                   Grid.Column="0"/>
-                            
-                            <TextBlock Text="{Binding Stats}"
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"/>
+
+                                <TextBlock Text="{Binding Stats}"
+                                       Width="200"
                                     Grid.Row="0"
                                     Grid.Column="1"
                                     Style="{StaticResource PhoneTextNormalStyle}" 
                                     VerticalAlignment="Center"
                                     TextWrapping="Wrap"/>
+                            </Grid>
+                            
+                            
                         </Grid>
                     </DataTemplate>
                 </toolkit:ListPicker.FullModeItemTemplate>
             </toolkit:ListPicker>
-
-            <Image x:Name="imgSeparator"
-                Source="/Resources/next.png" 
-                VerticalAlignment="Center"
-                Stretch="None"
-                Visibility="Visible"/>
+            
+            <Image x:Name="imgSeparator2"
+                    Source="/Resources/next.png" 
+                    VerticalAlignment="Center"
+                    Stretch="None"
+                    Visibility="{Binding SecondLPKVisibility}"/>
 
             <toolkit:ListPicker Name="lpkSecondBrothers" 
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
                                 VerticalAlignment="Center"
-                                Width="190">
+                                Visibility="{Binding SecondLPKVisibility}"
+                                Width="180">
+                <toolkit:ListPicker.Background>
+                    <ImageBrush ImageSource="/Images/background.png"/>
+                </toolkit:ListPicker.Background>
                 <toolkit:ListPicker.ItemTemplate>
                     <DataTemplate>
-                        <TextBlock Text="{Binding Name}"
+                        <TextBlock Text="{Binding Name}" x:Name="txtName"
                                     Style="{StaticResource PhoneTextNormalStyle}" 
                                     FontFamily="{StaticResource PhoneFontFamilySemiBold}"
                                     Foreground="White"/>
@@ -93,24 +116,35 @@
                 <toolkit:ListPicker.FullModeItemTemplate>
                     <DataTemplate>
                         <Grid>
+                            <Grid.Background>
+                                <ImageBrush ImageSource="/Images/background.png"/>
+                            </Grid.Background>
+                            
                             <Grid.RowDefinitions>
-                                <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="Auto"/>
                                 <RowDefinition Height="15"/>
                             </Grid.RowDefinitions>
 
-                            <StackPanel Orientation="Horizontal" Grid.Row="0">
-                                <Image Source="/Resources/next.png" 
-                                    VerticalAlignment="Center"
-                                    Stretch="None"
-                                    Visibility="Visible"/>
-                                <TextBlock Text="{Binding Name}"
-                                            Style="{StaticResource PhoneTextNormalStyle}"/>
-                            </StackPanel>
-                            <TextBlock Text="{Binding Stats}"
+                            <Grid Grid.Row="0">
+                                <Grid.Background>
+                                    <ImageBrush ImageSource="/Images/background2.png"/>
+                                </Grid.Background>
+                                
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                </Grid.RowDefinitions>
+                                                                
+                                <TextBlock Text="{Binding Name}" Grid.Row="0"
+                                        Width="410"
+                                        Style="{StaticResource PhoneTextLargeStyle}"/>
+                                
+                                <TextBlock Text="{Binding Stats}"
                                         Grid.Row="1"
+                                        Width="410"
                                         Style="{StaticResource PhoneTextNormalStyle}" 
                                         TextWrapping="Wrap"/>
+                            </Grid>
                         </Grid>
                     </DataTemplate>
                 </toolkit:ListPicker.FullModeItemTemplate>

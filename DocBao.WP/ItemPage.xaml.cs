@@ -102,6 +102,7 @@ namespace DocBao.WP
             _itemContainer.Dispose();
             adControl.StopAds();
             adControl.Dispose();
+            NavBar.Dispose();
         }
 
         void wbContent_Navigating(object sender, NavigatingEventArgs e)

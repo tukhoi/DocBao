@@ -91,6 +91,7 @@ namespace DocBao.WP
             llsItemList.ItemRealized -= llsItemList_ItemRealized;
             ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
             adControl = null;
+            NavBar.Dispose();
         }
 
         private async Task<int> Binding(bool refresh = false, bool gobackOnFail = true)
@@ -436,7 +437,7 @@ namespace DocBao.WP
         private void UpdateItemReadCount()
         {
             txtReadCount.Text = _viewModel.ReadStats;
-            txtLastUpdated.Text = CategoryHelper.GetUpdateStats(_viewModel.Id);
+            //txtLastUpdated.Text = CategoryHelper.GetUpdateStats(_viewModel.Id);
         }
 
         private void UpdateViewTitle()
