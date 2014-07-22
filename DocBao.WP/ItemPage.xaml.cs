@@ -143,7 +143,24 @@ namespace DocBao.WP
                 _wbContent.Navigate(new Uri(item.Link, UriKind.Absolute));
             }
         }
+
         private void BindingNavBar()
+        {
+            switch (_previousPage)
+            { 
+                case PreviousPage.FeedPage:
+                    BindingNavBarForPrevFeedPage();
+                    break;
+                case PreviousPage.CategoryPage:
+                    BindingNavBarForPrevCatPage();
+                    break;
+                case PreviousPage.StoredItemsPage:
+                    BindingNavBarForPrevStoredItemsPage();
+                    break;
+            }
+        }
+
+        private void BindingNavBarForPrevFeedPage()
         {
             var navBarViewModel = new NavBarViewModel();
             var item = _itemContainer.AllItemViewModels[_currentIndex];
@@ -188,6 +205,69 @@ namespace DocBao.WP
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 
+        private void BindingNavBarForPrevCatPage()
+        {
+            var navBarViewModel = new NavBarViewModel();
+
+            var categories = _feedManager.GetCategories();
+            categories.ForEach(c =>
+            {
+                navBarViewModel.FirstBrothers.Add(new Brother()
+                {
+                    Id = c.Id.ToString(),
+                    Name = c.Name,
+                    ImageUri = c.ImageUri.ToString().StartsWith("/") ? c.ImageUri : new Uri("/" + c.ImageUri.ToString(), UriKind.Relative),
+                    Stats = CategoryHelper.GetStatsString(c.Id),
+                    Selected = c.Id.Equals(_itemContainer.Id),
+                    NavigateUri = new Uri(string.Format("/CategoryPage.xaml?categoryId={0}", c.Id), UriKind.Relative)
+                });
+            });
+
+            NavBar.SecondLPKVisibility = System.Windows.Visibility.Collapsed;
+            NavBar.Binding(navBarViewModel);
+            NavBar.Navigation = ((uri) => { DisposeAll(); NavigationService.Navigate(uri); });
+            NavBar.NavigateHome = (() => this.BackToMainPage());
+        }
+
+        private void BindingNavBarForPrevStoredItemsPage()
+        {
+            var navBarViewModel = new NavBarViewModel();
+
+            navBarViewModel.SecondBrothers.Add(new Brother()
+            {
+                Id = null,
+                Name = "tin đã lưu",
+                ImageUri = null,
+                Stats = "lưu các tin hay trên điện thoại",
+                Selected = true,
+                NavigateUri = null
+            });
+
+            navBarViewModel.SecondBrothers.Add(new Brother()
+            {
+                Id = null,
+                Name = "xem theo báo",
+                ImageUri = null,
+                Stats = "xem theo các đầu báo đã cài",
+                Selected = true,
+                NavigateUri = new Uri("/HubTilePage.xaml", UriKind.Relative)
+            });
+
+            navBarViewModel.SecondBrothers.Add(new Brother()
+            {
+                Id = null,
+                Name = "xem theo mục",
+                ImageUri = null,
+                Stats = "xem nhóm các báo theo chuyên mục",
+                Selected = true,
+                NavigateUri = new Uri("/CustomViewPage.xaml", UriKind.Relative)
+            });
+
+            NavBar.FirstLPKVisibility = System.Windows.Visibility.Collapsed;
+            NavBar.Binding(navBarViewModel);
+            NavBar.Navigation = ((uri) => { DisposeAll(); NavigationService.Navigate(uri); });
+            NavBar.NavigateHome = (() => this.BackToMainPage());
+        }
 
         private void BindingWebBrowser()
         {
@@ -446,7 +526,7 @@ namespace DocBao.WP
                     if (result.Value != null || result.Value.Count > 0)
                     {
                         _itemContainer = new FeedViewModel();
-                        _itemContainer.Id = feedId;
+                        _itemContainer.Id = categoryId;
                         _itemContainer.Name = _feedManager.GetCategory(categoryId).Name;
                         result.Value.ForEach(i => _itemContainer.AllItemViewModels.Add(new ItemViewModel(i)));
                     }

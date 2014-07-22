@@ -41,6 +41,7 @@ namespace DocBao.WP
                 _lastItemId = lastItemId;
 
              Binding();
+             BindingNavBar();
              base.OnNavigatedTo(e);
         }
 
@@ -84,7 +85,7 @@ namespace DocBao.WP
                 }
 
                 _viewModel.LoadPage(_pageNumber, AppConfig.ShowUnreadItemOnly);
-                firstNextIcon.Visibility = System.Windows.Visibility.Visible;
+                //firstNextIcon.Visibility = System.Windows.Visibility.Visible;
                 UpdateViewTitle();
                 UpdateItemReadCount();
                 this.llsItemList.ItemsSource = _viewModel.PagedItemViewModels;
@@ -101,6 +102,46 @@ namespace DocBao.WP
                 GA.LogException(ex);
                 return;
             }
+        }
+
+        private void BindingNavBar()
+        {
+            var navBarViewModel = new NavBarViewModel();
+
+            navBarViewModel.SecondBrothers.Add(new Brother()
+            {
+                Id = string.Empty,
+                Name = "tin đã lưu",
+                ImageUri = null,
+                Stats = "lưu các tin hay trên điện thoại",
+                Selected = true,
+                NavigateUri = null
+            });
+
+            navBarViewModel.SecondBrothers.Add(new Brother()
+            {
+                Id = string.Empty,
+                Name = "xem theo báo",
+                ImageUri = null,
+                Stats = "xem theo các đầu báo đã cài",
+                Selected = false,
+                NavigateUri = new Uri("/HubTilePage.xaml", UriKind.Relative)
+            });
+
+            navBarViewModel.SecondBrothers.Add(new Brother()
+            {
+                Id = string.Empty,
+                Name = "xem theo mục",
+                ImageUri = null,
+                Stats = "xem nhóm các báo theo chuyên mục",
+                Selected = false,
+                NavigateUri = new Uri("/CustomViewPage.xaml", UriKind.Relative)
+            });
+
+            //NavBar.SecondLPKVisibility = System.Windows.Visibility.Collapsed;
+            NavBar.Binding(navBarViewModel);
+            NavBar.Navigation = ((uri) => NavigationService.Navigate(uri));
+            NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 
         private void llsItemList_Tap(object sender, System.Windows.Input.GestureEventArgs e)

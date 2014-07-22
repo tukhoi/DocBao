@@ -97,7 +97,7 @@
                     Foreground="White"
                     Margin="12,0,12,12"
                     TextWrapping="Wrap"
-                    Text="cập nhật ngày 19/7/2014"/>
+                    Text="cập nhật ngày 22/7/2014"/>
             </StackPanel>
 
             <Image Source="/Resources/tile-small.png"

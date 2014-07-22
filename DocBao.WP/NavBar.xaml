@@ -31,11 +31,16 @@
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">
             <toolkit:ListPicker Name="lpkFirstBrothers" 
+                                Margin="12,0,0,0"
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
-                                Width="180">
+                                Width="190"
+                                FullModeHeader="{Binding FirstLPKFullModeHeader}"
+                                Visibility="{Binding FirstLPKVisibility}"
+                                CacheMode="BitmapCache"
+                                VerticalAlignment="Top">
                 <toolkit:ListPicker.Background>
-                    <ImageBrush ImageSource="/Images/background.png"/>
+                    <ImageBrush ImageSource="/Images/background2.png"/>
                 </toolkit:ListPicker.Background>
                 <toolkit:ListPicker.ItemTemplate>
                     <DataTemplate>
@@ -53,12 +58,13 @@
                             </Grid.Background>
 
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="5"/>
                                 <RowDefinition Height="210"/>
-                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
                             
 
-                            <Grid Grid.Row="0">
+                            <Grid Grid.Row="1">
                                 <Grid.Background>
                                     <ImageBrush ImageSource="/Images/background2.png"/>
                                 </Grid.Background>
@@ -83,27 +89,28 @@
                                     VerticalAlignment="Center"
                                     TextWrapping="Wrap"/>
                             </Grid>
-                            
-                            
                         </Grid>
                     </DataTemplate>
                 </toolkit:ListPicker.FullModeItemTemplate>
             </toolkit:ListPicker>
             
-            <Image x:Name="imgSeparator2"
+            <Image Margin="12,0,0,0"
+                x:Name="imgSeparator2"
                     Source="/Resources/next.png" 
                     VerticalAlignment="Center"
-                    Stretch="None"
-                    Visibility="{Binding SecondLPKVisibility}"/>
+                    Stretch="None"/>
 
-            <toolkit:ListPicker Name="lpkSecondBrothers" 
+            <toolkit:ListPicker Margin="12,0,0,0"
+                Name="lpkSecondBrothers" 
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
                                 VerticalAlignment="Center"
                                 Visibility="{Binding SecondLPKVisibility}"
-                                Width="180">
+                                FullModeHeader="{Binding SecondLPKFullModeHeader}"
+                                Width="190"
+                                CacheMode="BitmapCache">
                 <toolkit:ListPicker.Background>
-                    <ImageBrush ImageSource="/Images/background.png"/>
+                    <ImageBrush ImageSource="/Images/background2.png"/>
                 </toolkit:ListPicker.Background>
                 <toolkit:ListPicker.ItemTemplate>
                     <DataTemplate>
@@ -121,11 +128,12 @@
                             </Grid.Background>
                             
                             <Grid.RowDefinitions>
+                                <RowDefinition Height="5"/>
                                 <RowDefinition Height="Auto"/>
-                                <RowDefinition Height="15"/>
+                                <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
 
-                            <Grid Grid.Row="0">
+                            <Grid Grid.Row="1">
                                 <Grid.Background>
                                     <ImageBrush ImageSource="/Images/background2.png"/>
                                 </Grid.Background>
@@ -149,7 +157,6 @@
                     </DataTemplate>
                 </toolkit:ListPicker.FullModeItemTemplate>
             </toolkit:ListPicker>
-
         </StackPanel>
     </Grid>
 </UserControl>

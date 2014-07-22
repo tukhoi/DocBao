@@ -58,8 +58,13 @@
 
         <!--TitlePanel contains the name of the application and page title-->
         <StackPanel Grid.Row="0" Margin="12,12,12,12" Orientation="Vertical">
-            <local:NavBar x:Name="NavBar"/>
-            <TextBlock Text="" x:Name="txtReadCount" HorizontalAlignment="Left" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
+            <local:NavBar x:Name="NavBar"
+                          FirstLPKFullModeHeader="chọn báo"
+                          SecondLPKFullModeHeader="chọn chuyên mục"/>
+            <TextBlock Text="" x:Name="txtReadCount"
+                       HorizontalAlignment="Left" 
+                       Style="{StaticResource PhoneTextSubtleStyle}" 
+                       Foreground="White"/>
             <!--<TextBlock Text="" x:Name="txtLastUpdated" HorizontalAlignment="Left" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>-->
         </StackPanel>
 

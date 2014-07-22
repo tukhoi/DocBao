@@ -65,6 +65,8 @@ namespace DocBao.WP
             if (newItemCount > 0)
                 Messenger.ShowToast(newItemCount + " tin mới");
 
+            SetSecondPage();
+
             base.OnNavigatedTo(e);
         }
 
@@ -273,6 +275,7 @@ namespace DocBao.WP
                 _currentIndex++;
 
             await Binding();
+            BindingNavBar();
         }
 
         private async Task LoadPreviousCategory()
@@ -283,6 +286,7 @@ namespace DocBao.WP
                 _currentIndex--;
 
             await Binding();
+            BindingNavBar();
         }
 
         #endregion

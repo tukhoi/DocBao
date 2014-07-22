@@ -513,6 +513,7 @@ namespace DocBao.WP
                 _currentIndex++;
 
             await Binding();
+            BindingNavBar();
         }
 
         private async Task LoadPreviousFeed()
@@ -523,6 +524,7 @@ namespace DocBao.WP
                 _currentIndex--;
 
             await Binding();
+            BindingNavBar();
         }
 
         #endregion

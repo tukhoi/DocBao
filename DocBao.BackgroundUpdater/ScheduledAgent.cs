@@ -31,8 +31,10 @@ namespace DocBao.BackgroundUpdater
         /// </remarks>
         static ScheduledAgent()
         {
+            var version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
             Action intialization = new Action(() 
-                => GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, AppConfig.GA_APP_VERSION));
+                => GA.Initialize(AppConfig.ClientId.ToString(), AppConfig.GA_ID, AppConfig.GA_APP_NAME, version.ToString()));
 
             Task.Factory.StartNew(() =>
                 Deployment.Current.Dispatcher.BeginInvoke(intialization));
