@@ -2,6 +2,7 @@
 using Davang.Utilities.Helpers;
 using Davang.Utilities.Helpers.Serialization;
 using DocBao.ApplicationServices.Background;
+using Microsoft.Phone.Info;
 using System;
 using System.Collections.Generic;
 using System.Linq;

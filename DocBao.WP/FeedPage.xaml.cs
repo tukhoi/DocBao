@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Windows;
@@ -10,21 +9,17 @@ using Microsoft.Phone.Shell;
 using DocBao.ApplicationServices;
 using Davang.Parser.Dto;
 using Davang.Utilities.Extensions;
-using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 using DocBao.WP.Helper;
 using Microsoft.Phone.Tasks;
 using DocBao.WP.ViewModels;
-using System.Windows.Data;
 using Davang.Utilities.Helpers;
 using Microsoft.Phone.Net.NetworkInformation;
 using DocBao.ApplicationServices.RssService;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
 using DocBao.ApplicationServices.UserBehavior;
-using System.Diagnostics;
 using System.Windows.Input;
-using System.Windows.Media;
 using Davang.WP.Utilities.Helper;
 
 namespace DocBao.WP
@@ -37,6 +32,8 @@ namespace DocBao.WP
         string _lastItemId;
         Publisher _currentPubisher;
         int _currentIndex=-1;
+        Guid _publisherIdFromQS = default(Guid);
+        Guid _feedIdFromQS = default(Guid);
 
         public FeedPage()
         {
@@ -52,10 +49,21 @@ namespace DocBao.WP
         {
             await MyOnNavigatedTo();
 
-            var feedId = NavigationContext.QueryString.GetQueryStringToGuid("feedId");
-            var publisherId = NavigationContext.QueryString.GetQueryStringToGuid("publisherId");
+            if (default(Guid).Equals(_publisherIdFromQS))
+                _publisherIdFromQS = NavigationContext.QueryString.GetQueryStringToGuid("publisherId");
+            
+            if (default(Guid).Equals(_feedIdFromQS))
+                _feedIdFromQS = NavigationContext.QueryString.GetQueryStringToGuid("feedId");
 
-            var publisherResult = _feedManager.GetSubscribedPublisher(publisherId);
+            await Binding();
+
+            SetSecondPage();
+            base.OnNavigatedTo(e);
+        }
+
+        async Task Binding()
+        {
+            var publisherResult = _feedManager.GetSubscribedPublisher(_publisherIdFromQS);
             if (publisherResult.HasError)
             {
                 Messenger.ShowToast("không tìm thấy báo...");
@@ -69,24 +77,20 @@ namespace DocBao.WP
             _currentPubisher = publisherResult.Target;
             //if _currentIndex hasn't been initialized (-1) then initialize it
             //otherwise leave it as-is
-            _currentIndex = _currentIndex == -1 ? _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(feedId))) : _currentIndex;
+            //_currentIndex = _currentIndex == -1 || findNewCurrentIndex
+            //    ? _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)))
+            //    : _currentIndex;
+
+            _currentIndex = _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)));
             if (_currentIndex == -1 && _currentPubisher.FeedIds.Count > 0)
                 _currentIndex = 0;
 
-            var newItemCount = await Binding();
+            var newItemCount = await BindingContent();
             BindingNavBar();
             if (newItemCount > 0)
                 Messenger.ShowToast(newItemCount + " tin mới");
             if (newItemCount == -1)
                 Messenger.ShowToast("lấy tin mới bị lỗi...");
-
-            //var previousPage = NavigationService.BackStack.First().Source;
-            //if (previousPage.ToString().Contains("FeedPage.xaml") || previousPage.ToString().Contains("ItemPage.xaml"))
-            //    NavigationService.RemoveBackEntry(); 
-
-            SetSecondPage();
-
-            base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -113,12 +117,13 @@ namespace DocBao.WP
             _viewModel.Dispose();
             llsItemList.ItemRealized -= llsItemList_ItemRealized;
             ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
+            NavBar.SelectedEvent -= NavBar_Selected;
             NavBar.Dispose();
 
             adControl = null;
         }
 
-        private async Task<int> Binding(bool requireUpdate = false, bool goBackOnFail = true)
+        private async Task<int> BindingContent(bool requireUpdate = false, bool goBackOnFail = true)
         {
             try
             {
@@ -196,7 +201,12 @@ namespace DocBao.WP
                             ImageUri = p.ImageUri.ToString().StartsWith("/") ? p.ImageUri : new Uri("/" + p.ImageUri.ToString(), UriKind.Relative),
                             Stats = PublisherHelper.GetStatsString(p.Id),
                             Selected = p.Id.Equals(_viewModel.Publisher.Id),
-                            NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", p.Id, p.FeedIds[0]), UriKind.Relative)
+                            BindingData = new BindingData() 
+                                {
+                                    PublisherId = p.Id,
+                                    FeedId = default(Guid),
+                                    CategoryId = default(Guid)
+                                }
                         });
                 });
 
@@ -205,22 +215,42 @@ namespace DocBao.WP
                     var feedResult = _feedManager.GetSubscribedFeed(f);
                     if (feedResult.HasError) return;
 
-                    navBarViewModel.SecondBrothers.Add(new Brother() 
+                    navBarViewModel.SecondBrothers.Add(new Brother()
                         {
                             Id = f.ToString(),
                             Name = feedResult.Target.Name,
                             ImageUri = null,
                             Stats = FeedHelper.GetStatsString(f),
                             Selected = f.Equals(_viewModel.Id),
-                            NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", feedResult.Target.Publisher.Id, f), UriKind.Relative)
+                            //NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", feedResult.Target.Publisher.Id, f), UriKind.Relative)
+                            BindingData = new BindingData() 
+                                {
+                                    PublisherId = feedResult.Target.Publisher.Id,
+                                    FeedId = f,
+                                    CategoryId = default(Guid)
+                                }
                         });
                 });
 
-            //NavBar.SelectedFirstBrotherId = _currentPubisher.Id.ToString();
-            //NavBar.SelectedSecondBrotherId = _viewModel.Id.ToString();
-            NavBar.Binding(navBarViewModel);
-            NavBar.Navigation = ((uri) => NavigationService.Navigate(uri));
+            NavBar.BindingNavBar(navBarViewModel);
+            NavBar.PostAction = PostAction.Binding;
+            NavBar.SelectedEvent -= NavBar_Selected;
+            NavBar.SelectedEvent += NavBar_Selected;
             NavBar.NavigateHome = (() => this.BackToMainPage());
+        }
+
+        Task NavBar_Selected(BindingData bindingData)
+        {
+            return Task.Run(() =>
+                {
+                    _viewModel.PagedItemViewModels.Clear();
+                    _publisherIdFromQS = bindingData.PublisherId;
+                    _feedIdFromQS = bindingData.FeedId;
+                    _lastItemId = null;
+                    _feedManager.SetLastId<string>(null);
+                    _pageNumber = 0;
+                    //await Binding(true);
+                });
         }
 
         private void UpdateItemReadCount()
@@ -262,6 +292,12 @@ namespace DocBao.WP
 
         #region Context Menu
 
+        private ItemViewModel GetItemFromContextMenu(object sender)
+        {
+            var dataContext = (sender as MenuItem).DataContext;
+            return dataContext as ItemViewModel;
+        }
+
         private void ctxOpenIE_Click(object sender, RoutedEventArgs e)
         {
             var item = GetItemFromContextMenu(sender);
@@ -288,7 +324,7 @@ namespace DocBao.WP
             else
             {
                 _lastItemId = item.Id;
-                await Binding();
+                await BindingContent();
             }
 
             this.SetProgressIndicator(false);
@@ -333,7 +369,7 @@ namespace DocBao.WP
         {
             this.SetProgressIndicator(true, "đang cập nhật...");
             this._lastItemId = string.Empty;
-            var updated = await Binding(true, false);
+            var updated = await BindingContent(true, false);
             if (updated > 0)
                 Messenger.ShowToast(updated + " tin mới");
             if (updated == -1)
@@ -349,7 +385,7 @@ namespace DocBao.WP
             _pageNumber = 1;
             _viewModel.PagedItemViewModels.Clear();
             _lastItemId = null;
-            await Binding();
+            await BindingContent();
             this.SetProgressIndicator(false);
         }
 
@@ -365,7 +401,7 @@ namespace DocBao.WP
             _pageNumber = 1;
             _viewModel.PagedItemViewModels.Clear();
             _lastItemId = null;
-            await Binding();
+            await BindingContent();
         }
 
         private async void unreadItemOnly_Click(object sender, EventArgs e)
@@ -374,7 +410,7 @@ namespace DocBao.WP
             _pageNumber = 1;
             _viewModel.PagedItemViewModels.Clear();
             _lastItemId = null;
-            await Binding();
+            await BindingContent();
 
         }
 
@@ -414,12 +450,6 @@ namespace DocBao.WP
 
         #endregion
 
-        private ItemViewModel GetItemFromContextMenu(object sender)
-        {
-            var dataContext = (sender as MenuItem).DataContext;
-            return dataContext as ItemViewModel;
-        }
-
         private void llsItemList_ItemRealized(object sender, ItemRealizationEventArgs e)
         {
             if (!_viewModel.IsLoading
@@ -443,8 +473,14 @@ namespace DocBao.WP
                     this.SetProgressIndicator(false);
                 }
         }
-
+        
         #region Flick
+
+        private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            if (e.IsInertial)
+                this.OnFlick(sender, e);
+        }
 
         private async void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
@@ -468,42 +504,7 @@ namespace DocBao.WP
                 _lastItemId = string.Empty;
                 _feedManager.SetLastId<string>(string.Empty);
             }
-
-
-            //if (_currentPubisher.FeedIds.Count == 1) return;
-            //if (e.Direction == System.Windows.Controls.Orientation.Horizontal)
-            //{
-            //    _pageNumber = 0;
-            //    _viewModel.PagedItemViewModels.Clear();
-
-            //    if (e.HorizontalVelocity < 0)
-            //        await LoadNextFeed();
-            //    else
-            //        await LoadPreviousFeed();
-
-            //    _lastItemId = string.Empty;
-            //    _feedManager.SetLastId<string>(string.Empty);
-            //}
         }
-
-        //private GeneralTransform GetTransformNoTranslation(CompositeTransform transform)
-        //{
-        //    CompositeTransform newTransform = new CompositeTransform();
-        //    newTransform.Rotation = transform.Rotation;
-        //    newTransform.ScaleX = transform.ScaleX;
-        //    newTransform.ScaleY = transform.ScaleY;
-        //    newTransform.CenterX = transform.CenterX;
-        //    newTransform.CenterY = transform.CenterY;
-        //    newTransform.TranslateX = 0;
-        //    newTransform.TranslateY = 0;
-
-        //    return newTransform;
-        //}
-
-        //private Orientation GetDirection(double x, double y)
-        //{
-        //    return Math.Abs(x) >= Math.Abs(y) ? System.Windows.Controls.Orientation.Horizontal : System.Windows.Controls.Orientation.Vertical;
-        //}
 
         private async Task LoadNextFeed()
         {
@@ -512,7 +513,7 @@ namespace DocBao.WP
             else
                 _currentIndex++;
 
-            await Binding();
+            await BindingContent();
             BindingNavBar();
         }
 
@@ -523,32 +524,10 @@ namespace DocBao.WP
             else
                 _currentIndex--;
 
-            await Binding();
+            await BindingContent();
             BindingNavBar();
         }
 
         #endregion
-
-        //private void txtAppName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        //{
-        //    //if (_currentPubisher.FeedIds.Count == 1)
-        //    //    this.BackToPreviousPage();
-        //    //else
-        //    //    this.BackToPreviousPage(1);
-
-        //    this.BackToMainPage();
-        //}
-
-        private void txtPublisherName_Tap(object sender, System.Windows.Input.GestureEventArgs e)
-        {
-            //if (_currentPubisher.FeedIds.Count == 1) return;
-            this.BackToPreviousPage();
-        }
-
-        private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
-        {
-            if (e.IsInertial)
-                this.OnFlick(sender, e);
-        }
     }
 }

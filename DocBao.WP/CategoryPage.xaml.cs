@@ -30,6 +30,7 @@ namespace DocBao.WP
         string _lastItemId;
         CategoryModel _viewModel = new CategoryModel();
         int _currentIndex = -1;
+        Guid _catIdFromQS = default(Guid);
 
         public CategoryPage()
         {
@@ -47,8 +48,17 @@ namespace DocBao.WP
         {
             await MyOnNavigatedTo();
 
-            var categoryId = NavigationContext.QueryString.GetQueryStringToGuid("categoryId");
+            if (default(Guid).Equals(_catIdFromQS))
+                _catIdFromQS = NavigationContext.QueryString.GetQueryStringToGuid("categoryId");
 
+            await Binding();
+
+            SetSecondPage();
+            base.OnNavigatedTo(e);
+        }
+
+        async Task Binding()
+        {
             var lastItemId = _feedManager.GetLastId<string>();
             if (!string.IsNullOrEmpty(lastItemId))
                 _lastItemId = lastItemId;
@@ -56,18 +66,18 @@ namespace DocBao.WP
             var categories = _feedManager.GetCategories();
             //if _currentIndex hasn't been initialized (-1) then initialize it
             //otherwise leave it as-is
-            _currentIndex = _currentIndex == -1 ? categories.IndexOf(categories.FirstOrDefault(c => c.Id.Equals(categoryId))) : _currentIndex;
+            //_currentIndex = _currentIndex == -1 || findNewCurrentIndex
+            //    ? categories.IndexOf(categories.FirstOrDefault(c => c.Id.Equals(_catIdFromQS))) 
+            //    : _currentIndex;
+
+            _currentIndex = categories.IndexOf(categories.FirstOrDefault(c => c.Id.Equals(_catIdFromQS)));
             if (_currentIndex == -1 && categories.Count > 0)
                 _currentIndex = 0;
 
-            var newItemCount = await Binding();
+            var newItemCount = await BindingContent();
             BindingNavBar();
             if (newItemCount > 0)
                 Messenger.ShowToast(newItemCount + " tin mới");
-
-            SetSecondPage();
-
-            base.OnNavigatedTo(e);
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -93,10 +103,11 @@ namespace DocBao.WP
             llsItemList.ItemRealized -= llsItemList_ItemRealized;
             ContentPanel.ManipulationCompleted -= ContentPanel_ManipulationCompleted;
             adControl = null;
+            NavBar.SelectedEvent -= NavBar_SelectedEvent;
             NavBar.Dispose();
         }
 
-        private async Task<int> Binding(bool refresh = false, bool gobackOnFail = true)
+        private async Task<int> BindingContent(bool refresh = false, bool gobackOnFail = true)
         {
             try
             {
@@ -176,13 +187,33 @@ namespace DocBao.WP
                     ImageUri = c.ImageUri.ToString().StartsWith("/") ? c.ImageUri : new Uri("/" + c.ImageUri.ToString(), UriKind.Relative),
                     Stats = CategoryHelper.GetStatsString(c.Id),
                     Selected = c.Id.Equals(_viewModel.Id),
-                    NavigateUri = new Uri(string.Format("/CategoryPage.xaml?categoryId={0}", c.Id), UriKind.Relative)
+                    BindingData = new BindingData() 
+                        {
+                            CategoryId = c.Id,
+                            PublisherId = default(Guid),
+                            FeedId = default(Guid)
+                        }
                 });
             });
 
-            NavBar.Binding(navBarViewModel);
-            NavBar.Navigation = ((uri) => NavigationService.Navigate(uri));
+            NavBar.BindingNavBar(navBarViewModel);
+            NavBar.PostAction = PostAction.Binding;
+            NavBar.SelectedEvent -= NavBar_SelectedEvent;
+            NavBar.SelectedEvent += NavBar_SelectedEvent;
             NavBar.NavigateHome = (() => this.BackToMainPage());
+        }
+
+        Task NavBar_SelectedEvent(BindingData bindingData)
+        {
+            return Task.Run(() =>
+                {
+                    _viewModel.ItemViewModels.Clear();
+                    _catIdFromQS = bindingData.CategoryId;
+                    _lastItemId = null;
+                    _feedManager.SetLastId<string>(null);
+                    _pageNumber = 0;
+                    //await Binding(true);
+                });
         }
 
         #endregion
@@ -244,6 +275,12 @@ namespace DocBao.WP
 
         #region Flick
 
+        private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            if (e.IsInertial)
+                this.OnFlick(sender, e);
+        }
+
         private async void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
             Point transformedVelocity = GestureHelper.GetTransformNoTranslation(transform).Transform(e.FinalVelocities.LinearVelocity);
@@ -274,7 +311,7 @@ namespace DocBao.WP
             else
                 _currentIndex++;
 
-            await Binding();
+            await BindingContent();
             BindingNavBar();
         }
 
@@ -285,7 +322,7 @@ namespace DocBao.WP
             else
                 _currentIndex--;
 
-            await Binding();
+            await BindingContent();
             BindingNavBar();
         }
 
@@ -393,7 +430,7 @@ namespace DocBao.WP
         private async void refreshButton_Click(object sender, EventArgs e)
         {
             this.SetProgressIndicator(true, "đang cập nhật...");
-            var updated = await Binding(true, false);
+            var updated = await BindingContent(true, false);
             if (updated > 0)
                 Messenger.ShowToast(updated + " tin mới");
             this.SetProgressIndicator(false);
@@ -453,11 +490,5 @@ namespace DocBao.WP
         }
 
         #endregion
-
-        private void ContentPanel_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
-        {
-            if (e.IsInertial)
-                this.OnFlick(sender, e);
-        }
     }
 }

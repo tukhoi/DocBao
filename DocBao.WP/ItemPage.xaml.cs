@@ -96,6 +96,7 @@ namespace DocBao.WP
             _wbContent.Navigating -= wbContent_Navigating;
             _wbContent.Navigated -= wbsContent_Navigated;
             _wbContent.LoadCompleted -= wbContent_LoadCompleted;
+            _wbContent.IsScriptEnabled = false;
             _wbContent.NavigateToString("<html></html>");
             WBContainer.Child = null;
             brdTitle.ManipulationCompleted -= Border_ManipulationCompleted;
@@ -143,6 +144,8 @@ namespace DocBao.WP
                 _wbContent.Navigate(new Uri(item.Link, UriKind.Absolute));
             }
         }
+
+        #region NavBar
 
         private void BindingNavBar()
         {
@@ -196,7 +199,7 @@ namespace DocBao.WP
                 });
             });
 
-            NavBar.Binding(navBarViewModel);
+            NavBar.BindingNavBar(navBarViewModel);
             NavBar.Navigation = ((uri) =>
                 {
                     DisposeAll();
@@ -223,8 +226,7 @@ namespace DocBao.WP
                 });
             });
 
-            NavBar.SecondLPKVisibility = System.Windows.Visibility.Collapsed;
-            NavBar.Binding(navBarViewModel);
+            NavBar.BindingNavBar(navBarViewModel);
             NavBar.Navigation = ((uri) => { DisposeAll(); NavigationService.Navigate(uri); });
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
@@ -263,11 +265,12 @@ namespace DocBao.WP
                 NavigateUri = new Uri("/CustomViewPage.xaml", UriKind.Relative)
             });
 
-            NavBar.FirstLPKVisibility = System.Windows.Visibility.Collapsed;
-            NavBar.Binding(navBarViewModel);
+            NavBar.BindingNavBar(navBarViewModel);
             NavBar.Navigation = ((uri) => { DisposeAll(); NavigationService.Navigate(uri); });
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
+
+        #endregion
 
         private void BindingWebBrowser()
         {
@@ -277,15 +280,67 @@ namespace DocBao.WP
             _wbContent.LoadCompleted += wbContent_LoadCompleted;
             _wbContent.Width = WBContainer.Width;
             _wbContent.Height = WBContainer.Height;
+            _wbContent.IsScriptEnabled = MemoryHelper.IsLowMemDevice ? false : true;
 
             WBContainer.Child = _wbContent;
         }
 
-        //private void BindingAdViewer()
-        //{
-        //    _adViewer = AdViewerManager.AdViewer;
-        //    AdContainer.Child = _adViewer;
-        //}
+        #region AppBar
+
+        private void CreateAppBar()
+        {
+            var item = _itemContainer.AllItemViewModels[_currentIndex];
+
+            ApplicationBar = new ApplicationBar();
+            ApplicationBar.Mode = ApplicationBarMode.Minimized;
+
+            var ieButton = new ApplicationBarIconButton();
+            ieButton.Text = "mở bằng IE";
+            ieButton.IconUri = new Uri("/Assets/AppBar/ie-icon.png", UriKind.Relative);
+            ieButton.Click += new EventHandler(ieButton_Click);
+
+            var updateButton = new ApplicationBarIconButton();
+            updateButton.Text = "cập nhật";
+            updateButton.IconUri = new Uri("/Assets/AppBar/refresh.png", UriKind.Relative);
+            updateButton.Click += new EventHandler(refreshButton_Click);
+
+            var markReadButton = new ApplicationBarIconButton();
+            markReadButton.Text = item.Read ? "chưa đọc" : "đã đọc";
+            var iconUrl = item.Read ? "/Assets/AppBar/cancel.png" : "/Assets/AppBar/check.png";
+            markReadButton.IconUri = new Uri(iconUrl, UriKind.Relative);
+            markReadButton.Click += new EventHandler(unreadButton_Click);
+
+            var storeButton = new ApplicationBarIconButton();
+            storeButton.Text = _feedManager.IsStored(item.Id) ? "xóa tin" : "lưu tin";
+            var storeIconUrl = _feedManager.IsStored(item.Id) ? "/Assets/AppBar/minus.png" : "/Assets/AppBar/new.png";
+            storeButton.IconUri = new Uri(storeIconUrl, UriKind.Relative);
+            storeButton.Click += new EventHandler(storeButton_Click);
+
+            var emailMenuItem = new ApplicationBarMenuItem();
+            emailMenuItem.Text = "gởi qua email";
+            emailMenuItem.Click += new EventHandler(emailButton_Click);
+
+            var copyLinkMenuItem = new ApplicationBarMenuItem();
+            copyLinkMenuItem.Text = "chép link";
+            copyLinkMenuItem.Click += new EventHandler(copyLinkButton_Click);
+
+            var facebookMenuItem = new ApplicationBarMenuItem();
+            facebookMenuItem.Text = "đăng lên fb";
+            facebookMenuItem.Click += new EventHandler(facebookButton_Click);
+
+            var showTitleMenuItem = new ApplicationBarMenuItem();
+            showTitleMenuItem.Text = AppConfig.ShowItemTitle ? "tắt tiêu đề" : "hiện tiêu đề";
+            showTitleMenuItem.Click += new EventHandler(showTitleMenuItem_Click);
+
+            ApplicationBar.Buttons.Add(updateButton);
+            ApplicationBar.Buttons.Add(ieButton);
+            ApplicationBar.Buttons.Add(markReadButton);
+            ApplicationBar.Buttons.Add(storeButton);
+            ApplicationBar.MenuItems.Add(emailMenuItem);
+            ApplicationBar.MenuItems.Add(copyLinkMenuItem);
+            ApplicationBar.MenuItems.Add(facebookMenuItem);
+            ApplicationBar.MenuItems.Add(showTitleMenuItem);
+        }
 
         private void ieButton_Click(object sender, EventArgs e)
         {
@@ -390,6 +445,15 @@ namespace DocBao.WP
             this.SetProgressIndicator(false);
         }
 
+        #endregion
+
+        #region Flick
+
+        private void Border_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
+        {
+            this.OnFlick(sender, e);
+        }
+
         private void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
             if (_itemContainer.AllItemViewModels.Count == 1) return;
@@ -442,60 +506,7 @@ namespace DocBao.WP
             Binding();
         }
 
-        private void CreateAppBar()
-        {
-            var item = _itemContainer.AllItemViewModels[_currentIndex];
-
-            ApplicationBar = new ApplicationBar();
-            ApplicationBar.Mode = ApplicationBarMode.Minimized;
-
-            var ieButton = new ApplicationBarIconButton();
-            ieButton.Text = "mở bằng IE";
-            ieButton.IconUri = new Uri("/Assets/AppBar/ie-icon.png", UriKind.Relative);
-            ieButton.Click += new EventHandler(ieButton_Click);
-
-            var updateButton = new ApplicationBarIconButton();
-            updateButton.Text = "cập nhật";
-            updateButton.IconUri = new Uri("/Assets/AppBar/refresh.png", UriKind.Relative);
-            updateButton.Click += new EventHandler(refreshButton_Click);
-
-            var markReadButton = new ApplicationBarIconButton();
-            markReadButton.Text = item.Read ? "chưa đọc" : "đã đọc";
-            var iconUrl = item.Read ? "/Assets/AppBar/cancel.png" : "/Assets/AppBar/check.png";
-            markReadButton.IconUri = new Uri(iconUrl, UriKind.Relative);
-            markReadButton.Click += new EventHandler(unreadButton_Click);
-
-            var storeButton = new ApplicationBarIconButton();
-            storeButton.Text = _feedManager.IsStored(item.Id) ? "xóa tin" : "lưu tin";
-            var storeIconUrl = _feedManager.IsStored(item.Id) ? "/Assets/AppBar/minus.png" : "/Assets/AppBar/new.png";
-            storeButton.IconUri = new Uri(storeIconUrl, UriKind.Relative);
-            storeButton.Click += new EventHandler(storeButton_Click);
-
-            var emailMenuItem = new ApplicationBarMenuItem();
-            emailMenuItem.Text = "gởi qua email";
-            emailMenuItem.Click += new EventHandler(emailButton_Click);
-
-            var copyLinkMenuItem = new ApplicationBarMenuItem();
-            copyLinkMenuItem.Text = "chép link";
-            copyLinkMenuItem.Click += new EventHandler(copyLinkButton_Click);
-
-            var facebookMenuItem = new ApplicationBarMenuItem();
-            facebookMenuItem.Text = "đăng lên fb";
-            facebookMenuItem.Click += new EventHandler(facebookButton_Click);
-
-            var showTitleMenuItem = new ApplicationBarMenuItem();
-            showTitleMenuItem.Text = AppConfig.ShowItemTitle ? "tắt tiêu đề" : "hiện tiêu đề";
-            showTitleMenuItem.Click += new EventHandler(showTitleMenuItem_Click);
-
-            ApplicationBar.Buttons.Add(updateButton);
-            ApplicationBar.Buttons.Add(ieButton);
-            ApplicationBar.Buttons.Add(markReadButton);
-            ApplicationBar.Buttons.Add(storeButton);
-            ApplicationBar.MenuItems.Add(emailMenuItem);
-            ApplicationBar.MenuItems.Add(copyLinkMenuItem);
-            ApplicationBar.MenuItems.Add(facebookMenuItem);
-            ApplicationBar.MenuItems.Add(showTitleMenuItem);
-        }
+        #endregion
 
         private void BindItemListToFlick(Guid feedId, Guid categoryId)
         {
@@ -532,11 +543,6 @@ namespace DocBao.WP
                     }
                     break;
             }
-        }
-
-        private void Border_ManipulationCompleted(object sender, System.Windows.Input.ManipulationCompletedEventArgs e)
-        {
-            this.OnFlick(sender, e);
         }
     }
 

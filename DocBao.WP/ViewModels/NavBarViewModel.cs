@@ -27,6 +27,7 @@ namespace DocBao.WP.ViewModels
         string Stats { get; set; }
         bool Selected { get; set; }
         Uri NavigateUri { get; set; }
+        BindingData BindingData { get; set; }
     }
 
     public class Brother : IBrother
@@ -37,22 +38,13 @@ namespace DocBao.WP.ViewModels
         public string Stats { get; set; }
         public bool Selected { get; set; }
         public Uri NavigateUri { get; set; }
+        public BindingData BindingData { get; set; }
     }
 
-    //public class FeedBrother : IBrother
-    //{
-    //    public string Id { get; set; }
-    //    public Uri ImageUri { get; set; }
-    //    public string Name { get; set; }
-    //    public string Stats { get; set; }
-    //}
-
-    //public class PublisherBrother : IBrother
-    //{
-    //    public string Id { get; set; }
-    //    public Uri ImageUri { get; set; }
-    //    public string Name { get; set; }
-    //    public string Stats { get; set; }
-    //    public Uri NavigateUri { get; set; }
-    //}
+    public class BindingData
+    {
+        public Guid PublisherId { get; set; }
+        public Guid FeedId { get; set; }
+        public Guid CategoryId { get; set; }
+    }
 }

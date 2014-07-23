@@ -63,7 +63,6 @@
                            Foreground="White"/>
             </StackPanel>-->
             <local:NavBar x:Name="NavBar" 
-                          FirstLPKVisibility="Collapsed"
                           SecondLPKFullModeHeader="chọn chuyên mục"/>
             <TextBlock Text="" x:Name="txtReadCount" Style="{StaticResource PhoneTextSubtleStyle}" Foreground="White"/>
         </StackPanel>

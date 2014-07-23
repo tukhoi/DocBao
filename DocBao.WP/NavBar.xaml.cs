@@ -10,6 +10,8 @@ using Microsoft.Phone.Shell;
 using DocBao.WP.ViewModels;
 using DocBao.ApplicationServices;
 using System.Windows.Media;
+using System.Threading.Tasks;
+using System.Collections.ObjectModel;
 
 namespace DocBao.WP
 {
@@ -17,12 +19,15 @@ namespace DocBao.WP
     {
         public Action<Uri> Navigation;
         public Action NavigateHome;
+        public PostAction PostAction;
+        public delegate Task BindingPageDelegate(BindingData bindingData);
+        public event BindingPageDelegate SelectedEvent;
 
-        public static readonly DependencyProperty FirstLPKVisibilityProperty =
-            DependencyProperty.Register("FirstLPKVisibility", typeof(Visibility), typeof(NavBar), null);
+        //public static readonly DependencyProperty FirstLPKVisibilityProperty =
+        //    DependencyProperty.Register("FirstLPKVisibility", typeof(Visibility), typeof(NavBar), null);
 
-        public static readonly DependencyProperty SecondLPKVisibilityProperty =
-            DependencyProperty.Register("SecondLPKVisibility", typeof(Visibility), typeof(NavBar), null);
+        //public static readonly DependencyProperty SecondLPKVisibilityProperty =
+        //    DependencyProperty.Register("SecondLPKVisibility", typeof(Visibility), typeof(NavBar), null);
 
         public static readonly DependencyProperty FirstLPKFullModeHeaderProperty =
             DependencyProperty.Register("FirstLPKFullModeHeader", typeof(string), typeof(NavBar), null);
@@ -30,17 +35,17 @@ namespace DocBao.WP
         public static readonly DependencyProperty SecondLPKFullModeHeaderProperty =
             DependencyProperty.Register("SecondLPKFullModeHeader", typeof(string), typeof(NavBar), null);
 
-        public Visibility FirstLPKVisibility
-        {
-            get { return (System.Windows.Visibility)GetValue(FirstLPKVisibilityProperty); }
-            set { SetValue(FirstLPKVisibilityProperty, value); }
-        }
+        //public Visibility FirstLPKVisibility
+        //{
+        //    get { return (System.Windows.Visibility)GetValue(FirstLPKVisibilityProperty); }
+        //    set { SetValue(FirstLPKVisibilityProperty, value); }
+        //}
 
-        public Visibility SecondLPKVisibility
-        {
-            get { return (System.Windows.Visibility)GetValue(SecondLPKVisibilityProperty); }
-            set { SetValue(SecondLPKVisibilityProperty, value); }
-        }
+        //public Visibility SecondLPKVisibility
+        //{
+        //    get { return (System.Windows.Visibility)GetValue(SecondLPKVisibilityProperty); }
+        //    set { SetValue(SecondLPKVisibilityProperty, value); }
+        //}
 
         public string FirstLPKFullModeHeader
         {
@@ -70,39 +75,33 @@ namespace DocBao.WP
             lpkSecondBrothers.ItemTemplate = null;
         }
 
-        public void Binding(NavBarViewModel viewModel)
+        public void BindingNavBar(NavBarViewModel viewModel)
         {
             if (viewModel == null) throw new ApplicationException("ViewModel is null");
-            lpkFirstBrothers.SelectionChanged -= lpkBrotherPublishers_SelectionChanged;
-            lpkSecondBrothers.SelectionChanged -= lpkBrotherFeeds_SelectionChanged;
-            
 
-            lpkFirstBrothers.ItemsSource = viewModel.FirstBrothers;
-            lpkSecondBrothers.ItemsSource = viewModel.SecondBrothers;
+            LayoutRoot.Visibility = System.Windows.Visibility.Collapsed;
 
-            //if (viewModel.FirstBrothers.Count == 1) lpkFirstBrothers.IsHitTestVisible = false;
-            //if (viewModel.SecondBrothers.Count == 1) lpkSecondBrothers.IsHitTestVisible = false;
+            var showBoth = viewModel.FirstBrothers != null && viewModel.FirstBrothers.Count > 1 && viewModel.SecondBrothers != null && viewModel.SecondBrothers.Count > 1;
+            BindListPicker(lpkFirstBrothers, viewModel.FirstBrothers, showBoth);
+            BindListPicker(lpkSecondBrothers, viewModel.SecondBrothers, showBoth);
 
-            if (viewModel.FirstBrothers.Count == 1) FirstLPKVisibility = System.Windows.Visibility.Collapsed;
-            if (viewModel.SecondBrothers.Count == 1) SecondLPKVisibility = System.Windows.Visibility.Collapsed;
-
-            lpkFirstBrothers.SelectedItem = lpkFirstBrothers.Items.Select(x => x as IBrother).Where(x => x.Selected).FirstOrDefault();
-            lpkSecondBrothers.SelectedItem = lpkSecondBrothers.Items.Select(x => x as IBrother).Where(x => x.Selected).FirstOrDefault();
-
-            txtHome.Tap += txtHome_Tap;
-            lpkFirstBrothers.SelectionChanged += lpkBrotherPublishers_SelectionChanged;
-            lpkSecondBrothers.SelectionChanged += lpkBrotherFeeds_SelectionChanged;
-
-            LayoutRoot.Visibility = System.Windows.Visibility.Visible;
-            imgSeparator2.Visibility =
-                FirstLPKVisibility == System.Windows.Visibility.Visible && SecondLPKVisibility == System.Windows.Visibility.Visible
+            imgSeparator2.Visibility = showBoth                
                 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
 
-            if (FirstLPKVisibility == System.Windows.Visibility.Collapsed)
-            lpkSecondBrothers.Width = 430;
-            
-            if (SecondLPKVisibility == System.Windows.Visibility.Collapsed)
-                lpkFirstBrothers.Width = 430;
+            txtHome.Tap += txtHome_Tap;
+            LayoutRoot.Visibility = System.Windows.Visibility.Visible;
+        }
+
+        void BindListPicker(ListPicker listPicker, ObservableCollection<IBrother> brothers, bool showBoth)
+        {
+            var visibility = brothers == null || brothers.Count < 2 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
+            listPicker.SelectionChanged -= ListPicker_SelectionChanged;
+            listPicker.ItemsSource = brothers;
+            listPicker.Visibility = visibility;
+            if (visibility == System.Windows.Visibility.Visible)
+                listPicker.SelectedItem = listPicker.Items.Select(x => x as IBrother).Where(x => x.Selected).FirstOrDefault();
+            listPicker.Width = showBoth ? 190 : 430;
+            listPicker.SelectionChanged += ListPicker_SelectionChanged;
         }
 
         void txtHome_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -110,44 +109,32 @@ namespace DocBao.WP
             NavigateHome();
         }
 
-        private void lpkBrotherFeeds_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ListPicker_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            if (e.RemovedItems == null || e.RemovedItems.Count == 0 || lpkSecondBrothers.SelectedIndex == -1)
+            var listPicker = sender as ListPicker;
+            if (listPicker == null) return;
+
+            if (e.RemovedItems == null || e.RemovedItems.Count == 0 || listPicker.SelectedIndex == -1)
                 return;
 
-            var brother = lpkSecondBrothers.SelectedItem as IBrother;
+            var brother = listPicker.SelectedItem as IBrother;
             if (brother == null) return;
-
-            Navigation(brother.NavigateUri);
-
+            await ExecutePostAction(brother);
         }
 
-        private void lpkBrotherPublishers_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async Task ExecutePostAction(IBrother brother)
         {
-            if (e.RemovedItems == null || e.RemovedItems.Count == 0 || lpkFirstBrothers.SelectedIndex == -1)
-                return;
-
-            var brother = lpkFirstBrothers.SelectedItem as IBrother;
-            if (brother == null) return;
-
-            Navigation(brother.NavigateUri);
+            if (this.PostAction == PostAction.Navigation)
+                Navigation(brother.NavigateUri);
+            else if (this.PostAction == PostAction.Binding)
+                if (SelectedEvent != null)
+                    await SelectedEvent(brother.BindingData);
         }
+    }
 
-        //protected void ActionOnChildControls<T>(DependencyObject obj, DependencyProperty propName, string propValue, Action<DependencyObject> action)
-        //{
-        //    var count = VisualTreeHelper.GetChildrenCount(obj);
-        //    if (count == 0)
-        //        return;
-
-        //    for (int i = 0; i < count; i++)
-        //    {
-        //        var child = VisualTreeHelper.GetChild(obj, i);
-
-        //        if (child != null && child is T && child.GetValue(propName).Equals(propValue))
-        //            action(child);
-        //        else
-        //            ActionOnChildControls<T>(child, propName, propValue, action);
-        //    }
-        //}
+    public enum PostAction
+    {
+        Navigation,
+        Binding
     }
 }

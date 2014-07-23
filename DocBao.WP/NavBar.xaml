@@ -36,8 +36,6 @@
                                 ItemsSource="{Binding}"
                                 Width="190"
                                 FullModeHeader="{Binding FirstLPKFullModeHeader}"
-                                Visibility="{Binding FirstLPKVisibility}"
-                                CacheMode="BitmapCache"
                                 VerticalAlignment="Top">
                 <toolkit:ListPicker.Background>
                     <ImageBrush ImageSource="/Images/background2.png"/>
@@ -105,10 +103,8 @@
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
                                 VerticalAlignment="Center"
-                                Visibility="{Binding SecondLPKVisibility}"
                                 FullModeHeader="{Binding SecondLPKFullModeHeader}"
-                                Width="190"
-                                CacheMode="BitmapCache">
+                                Width="190">
                 <toolkit:ListPicker.Background>
                     <ImageBrush ImageSource="/Images/background2.png"/>
                 </toolkit:ListPicker.Background>

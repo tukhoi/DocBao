@@ -9,7 +9,7 @@ namespace DocBao.WP.Helper
 {
     internal class WebBrowserManager
     {
-        private static readonly Lazy<WebBrowser> _instance = 
+        private static readonly Lazy<WebBrowser> _instance =
             new Lazy<WebBrowser>(() => new WebBrowser());
 
         public static WebBrowser WebBrowser { 
