@@ -497,35 +497,33 @@ namespace DocBao.WP
                 _viewModel.PagedItemViewModels.Clear();
 
                 if (horizontalVelocity < 0)
-                    await LoadNextFeed();
+                    LoadNextFeed();
                 else
-                    await LoadPreviousFeed();
+                    LoadPreviousFeed();
+
+                _feedIdFromQS = _currentPubisher.FeedIds[_currentIndex];
+                await BindingContent();
+                BindingNavBar();
 
                 _lastItemId = string.Empty;
                 _feedManager.SetLastId<string>(string.Empty);
             }
         }
 
-        private async Task LoadNextFeed()
+        private void LoadNextFeed()
         {
             if (_currentIndex == _currentPubisher.FeedIds.Count - 1)
                 _currentIndex = 0;
             else
                 _currentIndex++;
-
-            await BindingContent();
-            BindingNavBar();
         }
 
-        private async Task LoadPreviousFeed()
+        private void LoadPreviousFeed()
         {
             if (_currentIndex == 0 && _currentPubisher.FeedIds.Count > 0)
                 _currentIndex = _currentPubisher.FeedIds.Count - 1;
             else
                 _currentIndex--;
-
-            await BindingContent();
-            BindingNavBar();
         }
 
         #endregion
