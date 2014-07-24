@@ -5,7 +5,7 @@
     <Language code="vi" />
     <Language code="vi-VN" />
   </Languages>
-  <App xmlns="" ProductID="{5debf308-5c2d-4afd-a0a8-c52ba0210355}" Title="duyệt báo" RuntimeType="Silverlight" Version="1.7.2.0" Genre="apps.normal" Author="Davang Solutions" Description="Thưởng thức tin nóng, được cập nhật liên tục, định kỳ... Bản trả tiền không có quảng cáo, không giới hạn báo/chuyên mục theo dõi cùng nhiều tính năng khác..." Publisher="Davang Solutions" PublisherID="{fe74107c-ab16-4b11-8a25-39db85ba141c}">
+  <App xmlns="" ProductID="{5debf308-5c2d-4afd-a0a8-c52ba0210355}" Title="duyệt báo" RuntimeType="Silverlight" Version="1.7.3.0" Genre="apps.normal" Author="Davang Solutions" Description="Thưởng thức tin nóng, được cập nhật liên tục, định kỳ... Bản trả tiền không có quảng cáo, không giới hạn báo/chuyên mục theo dõi cùng nhiều tính năng khác..." Publisher="Davang Solutions" PublisherID="{fe74107c-ab16-4b11-8a25-39db85ba141c}">
     <IconPath IsRelative="true" IsResource="false">Resources\icon.png</IconPath>
     <Capabilities>
       <Capability Name="ID_CAP_NETWORKING" />

@@ -687,4 +687,69 @@ cf2c0cf3-41df-420e-9810-2c36aa40522c, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Du h
 fbc16f82-6fdb-4f1c-8339-78fcd5f5ed6b, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Điện thoại, http://www.tienphong.vn/rss/cong-nghe-dien-thoai-171.rss,1 , 0
 aa2a53ca-9e49-413e-901e-777e70cf2ffa, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Xe, http://www.tienphong.vn/rss/xe-113.rss,1 , 0
 03eed8e6-0301-4ce7-92ba-46dcbbad08a3, 89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Người lính, http://www.tienphong.vn/rss/hanh-trang-nguoi-linh-182.rss,1 , 0
-bc112140-e477-43d1-915a-cb39132a8dd8, 3ffb9ef7-30a3-4a5e-b0cc-662bd514d23a, Trang chủ, http://vtc.vn/RssCate.aspx, 1, 1
+3ffb9ef7-30a3-4a5e-b0cc-662bd514d23a, 3ffb9ef7-30a3-4a5e-b0cc-662bd514d23a, Trang chủ, http://vtc.vn/RssCate.aspx, 1, 1
+d7ca36e4-2c6a-44f7-9007-5e3fb8e89378, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Thời sự Chính trị, http://daidoanket.vn/rss.aspx?Menu=1366, 1, 1
+dfaf85a0-06e6-4eef-9d71-93f8e126c59e, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Thời luận, http://daidoanket.vn/rss.aspx?Menu=1427, 1, 1
+f03b169c-c482-4732-a3c7-1ce9b3e0f3d0, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Kinh tế Xã hội, http://daidoanket.vn/rss.aspx?Menu=1372, 1, 1
+cc7f8db6-cd46-4bf8-be2e-80827d77aca1, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Thể thao, http://daidoanket.vn/rss.aspx?Menu=1424, 1, 1
+5ee055cd-0035-4bc8-a335-1fac48d81b88, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Văn hóa Nghệ thuật, http://daidoanket.vn/rss.aspx?Menu=1420, 1, 1
+ae9af511-ac4e-4eaa-aba0-7bde500d78d9, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Giám sát Pháp luật, http://daidoanket.vn/rss.aspx?Menu=1390, 1, 0
+55a4246c-f10e-412b-ac9e-cf2b489c099c, dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Quốc tế, http://daidoanket.vn/rss.aspx?Menu=1454, 1, 1
+a93cc793-2b76-48d6-940e-6fc2b98e098a, f81f4939-d773-45ea-bac6-32f20c042b09, Chính trị, http://hanoimoi.com.vn/Danh-muc-rss/192/Chinh-tri.rss,1,1
+86cbd757-cd07-47fc-a6f7-58f079fc2338, f81f4939-d773-45ea-bac6-32f20c042b09, Xã hội, http://hanoimoi.com.vn/Danh-muc-rss/163/Xa-hoi.rss,1,1
+47caa764-ad24-4685-9855-66cf3de3c2d5, f81f4939-d773-45ea-bac6-32f20c042b09, Kinh tế, http://hanoimoi.com.vn/Danh-muc-rss/190/Kinh-te.rss,1,1
+7f429f3f-8eb5-4cd2-84a4-5013e23c61d4, f81f4939-d773-45ea-bac6-32f20c042b09, Thế giới, http://hanoimoi.com.vn/Danh-muc-tin/189/The-gioi.rss,1,1
+f6a31cec-16e1-428d-87ce-157e5517710c, f81f4939-d773-45ea-bac6-32f20c042b09, Văn hóa, http://hanoimoi.com.vn/Danh-muc-rss/179/Van-hoa/,1,1
+97c5ffcf-9097-4cf1-bedc-fcb785c8baab, f81f4939-d773-45ea-bac6-32f20c042b09, Thể thao, http://hanoimoi.com.vn/Danh-muc-rss/170/The-thao/,1,1
+bf4a3a06-0755-4201-9a61-84bdb7d1bcef, f81f4939-d773-45ea-bac6-32f20c042b09, Giáo dục, http://hanoimoi.com.vn/Danh-muc-rss/164/Giao-duc.rss,1,0
+91b073eb-a103-4e9f-a443-a80dcb57abb8, f81f4939-d773-45ea-bac6-32f20c042b09, Pháp luật, http://hanoimoi.com.vn/Danh-muc-rss/175/Phap-luat.rss,1,0
+49f95fad-aa79-400d-9cf7-259d08cae6a4, f81f4939-d773-45ea-bac6-32f20c042b09, Khoa học, http://hanoimoi.com.vn/Danh-muc-rss/100/Khoa-hoc.rss,1,0
+9fd3c37c-2d3a-4488-ba86-1ee9a7d09f24, f81f4939-d773-45ea-bac6-32f20c042b09, Đời sống, http://hanoimoi.com.vn/Danh-muc-rss/224/Doi-song.rss,1,1
+820bc97c-7d03-475a-93f8-76a8d6012c1f, f81f4939-d773-45ea-bac6-32f20c042b09, Phóng sự, http://hanoimoi.com.vn/Danh-muc-rss/228/Phong-su-Ky-su.rss,1,0
+d1b26d42-fbf5-4368-9f35-a9bf09838ada, f81f4939-d773-45ea-bac6-32f20c042b09, Ôtô Xe máy, http://hanoimoi.com.vn/Danh-muc-rss/601/Oto-xemay.rss,1,0
+5a15151c-83db-4456-84e5-984d071bc790, f81f4939-d773-45ea-bac6-32f20c042b09, Thăng Long Hà Nội, http://hanoimoi.com.vn/Danh-muc-rss/204/1000_nam_thang_long.rss,1,0
+ca84efd1-65e9-40d4-8c59-1266ff92cf59, 2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Việt Báo Trang Nhất ,http://vietbao.vn/rss2/trang-nhat.rss,1,1
+02ed67d2-41ff-46ed-975d-da2b3dfdb01e, 2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Tin Mới Nhất trên Việt Báo ,http://vietbao.vn/rss2/tinmoi.rss,1,1
+64e71c32-e1ee-4e7c-a076-c5968c52b86a, 2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, An Ninh - Pháp Luật ,http://vietbao.vn/live/An-ninh-Phap-luat/rss.xml,1,0
+7dd6a426-0b92-47ef-ab8d-5bbdc80e1e69 ,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Blog Hay ,http://vietbao.vn/live/Blog/rss.xml,1,1
+ ffa2a63b-b566-4914-9e37-13f50237772b,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Bóng Đá ,http://vietbao.vn/live/Bong-da/rss.xml,1,1
+15fa6733-a5c5-4c6f-8085-a3955e5c46e4,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Chiêm Tinh ,http://vietbao.vn/live/Chiem-tinh/rss.xml,1,0
+5a13cc50-f070-4546-8fd5-9075b23f7dec,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Công Nghệ ,http://vietbao.vn/live/Cong-nghe/rss.xml,1,1
+f9896f1c-aa48-489d-8b3d-bf0a53e9f551,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Du Lịch ,http://vietbao.vn/live/Du-lich/rss.xml,1,1
+a57354b2-8d5a-4c38-b19a-902b582a5864,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Đời Sống-Gia Đình ,http://vietbao.vn/live/Doi-song-Gia-dinh/rss.xml,1,1
+ab23d9e7-a5ec-4503-a2ea-20a159f3ba26,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Game ,http://vietbao.vn/live/Game/rss.xml,1,0
+d67e80b9-b0de-4559-a173-17a84a4a32c8,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Giải Trí ,http://vietbao.vn/live/The-gioi-giai-tri/rss.xml,1,1
+e105bae5-0c6d-48b6-8758-33b0cfeeb1c6,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Giáo Dục ,http://vietbao.vn/live/Giao-duc/rss.xml,1,0
+dad2aae3-8533-4994-9053-17e14937549c,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Khám Phá Việt Nam ,http://vietbao.vn/live/Kham-pha-Viet-Nam/rss.xml,1,0
+4b0588bf-f458-4440-8122-b3491c9b99d0,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Khoa Học ,http://vietbao.vn/live/Khoa-hoc/rss.xml,1,1
+e5849976-cf3b-4067-a9a4-b0476f440065,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Kinh Tế ,http://vietbao.vn/live/Kinh-te/rss.xml,1,1
+d83e324a-4e80-433b-a73c-da8e3647f429,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Người Việt Bốn Phương ,http://vietbao.vn/live/Nguoi-Viet-bon-phuong/rss.xml,1,0
+404adfe1-4438-41e9-878e-671a9144eb0e,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Nhà Đất ,http://vietbao.vn/live/Nha-dat/rss.xml,1,0
+454d5cde-b87a-49d0-bc59-1aa70256d21a,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Ô tô - Xe Máy ,http://vietbao.vn/live/O-to-xe-may/rss.xml,1,0
+623769a2-88c0-4d90-a85a-80fbafde2a59,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Phóng Sự ,http://vietbao.vn/live/Phong-su/rss.xml,1,0
+69d289e2-35d6-48df-8542-766af6c3164b,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Sống Đẹp ,http://vietbao.vn/live/Dep/rss.xml,1,1
+db988c15-40ed-4c76-8351-6d767106234c,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Sức Khỏe ,http://vietbao.vn/live/Suc-khoe/rss.xml,1,1
+e9316955-fc64-4530-8691-0a21565f0488,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Tết ,http://vietbao.vn/live/Tet/rss.xml,1,0
+b93a4e08-609d-4d6f-8232-f526a87774d3,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Thế Giới ,http://vietbao.vn/live/The-gioi/rss.xml,1,1
+70644353-dc32-4ad5-8c2e-e60ad8c9dafc,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Thế Giới Giải Trí ,http://vietbao.vn/live/The-gioi-giai-tri/rss.xml,1,1
+716880b3-76bb-428d-ad60-b1e1df3afcb1,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Thế Giới Trẻ ,http://vietbao.vn/live/The-gioi-tre/rss.xml,1,1
+1f090ed6-0cde-4fdc-b3b9-0dd929de27e7,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Thể Thao ,http://vietbao.vn/live/The-thao/rss.xml,1,1
+d63a962b-e479-4606-83e6-f89d7c13a7fe,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Trang Ban Đọc ,http://vietbao.vn/live/Trang-ban-doc/rss.xml,1,0
+f70eff7a-34ed-4da9-8184-5b7fba5f6505,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Tuyển Sinh ,http://vietbao.vn/live/Tuyen-sinh/rss.xml,1,0
+e791d297-b978-420b-9b86-0b247f707e5b,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Văn Hóa ,http://vietbao.vn/live/Van-hoa/rss.xml,1,1
+37efeb8d-1449-4c66-a48c-54d1045bc002,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Việc Làm ,http://vietbao.vn/live/Viec-lam/rss.xml,1,0
+9e8f5c32-fc18-48f6-9d5f-c1bb3f230093,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Vui Cười ,http://vietbao.vn/live/Cuoi/rss.xml,1,0
+b325ad2b-bada-406e-86ed-10a772838063,2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Xã Hội ,http://vietbao.vn/live/Xa-hoi/rss.xml,1,1
+7938f337-365a-4f91-bd90-8866e98b2f5e, 2992a5db-fe37-4c24-8d19-53a41158b34c, Công nghệ, http://vnmedia.vn/rss/?Catid=30, 1, 1
+61298623-5c50-45f5-9577-21f8bf87af75, 2992a5db-fe37-4c24-8d19-53a41158b34c, Xã hội, http://vnmedia.vn/rss/?Catid=4, 1, 1
+4f31f720-c345-4977-989f-aff3961c8a75, 2992a5db-fe37-4c24-8d19-53a41158b34c, Quốc tế, http://vnmedia.vn/rss/?Catid=5, 1, 1
+889ff8cc-618e-4ded-ac9d-3600769f8c03, 2992a5db-fe37-4c24-8d19-53a41158b34c, Đối thoại, http://vnmedia.vn/rss/?Catid=438, 1, 0
+7ba375f2-0a98-4394-b7d6-f5e00326d067, 2992a5db-fe37-4c24-8d19-53a41158b34c, Kinh tế, http://vnmedia.vn/rss/?Catid=3, 1, 1
+1d36506f-304a-4b69-93cd-236d2fcfb62b,2992a5db-fe37-4c24-8d19-53a41158b34c, Pháp luật, http://vnmedia.vn/rss/?Catid=373, 1, 0
+b16f35e2-446a-4cc2-af68-9be28db90be3,2992a5db-fe37-4c24-8d19-53a41158b34c, Văn hóa, http://vnmedia.vn/rss/?Catid=28, 1, 1
+51491d8a-f892-4c32-b473-1852f5d0e3d2,2992a5db-fe37-4c24-8d19-53a41158b34c, Thể thao, http://vnmedia.vn/rss/?Catid=27, 1, 1
+00260e1a-6a17-4549-8d0b-9480322dbf4c,2992a5db-fe37-4c24-8d19-53a41158b34c, Sức khỏe, http://vnmedia.vn/rss/?Catid=72, 1, 0
+f3bed2ac-3f3b-406a-b5dd-5e3da302d8c6,2992a5db-fe37-4c24-8d19-53a41158b34c, Ô tô Xe máy, http://vnmedia.vn/rss/?Catid=350, 1, 0
+5759561e-e3ba-4c0c-b391-e8df88c26dae,2992a5db-fe37-4c24-8d19-53a41158b34c, Bất động sản, http://vnmedia.vn/rss/?Catid=96, 1, 0
+5e301613-47b4-42e6-a983-79fdb329a884,2992a5db-fe37-4c24-8d19-53a41158b34c, Thông tin Cuộc sống, http://vnmedia.vn/rss/?Catid=390, 1, 0
+348ae5ed-42b8-42b6-b8f1-f0ad2b14f21a,2992a5db-fe37-4c24-8d19-53a41158b34c, Nghĩa tình, http://vnmedia.vn/rss/?Catid=385, 1, 0

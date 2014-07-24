@@ -103,23 +103,14 @@
                 x:Name="adControl"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Margin="12,12,12,0"/>
+                Margin="12,0,12,0"/>
 
-            <!--<phone:WebBrowser 
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="12,12,12,12"
-                IsScriptEnabled="True" 
-                x:Name="wbsContent"
-                Navigating="wbsContent_Navigating"
-                Loaded="wbsContent_Loaded"/>-->
             <Border
                 x:Name="WBContainer"
                 Grid.Row="2"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Margin="12,12,12,12"
+                Margin="12,0,12,12"
                 />
         </Grid>
     </Grid>

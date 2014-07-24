@@ -246,9 +246,11 @@
     <Content Include="Images\publishers\cand.png" />
     <Content Include="Images\publishers\congan.png" />
     <Content Include="Images\publishers\dantri.png" />
+    <Content Include="Images\publishers\ddk.png" />
     <Content Include="Images\publishers\dspl.png" />
     <Content Include="Images\publishers\giadinh.png" />
     <Content Include="Images\publishers\haivl.png" />
+    <Content Include="Images\publishers\hnm.png" />
     <Content Include="Images\publishers\kenh14.png" />
     <Content Include="Images\publishers\ktnn.png" />
     <Content Include="Images\publishers\laodong.png" />
@@ -261,8 +263,10 @@
     <Content Include="Images\publishers\TP.png" />
     <Content Include="Images\publishers\ttvh.png" />
     <Content Include="Images\publishers\tuoitre.png" />
+    <Content Include="Images\publishers\vietbao.png" />
     <Content Include="Images\publishers\vietnamnet.png" />
     <Content Include="Images\publishers\vnexpress.png" />
+    <Content Include="Images\publishers\vnm.png" />
     <Content Include="Images\publishers\vov.png" />
     <Content Include="Images\publishers\vtc.png" />
     <Content Include="Images\publishers\wpv.png" />

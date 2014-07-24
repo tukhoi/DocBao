@@ -30,7 +30,7 @@ namespace DocBao.WP
         FeedViewModel _viewModel = new FeedViewModel();
         int _pageNumber = 0;
         string _lastItemId;
-        Publisher _currentPubisher;
+        Publisher _currentPublisher;
         int _currentIndex=-1;
         Guid _publisherIdFromQS = default(Guid);
         Guid _feedIdFromQS = default(Guid);
@@ -63,34 +63,70 @@ namespace DocBao.WP
 
         async Task Binding()
         {
-            var publisherResult = _feedManager.GetSubscribedPublisher(_publisherIdFromQS);
-            if (publisherResult.HasError)
+            try
             {
-                Messenger.ShowToast("không tìm thấy báo...");
-                return;
+                var publisherResult = _feedManager.GetSubscribedPublisher(_publisherIdFromQS);
+                if (publisherResult.HasError)
+                {
+                    Messenger.ShowToast("không tìm thấy báo...");
+                    return;
+                }
+
+                var lastItemId = _feedManager.GetLastId<string>();
+                if (!string.IsNullOrEmpty(lastItemId))
+                    _lastItemId = lastItemId;
+
+                _currentPublisher = publisherResult.Target;
+                //if _currentIndex hasn't been initialized (-1) then initialize it
+                //otherwise leave it as-is
+                //_currentIndex = _currentIndex == -1 || findNewCurrentIndex
+                //    ? _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)))
+                //    : _currentIndex;
+
+                _currentIndex = _currentPublisher.FeedIds.IndexOf(_currentPublisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)));
+                if (_currentIndex == -1 && _currentPublisher.FeedIds.Count > 0)
+                    _currentIndex = 0;
+
+                var newItemCount = await BindingContent();
+                BindingNavBar();
+
+                if (_viewModel.AllItemViewModels.Count > 0)
+                {
+                    if (newItemCount > 0)
+                        Messenger.ShowToast(newItemCount + " tin mới...");
+                    if (newItemCount == -1)
+                        Messenger.ShowToast("lấy tin mới bị lỗi...");
+
+                    return;
+                }
+                else
+                {
+                    //Messenger.ShowToast("lấy tin mới bị lỗi, thử mục tiếp theo...");
+                    var lastTryUpdated = -1;
+                    if (_currentPublisher.FeedIds.Count > 1)
+                    {
+                        var nextFeedTried = 0;
+                        while (lastTryUpdated == -1 && nextFeedTried < _currentPublisher.FeedIds.Count - 1)
+                        {
+                            lastTryUpdated = await TryNextFeed();
+                            nextFeedTried++;
+                        }
+
+                    }
+                }
+                if (_viewModel.AllItemViewModels.Count == 0)
+                        Messenger.ShowToast("báo bị lỗi...", completedAction: (() => this.BackToPreviousPage()));
             }
-
-            var lastItemId = _feedManager.GetLastId<string>();
-            if (!string.IsNullOrEmpty(lastItemId))
-                _lastItemId = lastItemId;
-
-            _currentPubisher = publisherResult.Target;
-            //if _currentIndex hasn't been initialized (-1) then initialize it
-            //otherwise leave it as-is
-            //_currentIndex = _currentIndex == -1 || findNewCurrentIndex
-            //    ? _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)))
-            //    : _currentIndex;
-
-            _currentIndex = _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)));
-            if (_currentIndex == -1 && _currentPubisher.FeedIds.Count > 0)
-                _currentIndex = 0;
-
-            var newItemCount = await BindingContent();
-            BindingNavBar();
-            if (newItemCount > 0)
-                Messenger.ShowToast(newItemCount + " tin mới");
-            if (newItemCount == -1)
-                Messenger.ShowToast("lấy tin mới bị lỗi...");
+            catch (Exception ex)
+            {
+                //this.SetProgressIndicator(false);
+                //var message = string.Format("mục này đang bị lỗi...");
+                //if (goBackOnFail)
+                //    Messenger.ShowToast(message, completedAction: (() => this.BackToPreviousPage()));
+                //else
+                //    Messenger.ShowToast(message);
+                GA.LogException(ex);
+            }
         }
 
         protected override void OnNavigatedFrom(NavigationEventArgs e)
@@ -123,17 +159,17 @@ namespace DocBao.WP
             adControl = null;
         }
 
-        private async Task<int> BindingContent(bool requireUpdate = false, bool goBackOnFail = true)
+        private async Task<int> BindingContent(bool requireUpdate = false, string updateStatus = "đang cập nhật...")
         {
             try
             {
                 int updated = 0;
 
-                this.SetProgressIndicator(true, "đang cập nhật...");
+                this.SetProgressIndicator(true, updateStatus);
                 if (_pageNumber == 0)
                     _pageNumber = 1;
 
-                var feedId = _currentPubisher.FeedIds[_currentIndex];
+                var feedId = _currentPublisher.FeedIds[_currentIndex];
 
                 if (requireUpdate && !NetworkInterface.GetIsNetworkAvailable())
                 {
@@ -141,14 +177,14 @@ namespace DocBao.WP
                     requireUpdate = false;
                 }
 
-                updated = await _viewModel.RefreshLatestData(feedId, _currentPubisher.Id, requireUpdate);
+                updated = await _viewModel.RefreshLatestData(feedId, _currentPublisher.Id, requireUpdate);
                 _feedManager.SetLastId<Guid>(feedId.ToString());
 
                 if (_viewModel.AllItemViewModels.Count == 0)
                 {
-                    this.SetProgressIndicator(false);
-                    Messenger.ShowToast("chưa có tin nào...", completedAction: () => this.BackToPreviousPage());
-                    return 0;
+                    //this.SetProgressIndicator(false);
+                    //Messenger.ShowToast("chưa có tin nào...", completedAction: () => this.BackToPreviousPage());
+                    return updated;
                 }
 
                 if (updated > 0)
@@ -176,14 +212,30 @@ namespace DocBao.WP
             }
             catch (Exception ex)
             {
-                this.SetProgressIndicator(false);
-                var message = string.Format("mục này đang bị lỗi...");
-                if (goBackOnFail)
-                    Messenger.ShowToast(message, completedAction: (() => this.BackToPreviousPage()));
-                else
-                    Messenger.ShowToast(message);
-                GA.LogException(ex);
-                return 0;
+                throw ex;
+            }
+        }
+
+        private async Task<int> TryNextFeed()
+        {
+            if (_currentIndex == _currentPublisher.FeedIds.Count - 1)
+                _currentIndex = 0;
+            else
+                _currentIndex++;
+
+            _feedIdFromQS = _currentPublisher.FeedIds[_currentIndex];
+            try
+            {
+                var updated = await BindingContent(updateStatus: "mục này bị lỗi, cập nhật mục tiếp theo...");
+                BindingNavBar();
+
+                _lastItemId = string.Empty;
+                _feedManager.SetLastId<string>(string.Empty);
+                return updated;
+            }
+            catch (Exception)
+            {
+                return -1;
             }
         }
 
@@ -210,7 +262,7 @@ namespace DocBao.WP
                         });
                 });
 
-            _currentPubisher.FeedIds.ForEach(f =>
+            _currentPublisher.FeedIds.ForEach(f =>
                 {
                     var feedResult = _feedManager.GetSubscribedFeed(f);
                     if (feedResult.HasError) return;
@@ -369,7 +421,7 @@ namespace DocBao.WP
         {
             this.SetProgressIndicator(true, "đang cập nhật...");
             this._lastItemId = string.Empty;
-            var updated = await BindingContent(true, false);
+            var updated = await BindingContent(true);
             if (updated > 0)
                 Messenger.ShowToast(updated + " tin mới");
             if (updated == -1)
@@ -484,7 +536,7 @@ namespace DocBao.WP
 
         private async void OnFlick(object sender, ManipulationCompletedEventArgs e)
         {
-            if (_currentPubisher.FeedIds.Count == 1) return;
+            if (_currentPublisher.FeedIds.Count == 1) return;
 
             Point transformedVelocity = GestureHelper.GetTransformNoTranslation(transform).Transform(e.FinalVelocities.LinearVelocity);
             double horizontalVelocity = transformedVelocity.X;
@@ -501,18 +553,21 @@ namespace DocBao.WP
                 else
                     LoadPreviousFeed();
 
-                _feedIdFromQS = _currentPubisher.FeedIds[_currentIndex];
-                await BindingContent();
-                BindingNavBar();
-
+                _feedIdFromQS = _currentPublisher.FeedIds[_currentIndex];
                 _lastItemId = string.Empty;
                 _feedManager.SetLastId<string>(string.Empty);
+                await Binding();
+                //await BindingContent();
+                //BindingNavBar();
+
+                //_lastItemId = string.Empty;
+                //_feedManager.SetLastId<string>(string.Empty);
             }
         }
 
         private void LoadNextFeed()
         {
-            if (_currentIndex == _currentPubisher.FeedIds.Count - 1)
+            if (_currentIndex == _currentPublisher.FeedIds.Count - 1)
                 _currentIndex = 0;
             else
                 _currentIndex++;
@@ -520,8 +575,8 @@ namespace DocBao.WP
 
         private void LoadPreviousFeed()
         {
-            if (_currentIndex == 0 && _currentPubisher.FeedIds.Count > 0)
-                _currentIndex = _currentPubisher.FeedIds.Count - 1;
+            if (_currentIndex == 0 && _currentPublisher.FeedIds.Count > 0)
+                _currentIndex = _currentPublisher.FeedIds.Count - 1;
             else
                 _currentIndex--;
         }
