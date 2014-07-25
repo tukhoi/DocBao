@@ -115,7 +115,10 @@ namespace DocBao.WP
                     }
                 }
                 if (_viewModel.AllItemViewModels.Count == 0)
-                        Messenger.ShowToast("báo bị lỗi...", completedAction: (() => this.BackToPreviousPage()));
+                {
+                    this.SetProgressIndicator(false);
+                    Messenger.ShowToast("báo bị lỗi...", completedAction: (() => this.BackToPreviousPage()));
+                }
             }
             catch (Exception ex)
             {
