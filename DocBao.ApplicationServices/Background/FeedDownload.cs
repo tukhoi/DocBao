@@ -12,6 +12,6 @@ namespace DocBao.ApplicationServices.Background
         public Guid PublisherId { get; set; }
         public DateTime LastUpdatedTime { get; set; }
         public string Link { get; set; }
-        public int UpdateTime { get; set; }
+        public int Score { get; set; }
     }
 }

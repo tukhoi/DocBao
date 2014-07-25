@@ -59,7 +59,7 @@ namespace DocBao.ApplicationServices.UserBehavior
                         .ForEach(fId =>
                             {
                                 var score = weight * ub.Value;
-                                scoredFeeds.AddTo(fId, score);
+                                scoredFeeds.AppendValue(fId, score);
                             });
                 });
 

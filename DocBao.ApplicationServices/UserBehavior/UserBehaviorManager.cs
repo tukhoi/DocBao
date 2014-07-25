@@ -41,7 +41,7 @@ namespace DocBao.ApplicationServices.UserBehavior
         public virtual void Log(UserAction userAction, string entityId, short value = 1)
         {
             var key = new KeyValuePair<UserAction, string>(userAction, entityId);
-            _userBehavior.AddTo(key, (int)value);
+            _userBehavior.AppendValue(key, (int)value);
         }
 
         public IDictionary<Guid, int> ScorePublishers(short pubCount = 10)
@@ -64,8 +64,10 @@ namespace DocBao.ApplicationServices.UserBehavior
                 _scorer.UserBehaviors = _userBehavior;
                 return _scorer.ScoreFeeds(feedCount);
             }
-            catch (Exception)
-            { }
+            catch (Exception ex)
+            {
+                int i = 1;
+            }
 
             return new Dictionary<Guid, int>();
         }

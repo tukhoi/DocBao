@@ -26,29 +26,39 @@ namespace DocBao.ApplicationServices.Background
         public static void CreateFeedsToDownload(IDictionary<Guid, Feed> subscribedFeeds)
         {
             var topScoredFeeds = UserBehaviorManager.Instance.ScoreFeeds(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND);
-            var scoredFeedModels = new Dictionary<Feed, int>();
+            var feedsToDownload = new List<FeedDownload>();
             topScoredFeeds.ForEach(sf =>
                 {
                     if (subscribedFeeds.ContainsKey(sf.Key))
-                        scoredFeedModels.Add(subscribedFeeds[sf.Key], sf.Value);
+                    {
+                        var feed = subscribedFeeds[sf.Key];
+                        feedsToDownload.Add(new FeedDownload()
+                        {
+                            Id = feed.Id,
+                            PublisherId = feed.Publisher.Id,
+                            LastUpdatedTime = feed.LastUpdatedTime,
+                            Link = feed.Link,
+                            Score = sf.Value
+                        });
+                    }
                 });
 
             //This group contains feeds which are scored
             //They're prior than below group (UpdateTime=1 - odd number)
-            var feedsToDownload = new List<FeedDownload>();
-            scoredFeedModels.OrderByDescending(f => f.Value)
-                .ThenBy(f=>f.Key.LastUpdatedTime)
-                .ForEach(f =>
-                    {
-                        feedsToDownload.Add(new FeedDownload() 
-                            {
-                                Id = f.Key.Id,
-                                PublisherId = f.Key.Publisher.Id,
-                                LastUpdatedTime = f.Key.LastUpdatedTime,
-                                Link = f.Key.Link,
-                                UpdateTime = 1
-                            });
-                    });
+            //var feedsToDownload = new List<FeedDownload>();
+            //scoredFeedModels.OrderByDescending(f => f.Value)
+            //    .ThenBy(f=>f.Key.LastUpdatedTime)
+            //    .ForEach(f =>
+            //        {
+            //            feedsToDownload.Add(new FeedDownload() 
+            //                {
+            //                    Id = f.Key.Id,
+            //                    PublisherId = f.Key.Publisher.Id,
+            //                    LastUpdatedTime = f.Key.LastUpdatedTime,
+            //                    Link = f.Key.Link,
+            //                    UpdateTime = 1
+            //                });
+            //        });
 
             //There're not enough FeedDownload items so
             //we're adding more to it base on last update time
@@ -67,7 +77,7 @@ namespace DocBao.ApplicationServices.Background
                                     PublisherId = f.Value.Publisher.Id,
                                     LastUpdatedTime = f.Value.LastUpdatedTime,
                                     Link = f.Value.Link,
-                                    UpdateTime = 2
+                                    Score = 1
                                 });
                         });
             }
@@ -117,7 +127,7 @@ namespace DocBao.ApplicationServices.Background
             var feedDownloads = AppConfig.FeedDownloads;
             if (feedDownloads == null || feedDownloads.Count == 0) return null;
 
-            var feedsToDownload = feedDownloads.OrderBy(fd => fd.UpdateTime).Take(AppConfig.FeedCountPerBackgroundUpdate).ToList();
+            var feedsToDownload = PickRandomBasedOnScore(feedDownloads, AppConfig.FeedCountPerBackgroundUpdate);
             if (feedsToDownload == null || feedsToDownload.Count == 0) return null;
 
             var rssParserService = RssParserService.Instance;
@@ -149,10 +159,10 @@ namespace DocBao.ApplicationServices.Background
                     //Group which is prior (UpdateTime is odd) should take small step forward (2)
                     //Group which is lower (UpdateTime is even) should take longer step forward (4)
                     //But we need to maintain their state (odd/even)
-                    fd.UpdateTime += fd.UpdateTime % 2 == 0 ? 4 : 2;
+                    //fd.UpdateTime += fd.UpdateTime % 2 == 0 ? 4 : 2;
                 });
 
-            AppConfig.FeedDownloads = feedDownloads;
+            //AppConfig.FeedDownloads = feedDownloads;
             return feeds;
         }
 
@@ -235,6 +245,21 @@ namespace DocBao.ApplicationServices.Background
                 {
                     StorageHelper.DeleteFile(f);
                 });
+        }
+
+        private static IList<FeedDownload> PickRandomBasedOnScore(IList<FeedDownload> feedDownloads, int count)
+        {
+            var feedToDownloads = new List<FeedDownload>();
+
+            var random = new Random();
+            for (int i = 0; i < count; i++)
+            {
+                var pickedFeedDownload = feedDownloads.PlayDice(fd => fd.Score, random);
+                feedToDownloads.Add(pickedFeedDownload);
+                feedDownloads.Remove(pickedFeedDownload);
+            }
+
+            return feedToDownloads;
         }
 
         #endregion

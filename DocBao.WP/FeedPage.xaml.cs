@@ -256,7 +256,7 @@ namespace DocBao.WP
                             BindingData = new BindingData() 
                                 {
                                     PublisherId = p.Id,
-                                    FeedId = default(Guid),
+                                    FeedId = p.FeedIds[0],
                                     CategoryId = default(Guid)
                                 }
                         });
@@ -402,7 +402,7 @@ namespace DocBao.WP
             }
             else
                 Messenger.ShowToast("không tìm thấy link");
-            UserBehaviorManager.Instance.Log(UserAction.ItemLink, item.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.ItemLink, item.FeedId.ToString());
         }
 
         private async void ctxStoreItem_Click(object sender, RoutedEventArgs e)
@@ -420,7 +420,7 @@ namespace DocBao.WP
             }
 
             this.SetProgressIndicator(false);
-            UserBehaviorManager.Instance.Log(UserAction.ItemStore, itemViewModel.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.ItemStore, itemViewModel.FeedId.ToString());
         }
 
         #endregion

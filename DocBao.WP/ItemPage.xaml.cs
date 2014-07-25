@@ -379,7 +379,7 @@ namespace DocBao.WP
             emailComposeTask.Subject = "Gởi từ app duyệt báo: " + item.Title;
             emailComposeTask.Body = item.Link;
             emailComposeTask.Show();
-            UserBehaviorManager.Instance.Log(UserAction.ItemEmail, item.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.ItemEmail, item.FeedId.ToString());
         }
 
         private void copyLinkButton_Click(object sender, EventArgs e)
@@ -393,7 +393,7 @@ namespace DocBao.WP
             }
             else
                 Messenger.ShowToast("không tìm thấy link");
-            UserBehaviorManager.Instance.Log(UserAction.ItemLink, item.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.ItemLink, item.FeedId.ToString());
         }
 
         private void facebookButton_Click(object sender, EventArgs e)
@@ -405,7 +405,7 @@ namespace DocBao.WP
             shareLinkTask.LinkUri = new Uri(item.Link, UriKind.Absolute);
             shareLinkTask.Message = item.Link;
             shareLinkTask.Show();
-            UserBehaviorManager.Instance.Log(UserAction.ItemShare, item.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.ItemShare, item.FeedId.ToString());
         }
 
         private async void storeButton_Click(object sender, EventArgs e)
@@ -428,7 +428,7 @@ namespace DocBao.WP
             }
 
             this.SetProgressIndicator(false);
-            UserBehaviorManager.Instance.Log(UserAction.ItemStore, item.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.ItemStore, item.FeedId.ToString());
         }
 
         private void showTitleMenuItem_Click(object sender, EventArgs e)
