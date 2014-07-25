@@ -140,7 +140,7 @@ namespace DocBao.WP
 
             //NavBar.SecondLPKVisibility = System.Windows.Visibility.Collapsed;
             NavBar.BindingNavBar(navBarViewModel);
-            NavBar.Navigation = ((uri) => NavigationService.Navigate(uri));
+            NavBar.Navigation = ((uri, id) => NavigationService.Navigate(uri));
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 

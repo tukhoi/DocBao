@@ -200,9 +200,14 @@ namespace DocBao.WP
             });
 
             NavBar.BindingNavBar(navBarViewModel);
-            NavBar.Navigation = ((uri) =>
+            NavBar.Navigation = ((uri, id) =>
                 {
                     DisposeAll();
+                    if (!id.Equals(_itemContainer.Publisher.Id))
+                        UserBehaviorManager.Instance.Log(UserAction.PubEnter, _itemContainer.Publisher.Id.ToString());
+                    if (!id.Equals(_itemContainer.Id))
+                        UserBehaviorManager.Instance.Log(UserAction.FeedEnter, _itemContainer.Id.ToString());
+
                     NavigationService.Navigate(uri);
                 });
             NavBar.NavigateHome = (() => this.BackToMainPage());
@@ -227,7 +232,13 @@ namespace DocBao.WP
             });
 
             NavBar.BindingNavBar(navBarViewModel);
-            NavBar.Navigation = ((uri) => { DisposeAll(); NavigationService.Navigate(uri); });
+            NavBar.Navigation = ((uri, id) => 
+                { 
+                    DisposeAll();
+                    if (!id.Equals(_itemContainer.Id))
+                        UserBehaviorManager.Instance.Log(UserAction.CatEnter, id);
+                    NavigationService.Navigate(uri); 
+                });
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 
@@ -266,7 +277,11 @@ namespace DocBao.WP
             });
 
             NavBar.BindingNavBar(navBarViewModel);
-            NavBar.Navigation = ((uri) => { DisposeAll(); NavigationService.Navigate(uri); });
+            NavBar.Navigation = ((uri, id) => 
+                { 
+                    DisposeAll(); 
+                    NavigationService.Navigate(uri); 
+                });
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 
@@ -364,6 +379,7 @@ namespace DocBao.WP
             emailComposeTask.Subject = "Gởi từ app duyệt báo: " + item.Title;
             emailComposeTask.Body = item.Link;
             emailComposeTask.Show();
+            UserBehaviorManager.Instance.Log(UserAction.ItemEmail, item.Id.ToString());
         }
 
         private void copyLinkButton_Click(object sender, EventArgs e)
@@ -377,6 +393,7 @@ namespace DocBao.WP
             }
             else
                 Messenger.ShowToast("không tìm thấy link");
+            UserBehaviorManager.Instance.Log(UserAction.ItemLink, item.Id.ToString());
         }
 
         private void facebookButton_Click(object sender, EventArgs e)
@@ -388,6 +405,7 @@ namespace DocBao.WP
             shareLinkTask.LinkUri = new Uri(item.Link, UriKind.Absolute);
             shareLinkTask.Message = item.Link;
             shareLinkTask.Show();
+            UserBehaviorManager.Instance.Log(UserAction.ItemShare, item.Id.ToString());
         }
 
         private async void storeButton_Click(object sender, EventArgs e)
@@ -410,6 +428,7 @@ namespace DocBao.WP
             }
 
             this.SetProgressIndicator(false);
+            UserBehaviorManager.Instance.Log(UserAction.ItemStore, item.Id.ToString());
         }
 
         private void showTitleMenuItem_Click(object sender, EventArgs e)
@@ -471,7 +490,7 @@ namespace DocBao.WP
                     LoadPreviousItem();
 
                 var item = _itemContainer.AllItemViewModels[_currentIndex];
-                UserBehaviorManager.Instance.Log(UserAction.ItemClick, item.FeedId.ToString());
+                UserBehaviorManager.Instance.Log(UserAction.ItemEnter, item.FeedId.ToString());
             }
 
             //if (e.Direction == System.Windows.Controls.Orientation.Horizontal)

@@ -295,6 +295,14 @@ namespace DocBao.WP
         {
             return Task.Run(() =>
                 {
+                    if (_publisherIdFromQS.Equals(bindingData.PublisherId))
+                        UserBehaviorManager.Instance.Log(UserAction.FeedEnter, bindingData.FeedId.ToString());
+                    else
+                    {
+                        UserBehaviorManager.Instance.Log(UserAction.PubEnter, bindingData.PublisherId.ToString());
+                        UserBehaviorManager.Instance.Log(UserAction.FeedEnter, bindingData.FeedId.ToString());
+                    }
+
                     _viewModel.PagedItemViewModels.Clear();
                     _publisherIdFromQS = bindingData.PublisherId;
                     _feedIdFromQS = bindingData.FeedId;
@@ -336,7 +344,7 @@ namespace DocBao.WP
                     _feedManager.MarkItemAsRead(_viewModel.Id, item.Id, true);
                     _lastItemId = item.Id;
                     var uri = string.Format("/ItemPage.xaml?feedId={0}&itemId={1}", item.FeedId, HttpUtility.UrlEncode(item.Id));
-                    UserBehaviorManager.Instance.Log(UserAction.ItemClick, item.FeedId.ToString());
+                    UserBehaviorManager.Instance.Log(UserAction.ItemEnter, item.FeedId.ToString());
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }
@@ -394,6 +402,7 @@ namespace DocBao.WP
             }
             else
                 Messenger.ShowToast("không tìm thấy link");
+            UserBehaviorManager.Instance.Log(UserAction.ItemLink, item.Id.ToString());
         }
 
         private async void ctxStoreItem_Click(object sender, RoutedEventArgs e)
@@ -411,6 +420,7 @@ namespace DocBao.WP
             }
 
             this.SetProgressIndicator(false);
+            UserBehaviorManager.Instance.Log(UserAction.ItemStore, itemViewModel.Id.ToString());
         }
 
         #endregion
@@ -557,6 +567,7 @@ namespace DocBao.WP
                 _lastItemId = string.Empty;
                 _feedManager.SetLastId<string>(string.Empty);
                 await Binding();
+                UserBehaviorManager.Instance.Log(UserAction.FeedEnter, _feedIdFromQS.ToString());
                 //await BindingContent();
                 //BindingNavBar();
 

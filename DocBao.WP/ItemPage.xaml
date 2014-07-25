@@ -79,7 +79,7 @@
                     Source="/Resources/next.png"/>
 
             <Border Grid.Column="1" Grid.Row="0" 
-                    Margin="0,0,0,0"
+                    Margin="0,0,0,6"
                     x:Name="brdTitle" 
                     ManipulationCompleted="Border_ManipulationCompleted">                                
                 <TextBlock

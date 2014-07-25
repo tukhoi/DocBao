@@ -13,6 +13,7 @@ using DocBao.WP.Helper;
 using DocBao.ApplicationServices;
 using DocBao.ApplicationServices.Bank;
 using Davang.Utilities.Helpers;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
@@ -66,6 +67,7 @@ namespace DocBao.WP
             var category = CategoryBank.Categories.FirstOrDefault(c => c.Name.Equals(tileItem.Title, StringComparison.InvariantCultureIgnoreCase));
             if (category == null) return;
 
+            UserBehaviorManager.Instance.Log(UserAction.CatEnter, category.Id.ToString());
             var uri = string.Format("/CategoryPage.xaml?categoryId={0}", category.Id.ToString());
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }

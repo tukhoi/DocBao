@@ -17,7 +17,7 @@ namespace DocBao.WP
 {
     public partial class NavBar : UserControl, IDisposable
     {
-        public Action<Uri> Navigation;
+        public Action<Uri, string> Navigation;
         public Action NavigateHome;
         public PostAction PostAction;
         public delegate Task BindingPageDelegate(BindingData bindingData);
@@ -125,7 +125,7 @@ namespace DocBao.WP
         private async Task ExecutePostAction(IBrother brother)
         {
             if (this.PostAction == PostAction.Navigation)
-                Navigation(brother.NavigateUri);
+                Navigation(brother.NavigateUri, brother.Id);
             else if (this.PostAction == PostAction.Binding)
                 if (SelectedEvent != null)
                     await SelectedEvent(brother.BindingData);

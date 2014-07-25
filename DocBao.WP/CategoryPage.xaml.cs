@@ -21,6 +21,7 @@ using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
 using Davang.WP.Utilities.Helper;
 using System.Windows.Input;
+using DocBao.ApplicationServices.UserBehavior;
 
 namespace DocBao.WP
 {
@@ -207,6 +208,7 @@ namespace DocBao.WP
         {
             return Task.Run(() =>
                 {
+                    UserBehaviorManager.Instance.Log(UserAction.CatEnter, bindingData.CategoryId.ToString());
                     _viewModel.ItemViewModels.Clear();
                     _catIdFromQS = bindingData.CategoryId;
                     _lastItemId = null;
@@ -237,6 +239,7 @@ namespace DocBao.WP
                     _feedManager.MarkItemAsRead(item.FeedId, item.Id, true);
                     _lastItemId = item.Id;
                     var uri = string.Format("/ItemPage.xaml?feedId={0}&itemId={1}&categoryId={2}", item.FeedId, HttpUtility.UrlEncode(item.Id), _feedManager.GetCategories()[_currentIndex].Id);
+                    UserBehaviorManager.Instance.Log(UserAction.ItemEnter, item.Id.ToString());
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }
@@ -300,6 +303,7 @@ namespace DocBao.WP
                     LoadPreviousCategory();
 
                 _catIdFromQS = _feedManager.GetCategories()[_currentIndex].Id;
+                UserBehaviorManager.Instance.Log(UserAction.CatEnter, _catIdFromQS.ToString());
                 await BindingContent();
                 BindingNavBar();
 

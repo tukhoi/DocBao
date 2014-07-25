@@ -97,7 +97,7 @@ namespace DocBao.WP
                 {
                     _lastFeedId = feed.Id;
                     var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", feed.Id, feed.Publisher.Id);
-                    UserBehaviorManager.Instance.Log(UserAction.FeedClick, feed.Id.ToString());
+                    UserBehaviorManager.Instance.Log(UserAction.FeedEnter, feed.Id.ToString());
                     NavigationService.Navigate(new Uri(uri, UriKind.Relative));
                 }
             }

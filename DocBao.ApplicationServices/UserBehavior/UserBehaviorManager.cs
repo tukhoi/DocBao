@@ -73,12 +73,13 @@ namespace DocBao.ApplicationServices.UserBehavior
 
     public enum UserAction
     { 
-        PubClick,
-        FeedClick,
-        ItemClick,
+        PubEnter,
+        FeedEnter,
+        ItemEnter,
         ItemEmail,
         ItemShare,
         ItemLink,
-        ItemStore
+        ItemStore,
+        CatEnter
     }
 }

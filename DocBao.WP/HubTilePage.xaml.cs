@@ -73,7 +73,7 @@ namespace DocBao.WP
             //    : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
 
             var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
-            UserBehaviorManager.Instance.Log(UserAction.PubClick, publisher.Id.ToString());
+            UserBehaviorManager.Instance.Log(UserAction.PubEnter, publisher.Id.ToString());
             NavigationService.Navigate(new Uri(uri, UriKind.Relative));
         }
 

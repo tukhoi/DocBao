@@ -30,9 +30,13 @@ namespace DocBao.ApplicationServices.UserBehavior
                 var action = ub.Key.Key;
                 var entityId = ub.Key.Value;
                 var weight = GetWeight(action);
-                var score = weight * ub.Value;
-                var pubId = GetPubId(action, entityId);
-                scoredPubs.Add(pubId, score);
+                var pubIds = GetPubId(action, entityId);
+                pubIds.Where(pId => !default(Guid).Equals(pId))
+                    .ForEach(pId =>
+                    {
+                        var score = weight * ub.Value;
+                        scoredPubs.Add(pId, score);
+                    });
             });
 
             return scoredPubs.OrderByDescending(x => x.Value).Take(pubCount).ToDictionary(x => x.Key, x => x.Value);
@@ -51,11 +55,11 @@ namespace DocBao.ApplicationServices.UserBehavior
                     var entityId = ub.Key.Value;
                     var weight = GetWeight(action);
                     var feedIds = GetFeedIds(action, entityId);
-                    feedIds.Where(fid => !default(Guid).Equals(fid))
-                        .ForEach(fid =>
+                    feedIds.Where(fId => !default(Guid).Equals(fId))
+                        .ForEach(fId =>
                             {
                                 var score = weight * ub.Value;
-                                scoredFeeds.AddTo(fid, score);
+                                scoredFeeds.AddTo(fId, score);
                             });
                 });
 
@@ -68,13 +72,13 @@ namespace DocBao.ApplicationServices.UserBehavior
 
             switch (action)
             {
-                case UserAction.PubClick:
+                case UserAction.PubEnter:
                     weight = 1;
                     break;
-                case UserAction.FeedClick:
+                case UserAction.FeedEnter:
                     weight = 2;
                     break;
-                case UserAction.ItemClick:
+                case UserAction.ItemEnter:
                     weight = 3;
                     break;
                 case UserAction.ItemEmail:
@@ -88,32 +92,40 @@ namespace DocBao.ApplicationServices.UserBehavior
                     break;
                 case UserAction.ItemShare:
                     weight = 2;
+                    break;
+                case UserAction.CatEnter:
+                    weight = 1;
                     break;
             }
 
             return weight;
         }
 
-        protected virtual Guid GetPubId(UserAction action, string entityId)
+        protected virtual IList<Guid> GetPubId(UserAction action, string entityId)
         {
-            Guid pubId = default(Guid);
+            IList<Guid> pubIds = new List<Guid>();
 
             switch (action)
             {
-                case UserAction.PubClick:
-                    pubId = new Guid(entityId);
+                case UserAction.PubEnter:
+                    pubIds.Add(new Guid(entityId));
                     break;
-                case UserAction.FeedClick:
-                case UserAction.ItemClick:
+                case UserAction.FeedEnter:
+                case UserAction.ItemEnter:
                 case UserAction.ItemEmail:
                 case UserAction.ItemStore:
                 case UserAction.ItemLink:
                 case UserAction.ItemShare:
-                    pubId = GetPubIdFromStore(entityId);
+                    pubIds.Add(GetPubIdFromStore(entityId));
+                    break;
+                case UserAction.CatEnter:
+                    var ids = GetPubIdsFromCat(entityId);
+                    if (ids != null && ids.Count > 0)
+                        ids.ForEach(pId => pubIds.Add(pId));
                     break;
             }
 
-            return pubId;
+            return pubIds;
         }
 
         protected virtual IList<Guid> GetFeedIds(UserAction action, string entityId)
@@ -122,16 +134,21 @@ namespace DocBao.ApplicationServices.UserBehavior
 
             switch (action)
             { 
-                case UserAction.PubClick:
+                case UserAction.PubEnter:
                     feedIds = GetFeedIdsFromPub(entityId);
                     break;
-                case UserAction.FeedClick:
-                case UserAction.ItemClick:
+                case UserAction.FeedEnter:
+                case UserAction.ItemEnter:
                 case UserAction.ItemEmail:
                 case UserAction.ItemStore:
                 case UserAction.ItemLink:
                 case UserAction.ItemShare:
                     feedIds.Add(new Guid(entityId));
+                    break;
+                case UserAction.CatEnter:
+                    var ids = GetFeedIdsFromCat(entityId);
+                    if (ids != null && ids.Count > 0)
+                        ids.ForEach(pId => feedIds.Add(pId));
                     break;
             }
 
@@ -146,12 +163,28 @@ namespace DocBao.ApplicationServices.UserBehavior
             return feedResult.Target.Publisher.Id;
         }
 
+        protected IList<Guid> GetPubIdsFromCat(string catId)
+        {
+            var catResult = _feedManager.GetCategory(new Guid(catId));
+            if (catResult == null) return null;
+
+            return catResult.Feeds.Select(f => f.Publisher.Id).Distinct().ToList();
+        }
+
         protected IList<Guid> GetFeedIdsFromPub(string pubId)
         {
             var pubResult = _feedManager.GetSubscribedPublisher(new Guid(pubId));
             if (pubResult.HasError) return null;
 
             return pubResult.Target.FeedIds;
+        }
+
+        protected IList<Guid> GetFeedIdsFromCat(string catId)
+        {
+            var catResult = _feedManager.GetCategory(new Guid(catId));
+            if (catResult == null) return null;
+
+            return catResult.Feeds.Select(f => f.Id).Distinct().ToList();
         }
     }
 }
