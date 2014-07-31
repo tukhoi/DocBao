@@ -32,6 +32,12 @@ namespace DocBao.WP
             await MyOnNavigatedTo();
             CreateAppBar();
             Binding();
+
+            var previousPage = NavigationService.BackStack.First().Source;
+            if (previousPage.ToString().Contains("ItemPage.xaml")
+                || previousPage.ToString().Contains("FeedPage.xaml"))
+                SetAsSecondPage();
+
             base.OnNavigatedTo(e);
         }
 

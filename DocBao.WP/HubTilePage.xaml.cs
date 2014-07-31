@@ -20,6 +20,8 @@ namespace DocBao.WP
 {
     public partial class HubTilePage : DBMainPage
     {
+        private string _pickupTitle = "cài thêm báo";
+
         public HubTilePage()
         {
             InitializeComponent();
@@ -58,6 +60,12 @@ namespace DocBao.WP
             var tileItem = sender as HubTile;
             if (tileItem == null) return;
 
+            if (tileItem.Title.Equals(_pickupTitle))
+            {
+                NavigationService.Navigate(new Uri("/PublisherPickupPage.xaml", UriKind.Relative));
+                return;
+            }
+
             var publishersResult = _feedManager.GetSubscribedPublishers();
             if (publishersResult.HasError)
             {
@@ -67,10 +75,6 @@ namespace DocBao.WP
 
             var publisher = publishersResult.Target.FirstOrDefault(p => p.Name.Equals(tileItem.Title, StringComparison.InvariantCultureIgnoreCase));
             if (publisher == null) return;
-            
-            //var uri = publisher.FeedIds.Count() > 1
-            //    ? string.Format("/PublisherPage.xaml?publisherId={0}", publisher.Id.ToString())
-            //    : string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
 
             var uri = string.Format("/FeedPage.xaml?feedId={0}&publisherId={1}", publisher.FeedIds[0], publisher.Id);
             UserBehaviorManager.Instance.Log(UserAction.PubEnter, publisher.Id.ToString());
@@ -89,6 +93,15 @@ namespace DocBao.WP
             var publishers = result.Target;
             var hubTiles = new List<HubTileItem>();
             publishers.ForEach(p => hubTiles.Add(new HubTileItem().ConvertFromPublisherModel(p)));
+
+            hubTiles.Add(new HubTileItem() 
+                {
+                    Title = _pickupTitle,
+                    DisplayNotification = true,
+                    Message = string.Empty,
+                    ImageUri = new Uri("/Images/publishers/install.png", UriKind.Relative),
+                    GroupTag = "Publishers"
+                });
 
             this.tileList.ItemsSource = hubTiles;
         }

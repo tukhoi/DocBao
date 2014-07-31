@@ -57,7 +57,10 @@ namespace DocBao.WP
 
             await Binding();
 
-            SetSecondPage();
+            var previousPage = NavigationService.BackStack.First().Source;
+            if (previousPage.ToString().Contains("ItemPage.xaml"))
+                SetAsSecondPage();
+
             base.OnNavigatedTo(e);
         }
 
@@ -77,11 +80,6 @@ namespace DocBao.WP
                     _lastItemId = lastItemId;
 
                 _currentPublisher = publisherResult.Target;
-                //if _currentIndex hasn't been initialized (-1) then initialize it
-                //otherwise leave it as-is
-                //_currentIndex = _currentIndex == -1 || findNewCurrentIndex
-                //    ? _currentPubisher.FeedIds.IndexOf(_currentPubisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)))
-                //    : _currentIndex;
 
                 _currentIndex = _currentPublisher.FeedIds.IndexOf(_currentPublisher.FeedIds.FirstOrDefault(id => id.Equals(_feedIdFromQS)));
                 if (_currentIndex == -1 && _currentPublisher.FeedIds.Count > 0)
@@ -122,12 +120,6 @@ namespace DocBao.WP
             }
             catch (Exception ex)
             {
-                //this.SetProgressIndicator(false);
-                //var message = string.Format("mục này đang bị lỗi...");
-                //if (goBackOnFail)
-                //    Messenger.ShowToast(message, completedAction: (() => this.BackToPreviousPage()));
-                //else
-                //    Messenger.ShowToast(message);
                 GA.LogException(ex);
             }
         }
@@ -256,6 +248,7 @@ namespace DocBao.WP
                             ImageUri = p.ImageUri.ToString().StartsWith("/") ? p.ImageUri : new Uri("/" + p.ImageUri.ToString(), UriKind.Relative),
                             Stats = PublisherHelper.GetStatsString(p.Id),
                             Selected = p.Id.Equals(_viewModel.Publisher.Id),
+                            PostAction = ViewModels.PostAction.Binding,
                             BindingData = new BindingData() 
                                 {
                                     PublisherId = p.Id,
@@ -263,6 +256,17 @@ namespace DocBao.WP
                                     CategoryId = default(Guid)
                                 }
                         });
+                });
+
+            navBarViewModel.FirstBrothers.Add(new Brother() 
+                {
+                    Id = string.Empty,
+                    Name = string.Empty,
+                    ImageUri = new Uri("/Images/publishers/install.png", UriKind.Relative),
+                    Stats = "cài thêm hoặc gỡ bớt báo",
+                    Selected = false,
+                    PostAction = PostAction.Navigation,
+                    NavigateUri = new Uri("/PublisherPickupPage.xaml", UriKind.Relative)
                 });
 
             _currentPublisher.FeedIds.ForEach(f =>
@@ -277,7 +281,7 @@ namespace DocBao.WP
                             ImageUri = null,
                             Stats = FeedHelper.GetStatsString(f),
                             Selected = f.Equals(_viewModel.Id),
-                            //NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", feedResult.Target.Publisher.Id, f), UriKind.Relative)
+                            PostAction = ViewModels.PostAction.Binding,
                             BindingData = new BindingData() 
                                 {
                                     PublisherId = feedResult.Target.Publisher.Id,
@@ -287,10 +291,22 @@ namespace DocBao.WP
                         });
                 });
 
+            if (_currentPublisher.FeedIds.Count > 1)
+                navBarViewModel.SecondBrothers.Add(new Brother()
+                {
+                    Id = string.Empty,
+                    Name = "Cài thêm chuyên mục",
+                    ImageUri = null,
+                    Stats = "hoặc gỡ bớt chuyên mục không thích",
+                    Selected = false,
+                    PostAction = PostAction.Navigation,
+                    NavigateUri = new Uri("/FeedPickupPage.xaml?publisherId=" + _currentPublisher.Id.ToString(), UriKind.Relative)
+                });
+
             NavBar.BindingNavBar(navBarViewModel);
-            NavBar.PostAction = PostAction.Binding;
             NavBar.SelectedEvent -= NavBar_Selected;
             NavBar.SelectedEvent += NavBar_Selected;
+            NavBar.Navigation = ((uri, id) => NavigationService.Navigate(uri));
             NavBar.NavigateHome = (() => this.BackToMainPage());
         }
 

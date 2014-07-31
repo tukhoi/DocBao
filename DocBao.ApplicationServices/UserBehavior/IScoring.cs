@@ -11,7 +11,7 @@ namespace DocBao.ApplicationServices.UserBehavior
     {
         IDictionary<KeyValuePair<UserAction, string>, int> UserBehaviors { get; set; }
 
-        IDictionary<Guid, int> ScorePublishers(short pubCount = 10);
-        IDictionary<Guid, int> ScoreFeeds(short feedCount = 50);
+        IDictionary<Guid, int> ScorePublishers();
+        IDictionary<Guid, int> ScoreFeeds();
     }
 }

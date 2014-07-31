@@ -37,7 +37,7 @@ namespace DocBao.ApplicationServices
         public static IDictionary<string, short> MaxItemStoredList;
         public static IDictionary<string, short> FeedCountPerBackgroundUpdateList;
 
-        public static short MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND = 50;
+        //public static short MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND = 50;
         public static string TEMP_DOWNLOAD_FILE_PATTERN = "temp-download";
         public static short MAX_NEW_FEED_UPDATED_SHOW = 10;
         public static short MAX_FILE_DOWNLOAD_ALLOW = 72;
@@ -215,7 +215,7 @@ namespace DocBao.ApplicationServices
         {
             get
             {
-                return GetConfig<bool>(ConfigKey.ShowAllPublisher, false);
+                return GetConfig<bool>(ConfigKey.ShowAllPublisher, true);
             }
             set
             {
@@ -232,6 +232,18 @@ namespace DocBao.ApplicationServices
             set
             {
                 SetConfig<bool>(ConfigKey.DisAllowBackgroundInMidNight, value);
+            }
+        }
+
+        public static bool AutoArrangePubByScore
+        {
+            get
+            {
+                return GetConfig<bool>(ConfigKey.AutoArrangePubByScore, true);
+            }
+            set
+            {
+                SetConfig<bool>(ConfigKey.AutoArrangePubByScore, value);
             }
         }
 
@@ -307,7 +319,8 @@ namespace DocBao.ApplicationServices
         FeedDownloads,
         ShowAllPublisher,
         DisAllowBackgroundInMidNight,
-        UserBehavior
+        UserBehavior,
+        AutoArrangePubByScore
     }
 
     public enum UpdateVersion

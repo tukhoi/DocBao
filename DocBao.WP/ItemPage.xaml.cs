@@ -178,10 +178,21 @@ namespace DocBao.WP
                     ImageUri = p.ImageUri.ToString().StartsWith("/") ? p.ImageUri : new Uri("/" + p.ImageUri.ToString(), UriKind.Relative),
                     Stats = PublisherHelper.GetStatsString(p.Id),
                     Selected = p.Id.Equals(_itemContainer.Publisher.Id),
+                    PostAction = ViewModels.PostAction.Navigation,
                     NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", p.Id, p.FeedIds[0]), UriKind.Relative)
                 });
             });
 
+            navBarViewModel.FirstBrothers.Add(new Brother()
+            {
+                Id = string.Empty,
+                Name = string.Empty,
+                ImageUri = new Uri("/Images/publishers/install.png", UriKind.Relative),
+                Stats = "cài thêm hoặc gỡ bớt báo",
+                Selected = false,
+                PostAction = PostAction.Navigation,
+                NavigateUri = new Uri("/PublisherPickupPage.xaml", UriKind.Relative)
+            });
 
             _itemContainer.Publisher.FeedIds.ForEach(f =>
             {
@@ -195,9 +206,22 @@ namespace DocBao.WP
                     ImageUri = null,
                     Stats = FeedHelper.GetStatsString(f),
                     Selected = f.Equals(_itemContainer.Id),
+                    PostAction = ViewModels.PostAction.Navigation,
                     NavigateUri = new Uri(string.Format("/FeedPage.xaml?publisherId={0}&feedId={1}", _itemContainer.Publisher.Id, f), UriKind.Relative)
                 });
             });
+
+            if (_itemContainer.Publisher.FeedIds.Count > 1)
+                navBarViewModel.SecondBrothers.Add(new Brother()
+                {
+                    Id = string.Empty,
+                    Name = "Cài thêm chuyên mục",
+                    ImageUri = null,
+                    Stats = "hoặc gỡ bớt chuyên mục không thích",
+                    Selected = false,
+                    PostAction = PostAction.Navigation,
+                    NavigateUri = new Uri("/FeedPickupPage.xaml?publisherId=" + _itemContainer.Publisher.Id.ToString(), UriKind.Relative)
+                });
 
             NavBar.BindingNavBar(navBarViewModel);
             NavBar.Navigation = ((uri, id) =>
@@ -227,6 +251,7 @@ namespace DocBao.WP
                     ImageUri = c.ImageUri.ToString().StartsWith("/") ? c.ImageUri : new Uri("/" + c.ImageUri.ToString(), UriKind.Relative),
                     Stats = CategoryHelper.GetStatsString(c.Id),
                     Selected = c.Id.Equals(_itemContainer.Id),
+                    PostAction = ViewModels.PostAction.Navigation,
                     NavigateUri = new Uri(string.Format("/CategoryPage.xaml?categoryId={0}", c.Id), UriKind.Relative)
                 });
             });
@@ -263,6 +288,7 @@ namespace DocBao.WP
                 ImageUri = null,
                 Stats = "xem theo các đầu báo đã cài",
                 Selected = true,
+                PostAction = ViewModels.PostAction.Navigation,
                 NavigateUri = new Uri("/HubTilePage.xaml", UriKind.Relative)
             });
 
@@ -273,6 +299,7 @@ namespace DocBao.WP
                 ImageUri = null,
                 Stats = "xem nhóm các báo theo chuyên mục",
                 Selected = true,
+                PostAction = ViewModels.PostAction.Navigation,
                 NavigateUri = new Uri("/CustomViewPage.xaml", UriKind.Relative)
             });
 

@@ -108,9 +108,13 @@ namespace DocBao.ApplicationServices
 
         public AppResult<List<Publisher>> GetSubscribedPublishers() 
         {
-            var subscribedPublishers = _subscribedFeeds.Values.Select(f => f.Publisher).Where(f => f != null).Distinct(new PublisherComparer()).ToList();
+            var subscribedPublishers = _subscribedFeeds.Values.Select(f => f.Publisher)
+                .Where(f => f != null)
+                .Distinct(new PublisherComparer())
+                .OrderByDescending(p => p.Order)
+                .ToList();
             subscribedPublishers.ForEach(p => UpdatePublisherFeedIds(p));
-            return AppResult(subscribedPublishers.OrderBy(p => p.Order).ToList());
+            return AppResult(subscribedPublishers);
         }
 
         public AppResult<Publisher> GetPublisher(Guid publisherId)
@@ -543,6 +547,8 @@ namespace DocBao.ApplicationServices
         {
             if (_subscribedFeeds == null || _subscribedFeeds.Count == 0) return false;
             var savingFeeds = TailorSavingFeeds(_subscribedFeeds);
+            if (AppConfig.AutoArrangePubByScore) 
+                ScorePublishers(savingFeeds);
 
             try
             {
@@ -562,7 +568,7 @@ namespace DocBao.ApplicationServices
 
         #region private
 
-        public static IDictionary<Guid, Feed> TailorSavingFeeds(IDictionary<Guid, Feed> bareFeeds)
+        private static IDictionary<Guid, Feed> TailorSavingFeeds(IDictionary<Guid, Feed> bareFeeds)
         {
             if (bareFeeds == null || bareFeeds.Count == 0)
                 return null;
@@ -578,7 +584,20 @@ namespace DocBao.ApplicationServices
             return savingFeeds;
         }
 
-        public static async Task SyncFeedsAsync(IDictionary<Guid, Feed> newFeeds)
+        private static void ScorePublishers(IDictionary<Guid, Feed> feedToBeSaved)
+        {
+            var scoredPubs = UserBehavior.UserBehaviorManager.Instance.ScorePublishers();
+            feedToBeSaved.Values.ForEach(f => f.Publisher.Order = 0);
+            feedToBeSaved.Values.ForEach(f => 
+                {
+                    var scoredPub = scoredPubs.FirstOrDefault(p => p.Key.Equals(f.Publisher.Id));
+                    if (!default(KeyValuePair<Guid, int>).Equals(scoredPub)
+                        && scoredPub.Key.Equals(f.Publisher.Id))
+                        f.Publisher.Order = scoredPub.Value;
+                });
+        }
+
+        private static async Task SyncFeedsAsync(IDictionary<Guid, Feed> newFeeds)
         {
             if (newFeeds == null || newFeeds.Count == 0) return;
 
@@ -589,7 +608,7 @@ namespace DocBao.ApplicationServices
             SyncFeeds(newFeeds, savedFeeds);
         }
 
-        public static void SyncFeeds(IDictionary<Guid, Feed> newFeeds)
+        private static void SyncFeeds(IDictionary<Guid, Feed> newFeeds)
         {
             var dbContext = new PersistentManager();
             var savedFeeds = dbContext.ReadSerializedCopy<IDictionary<Guid, Feed>>(AppConfig.SUBSCRIBED_FEED_FILE_NAME);

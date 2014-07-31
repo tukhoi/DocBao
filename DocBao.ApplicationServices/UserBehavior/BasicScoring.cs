@@ -18,7 +18,7 @@ namespace DocBao.ApplicationServices.UserBehavior
 
         public IDictionary<KeyValuePair<UserAction, string>, int> UserBehaviors { get; set; }
 
-        public virtual IDictionary<Guid, int> ScorePublishers(short pubCount = 10)
+        public virtual IDictionary<Guid, int> ScorePublishers()
         {
             if (UserBehaviors == null || UserBehaviors.Count == 0)
                 throw new ApplicationException("No user behavior to score");
@@ -31,18 +31,19 @@ namespace DocBao.ApplicationServices.UserBehavior
                 var entityId = ub.Key.Value;
                 var weight = GetWeight(action);
                 var pubIds = GetPubId(action, entityId);
-                pubIds.Where(pId => !default(Guid).Equals(pId))
-                    .ForEach(pId =>
-                    {
-                        var score = weight * ub.Value;
-                        scoredPubs.Add(pId, score);
-                    });
+                if (pubIds != null && pubIds.Count > 0)
+                    pubIds.Where(pId => !default(Guid).Equals(pId))
+                        .ForEach(pId =>
+                        {
+                            var score = weight * ub.Value;
+                            scoredPubs.AppendValue(pId, score);
+                        });
             });
 
-            return scoredPubs.OrderByDescending(x => x.Value).Take(pubCount).ToDictionary(x => x.Key, x => x.Value);
+            return scoredPubs.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
         }
 
-        public virtual IDictionary<Guid, int> ScoreFeeds(short feedCount = 50)
+        public virtual IDictionary<Guid, int> ScoreFeeds()
         {
             if (UserBehaviors == null || UserBehaviors.Count == 0)
                 throw new ApplicationException("No user behavior to score");
@@ -55,15 +56,16 @@ namespace DocBao.ApplicationServices.UserBehavior
                     var entityId = ub.Key.Value;
                     var weight = GetWeight(action);
                     var feedIds = GetFeedIds(action, entityId);
-                    feedIds.Where(fId => !default(Guid).Equals(fId))
-                        .ForEach(fId =>
-                            {
-                                var score = weight * ub.Value;
-                                scoredFeeds.AppendValue(fId, score);
-                            });
+                    if (feedIds != null && feedIds.Count > 0)
+                        feedIds.Where(fId => !default(Guid).Equals(fId))
+                            .ForEach(fId =>
+                                {
+                                    var score = weight * ub.Value;
+                                    scoredFeeds.AppendValue(fId, score);
+                                });
                 });
 
-            return scoredFeeds.OrderByDescending(x => x.Value).Take(feedCount).ToDictionary(x => x.Key, x => x.Value);
+            return scoredFeeds.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
         }
 
         protected virtual short GetWeight(UserAction action)
@@ -166,7 +168,7 @@ namespace DocBao.ApplicationServices.UserBehavior
         protected IList<Guid> GetPubIdsFromCat(string catId)
         {
             var catResult = _feedManager.GetCategory(new Guid(catId));
-            if (catResult == null) return null;
+            if (catResult == null) return new List<Guid>();
 
             return catResult.Feeds.Select(f => f.Publisher.Id).Distinct().ToList();
         }
@@ -174,7 +176,7 @@ namespace DocBao.ApplicationServices.UserBehavior
         protected IList<Guid> GetFeedIdsFromPub(string pubId)
         {
             var pubResult = _feedManager.GetSubscribedPublisher(new Guid(pubId));
-            if (pubResult.HasError) return null;
+            if (pubResult.HasError) return new List<Guid>();
 
             return pubResult.Target.FeedIds;
         }
@@ -182,7 +184,7 @@ namespace DocBao.ApplicationServices.UserBehavior
         protected IList<Guid> GetFeedIdsFromCat(string catId)
         {
             var catResult = _feedManager.GetCategory(new Guid(catId));
-            if (catResult == null) return null;
+            if (catResult == null) return new List<Guid>();
 
             return catResult.Feeds.Select(f => f.Id).Distinct().ToList();
         }

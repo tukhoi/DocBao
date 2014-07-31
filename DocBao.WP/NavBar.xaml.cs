@@ -19,33 +19,14 @@ namespace DocBao.WP
     {
         public Action<Uri, string> Navigation;
         public Action NavigateHome;
-        public PostAction PostAction;
         public delegate Task BindingPageDelegate(BindingData bindingData);
         public event BindingPageDelegate SelectedEvent;
-
-        //public static readonly DependencyProperty FirstLPKVisibilityProperty =
-        //    DependencyProperty.Register("FirstLPKVisibility", typeof(Visibility), typeof(NavBar), null);
-
-        //public static readonly DependencyProperty SecondLPKVisibilityProperty =
-        //    DependencyProperty.Register("SecondLPKVisibility", typeof(Visibility), typeof(NavBar), null);
 
         public static readonly DependencyProperty FirstLPKFullModeHeaderProperty =
             DependencyProperty.Register("FirstLPKFullModeHeader", typeof(string), typeof(NavBar), null);
 
         public static readonly DependencyProperty SecondLPKFullModeHeaderProperty =
             DependencyProperty.Register("SecondLPKFullModeHeader", typeof(string), typeof(NavBar), null);
-
-        //public Visibility FirstLPKVisibility
-        //{
-        //    get { return (System.Windows.Visibility)GetValue(FirstLPKVisibilityProperty); }
-        //    set { SetValue(FirstLPKVisibilityProperty, value); }
-        //}
-
-        //public Visibility SecondLPKVisibility
-        //{
-        //    get { return (System.Windows.Visibility)GetValue(SecondLPKVisibilityProperty); }
-        //    set { SetValue(SecondLPKVisibilityProperty, value); }
-        //}
 
         public string FirstLPKFullModeHeader
         {
@@ -82,8 +63,8 @@ namespace DocBao.WP
             LayoutRoot.Visibility = System.Windows.Visibility.Collapsed;
 
             var showBoth = viewModel.FirstBrothers != null && viewModel.FirstBrothers.Count > 1 && viewModel.SecondBrothers != null && viewModel.SecondBrothers.Count > 1;
-            BindListPicker(lpkFirstBrothers, viewModel.FirstBrothers, showBoth);
-            BindListPicker(lpkSecondBrothers, viewModel.SecondBrothers, showBoth);
+            BindBrothers(lpkFirstBrothers, txtFirstBrother, viewModel.FirstBrothers, showBoth);
+            BindBrothers(lpkSecondBrothers, txtSecondBrother, viewModel.SecondBrothers, showBoth);
 
             imgSeparator2.Visibility = showBoth                
                 ? System.Windows.Visibility.Visible : System.Windows.Visibility.Collapsed;
@@ -92,16 +73,19 @@ namespace DocBao.WP
             LayoutRoot.Visibility = System.Windows.Visibility.Visible;
         }
 
-        void BindListPicker(ListPicker listPicker, ObservableCollection<IBrother> brothers, bool showBoth)
+        void BindBrothers(ListPicker listPicker, TextBlock textBlock, ObservableCollection<IBrother> brothers, bool showBoth)
         {
             var visibility = brothers == null || brothers.Count < 2 ? System.Windows.Visibility.Collapsed : System.Windows.Visibility.Visible;
             listPicker.SelectionChanged -= ListPicker_SelectionChanged;
             listPicker.ItemsSource = brothers;
-            listPicker.Visibility = visibility;
+            //listPicker.Visibility = visibility;
             if (visibility == System.Windows.Visibility.Visible)
                 listPicker.SelectedItem = listPicker.Items.Select(x => x as IBrother).Where(x => x.Selected).FirstOrDefault();
             listPicker.Width = showBoth ? 190 : 430;
             listPicker.SelectionChanged += ListPicker_SelectionChanged;
+
+            textBlock.Visibility = visibility;
+            textBlock.Text = (listPicker.SelectedItem as IBrother).Name;
         }
 
         void txtHome_Tap(object sender, System.Windows.Input.GestureEventArgs e)
@@ -124,17 +108,27 @@ namespace DocBao.WP
 
         private async Task ExecutePostAction(IBrother brother)
         {
-            if (this.PostAction == PostAction.Navigation)
-                Navigation(brother.NavigateUri, brother.Id);
-            else if (this.PostAction == PostAction.Binding)
-                if (SelectedEvent != null)
-                    await SelectedEvent(brother.BindingData);
+            switch(brother.PostAction)
+            {
+                case PostAction.Navigation:
+                    if (Navigation != null)
+                        Navigation(brother.NavigateUri, brother.Id);
+                    break;
+                case PostAction.Binding:
+                    if (SelectedEvent != null)
+                        await SelectedEvent(brother.BindingData);
+                    break;
+            }
         }
-    }
 
-    public enum PostAction
-    {
-        Navigation,
-        Binding
+        private void txtFirstBrother_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            lpkFirstBrothers.Open();
+        }
+
+        private void txtSecondBrother_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            lpkSecondBrothers.Open();
+        }
     }
 }

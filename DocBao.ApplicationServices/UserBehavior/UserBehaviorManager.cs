@@ -44,25 +44,27 @@ namespace DocBao.ApplicationServices.UserBehavior
             _userBehavior.AppendValue(key, (int)value);
         }
 
-        public IDictionary<Guid, int> ScorePublishers(short pubCount = 10)
+        public IDictionary<Guid, int> ScorePublishers()
         {
             try
             {
                 _scorer.UserBehaviors = _userBehavior;
-                return _scorer.ScorePublishers(pubCount);
+                return _scorer.ScorePublishers();
             }
-            catch (Exception)
-            { }
+            catch (Exception ex)
+            {
+                int i = 1;
+            }
 
             return new Dictionary<Guid, int>();
         }
 
-        public IDictionary<Guid, int> ScoreFeeds(short feedCount = 50)
+        public IDictionary<Guid, int> ScoreFeeds()
         {
             try
             {
                 _scorer.UserBehaviors = _userBehavior;
-                return _scorer.ScoreFeeds(feedCount);
+                return _scorer.ScoreFeeds();
             }
             catch (Exception ex)
             {

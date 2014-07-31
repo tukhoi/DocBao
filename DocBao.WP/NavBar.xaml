@@ -14,14 +14,11 @@
         
         <Grid.Background>
             <ImageBrush ImageSource="/Images/background.png"/>
-        </Grid.Background>
-        
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="Auto"/>
-        </Grid.RowDefinitions>
+        </Grid.Background>        
 
-        <TextBlock x:Name="txtHome"
+        <StackPanel Orientation="Horizontal" Grid.Row="1">
+
+            <TextBlock x:Name="txtHome"
                     Grid.Row="0"
                     VerticalAlignment="Center"
                     Text="duyệt báo"
@@ -29,14 +26,29 @@
                     FontFamily="{StaticResource PhoneFontFamilySemiBold}"
                     Foreground="White"/>
 
-        <StackPanel Orientation="Horizontal" Grid.Row="1">
+            <Image Margin="0,0,0,0"
+                x:Name="imgSeparator"
+                    Source="/Resources/next.png" 
+                    VerticalAlignment="Center"
+                    Stretch="None"/>
+
+            <TextBlock x:Name="txtFirstBrother"
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Text=""
+                    Style="{StaticResource PhoneTextNormalStyle}" 
+                    FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                    Foreground="White"
+                       Tap="txtFirstBrother_Tap"/>
+
             <toolkit:ListPicker Name="lpkFirstBrothers" 
                                 Margin="12,0,0,0"
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
                                 Width="190"
                                 FullModeHeader="{Binding FirstLPKFullModeHeader}"
-                                VerticalAlignment="Top">
+                                VerticalAlignment="Top"
+                                Visibility="Collapsed">
                 <toolkit:ListPicker.Background>
                     <ImageBrush ImageSource="/Images/background2.png"/>
                 </toolkit:ListPicker.Background>
@@ -92,19 +104,29 @@
                 </toolkit:ListPicker.FullModeItemTemplate>
             </toolkit:ListPicker>
             
-            <Image Margin="12,0,0,0"
+            <Image Margin="0,0,0,0"
                 x:Name="imgSeparator2"
                     Source="/Resources/next.png" 
                     VerticalAlignment="Center"
                     Stretch="None"/>
 
+            <TextBlock x:Name="txtSecondBrother"
+                    Grid.Row="0"
+                    VerticalAlignment="Center"
+                    Text=""
+                    Style="{StaticResource PhoneTextNormalStyle}" 
+                    FontFamily="{StaticResource PhoneFontFamilySemiBold}"
+                    Foreground="White"
+                       Tap="txtSecondBrother_Tap"/>
+            
             <toolkit:ListPicker Margin="12,0,0,0"
                 Name="lpkSecondBrothers" 
                                 ExpansionMode="FullScreenOnly"
                                 ItemsSource="{Binding}"
                                 VerticalAlignment="Center"
                                 FullModeHeader="{Binding SecondLPKFullModeHeader}"
-                                Width="190">
+                                Width="190"
+                                Visibility="Collapsed">
                 <toolkit:ListPicker.Background>
                     <ImageBrush ImageSource="/Images/background2.png"/>
                 </toolkit:ListPicker.Background>

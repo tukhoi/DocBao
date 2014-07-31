@@ -90,6 +90,8 @@
                         <RowDefinition Height="Auto"/>
                         <RowDefinition Height="10"/>
                         <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="10"/>
+                        <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
 
                     <Grid Grid.Row="0">
@@ -191,6 +193,30 @@
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
 
+                        <toolkit:ToggleSwitch Header="tự sắp xếp báo" x:Name="chkAutoArrangePubByScore" Tap="chkAutoArrangePubByScore_Tap">
+                            <toolkit:ToggleSwitch.HeaderTemplate>
+                                <DataTemplate>
+                                    <ContentControl FontSize="{StaticResource PhoneFontSizeNormal}" 
+                                        Foreground="White" 
+                                         Content="{Binding}"/>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.HeaderTemplate>
+                            <toolkit:ToggleSwitch.ContentTemplate>
+                                <DataTemplate>
+                                    <StackPanel Orientation="Vertical">
+                                        <ContentControl HorizontalAlignment="Left" FontSize="{StaticResource PhoneFontSizeLarge}" Content="{Binding}"/>
+                                        <TextBlock Text="tự động sắp xếp báo theo xu hướng đọc..." FontSize="{StaticResource PhoneFontSizeSmall}" Foreground="White" TextWrapping="Wrap"/>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </toolkit:ToggleSwitch.ContentTemplate>
+                        </toolkit:ToggleSwitch>
+                    </Grid>
+
+                    <Grid Grid.Row="10">
+                        <Grid.Background>
+                            <ImageBrush ImageSource="\Images\background2.png"/>
+                        </Grid.Background>
+
                         <toolkit:ToggleSwitch Header="cho phép cập nhật tin ngầm" x:Name="chkAllowBackgroundUpdate" Tap="chkAllowBackgroundUpdate_Tap">
                             <toolkit:ToggleSwitch.HeaderTemplate>
                                 <DataTemplate>
@@ -210,7 +236,7 @@
                         </toolkit:ToggleSwitch>
                     </Grid>
 
-                    <Grid Grid.Row="10">
+                    <Grid Grid.Row="12">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
@@ -234,7 +260,7 @@
                         </toolkit:ToggleSwitch>
                     </Grid>
 
-                    <Grid Grid.Row="12">
+                    <Grid Grid.Row="14">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
@@ -252,7 +278,7 @@
                         </toolkit:ListPicker>
                     </Grid>
 
-                    <Grid Grid.Row="14">
+                    <Grid Grid.Row="16">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>
@@ -275,7 +301,7 @@
                         </toolkit:ToggleSwitch>
                     </Grid>
                     
-                    <Grid Grid.Row="16">
+                    <Grid Grid.Row="18">
                         <Grid.Background>
                             <ImageBrush ImageSource="\Images\background2.png"/>
                         </Grid.Background>

@@ -107,6 +107,12 @@ namespace DocBao.WP
                 chkDisAllowBackgroundInMidnight.IsChecked.Value : true;
         }
 
+        private void chkAutoArrangePubByScore_Tap(object sender, System.Windows.Input.GestureEventArgs e)
+        {
+            AppConfig.AutoArrangePubByScore = chkAutoArrangePubByScore.IsChecked.HasValue ?
+                chkAutoArrangePubByScore.IsChecked.Value : true;
+        }
+
         private void SetBackgroundUpdateStuff(bool enabled)
         {
             lpkFeedCountPerBackgroundUpdate.IsEnabled = enabled;

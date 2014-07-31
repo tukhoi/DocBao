@@ -25,7 +25,7 @@ namespace DocBao.ApplicationServices.Background
         /// <param name="subscribedFeeds"></param>
         public static void CreateFeedsToDownload(IDictionary<Guid, Feed> subscribedFeeds)
         {
-            var topScoredFeeds = UserBehaviorManager.Instance.ScoreFeeds(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND);
+            var topScoredFeeds = UserBehaviorManager.Instance.ScoreFeeds();
             var feedsToDownload = new List<FeedDownload>();
             topScoredFeeds.ForEach(sf =>
                 {
@@ -63,12 +63,13 @@ namespace DocBao.ApplicationServices.Background
             //There're not enough FeedDownload items so
             //we're adding more to it base on last update time
             //This group is lower prior than above group (UpdateTime=2 - even number)
-            if (feedsToDownload.Count < AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND)
+            //if (feedsToDownload.Count < AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND)
+            if (feedsToDownload.Count < subscribedFeeds.Count)
             { 
                 subscribedFeeds
                     .Where(f => feedsToDownload.FirstOrDefault(fd => fd.Id.Equals(f.Key)) == null)
-                    .OrderBy(f => f.Value.LastUpdatedTime)
-                    .Take(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND - feedsToDownload.Count)
+                    //.OrderBy(f => f.Value.LastUpdatedTime)
+                    //.Take(AppConfig.MAX_FEEDS_TO_DOWNLOAD_IN_BACKGROUND - feedsToDownload.Count)
                     .ForEach(f =>
                         {
                             feedsToDownload.Add(new FeedDownload()

@@ -54,7 +54,9 @@ namespace DocBao.WP
 
             await Binding();
 
-            SetSecondPage();
+            var previousPage = NavigationService.BackStack.First().Source;
+            if (previousPage.ToString().Contains("ItemPage.xaml"))
+                SetAsSecondPage();
             base.OnNavigatedTo(e);
         }
 
@@ -188,6 +190,7 @@ namespace DocBao.WP
                     ImageUri = c.ImageUri.ToString().StartsWith("/") ? c.ImageUri : new Uri("/" + c.ImageUri.ToString(), UriKind.Relative),
                     Stats = CategoryHelper.GetStatsString(c.Id),
                     Selected = c.Id.Equals(_viewModel.Id),
+                    PostAction = ViewModels.PostAction.Binding,
                     BindingData = new BindingData() 
                         {
                             CategoryId = c.Id,
@@ -198,7 +201,6 @@ namespace DocBao.WP
             });
 
             NavBar.BindingNavBar(navBarViewModel);
-            NavBar.PostAction = PostAction.Binding;
             NavBar.SelectedEvent -= NavBar_SelectedEvent;
             NavBar.SelectedEvent += NavBar_SelectedEvent;
             NavBar.NavigateHome = (() => this.BackToMainPage());

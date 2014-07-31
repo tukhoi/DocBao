@@ -251,6 +251,7 @@
     <Content Include="Images\publishers\giadinh.png" />
     <Content Include="Images\publishers\haivl.png" />
     <Content Include="Images\publishers\hnm.png" />
+    <Content Include="Images\publishers\install.png" />
     <Content Include="Images\publishers\kenh14.png" />
     <Content Include="Images\publishers\ktnn.png" />
     <Content Include="Images\publishers\laodong.png" />

@@ -28,6 +28,8 @@ namespace DocBao.WP.ViewModels
         bool Selected { get; set; }
         Uri NavigateUri { get; set; }
         BindingData BindingData { get; set; }
+        PostAction PostAction { get; set; }
+
     }
 
     public class Brother : IBrother
@@ -39,6 +41,13 @@ namespace DocBao.WP.ViewModels
         public bool Selected { get; set; }
         public Uri NavigateUri { get; set; }
         public BindingData BindingData { get; set; }
+        public PostAction PostAction { get; set; }
+    }
+    
+    public enum PostAction
+    {
+        Navigation,
+        Binding
     }
 
     public class BindingData

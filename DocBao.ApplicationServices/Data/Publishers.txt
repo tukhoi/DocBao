@@ -13,24 +13,24 @@ adf4c5a9-3791-4fc6-bf3f-18e563480492, Gia đình & Xã hội, giadinh.net.vn, /I
 9fb41b7b-0ffb-44d1-a6a1-1c1bf5625494, Afamily, afamily.vn, /Images/publishers/afamily.png, 1, 1
 6fb6a19c-74ac-45da-be34-323ab6403b27, Kiến Thức Ngày Nay, kienthucngaynay.info, /Images/publishers/ktnn.png, 1, 0
 890d1e54-8298-4fc4-ba10-2c8b494245cb, CafeBiz, cafebiz.vn, /Images/publishers/cafebiz.png, 1,1
-074c83f9-2707-47d4-97ff-0de3985e92b3, CafeF, cafef.vn, /Images/publishers/cafef.png, 1,1
+074c83f9-2707-47d4-97ff-0de3985e92b3, CafeF, cafef.vn, /Images/publishers/cafef.png, 1,0
 b60df1ad-4a0d-48d2-bbaf-d328ef00067a, Đờisống & Phápluật, doisongphapluat.com, /Images/publishers/dspl.png,1,1
 59c5f421-6e68-4641-9d54-de145a4ae66f, Tinh tế, tinhte.vn, /Images/publishers/tinhte.png,1,1
 455b6156-77ba-4023-a057-9c06c7f60849, 2sao, 2sao.vn, /Images/publishers/2sao.png,1,1
 b99447ea-5c8b-4acb-8cc2-d6d215d4bf8d, WinphoneViet, winphoneviet.com, /Images/publishers/wpv.png,1,0
 7b420408-13bf-4340-81f7-a6430c538686, Tuổi Trẻ, tuoitre.vn, /Images/publishers/tuoitre.png,1,1
-67a3faf7-3ee4-4741-90f9-65713c37b261, Lao Động, laodong.com.vn, /Images/publishers/laodong.png,1,0
+67a3faf7-3ee4-4741-90f9-65713c37b261, Lao Động, laodong.com.vn, /Images/publishers/laodong.png,1,1
 e200232a-7905-4d89-85a4-ef2f9e13be8a, YanTV, yanner.yan.vn, /Images/publishers/yan.png,1,0
 1a9e4947-acc4-4994-9d1f-c2d1a7515833, ZingNews, zing.vn, /Images/publishers/zing.png,1,0
-4bf0a456-71b1-4bf2-9eea-1ffb65b4abbc, LinkHay, linkhay.com, /Images/publishers/linkhay.png,1,0
+4bf0a456-71b1-4bf2-9eea-1ffb65b4abbc, LinkHay, linkhay.com, /Images/publishers/linkhay.png,1,1
 9e31b411-d24c-40c5-b16f-23acff1c524b, WebTrẻThơ, webtretho.com, /Images/publishers/wtt.png,1,0
-7c13fa56-c25e-42b5-8887-03c59dfacd0e, Người lao động, nld.com.vn, /Images/publishers/nld.png,0,0
+7c13fa56-c25e-42b5-8887-03c59dfacd0e, Người lao động, nld.com.vn, /Images/publishers/nld.png,1,0
 662d0f68-d2ff-4880-82dc-bb47fb1654de, Đài Tiếng Nói Việt Nam, vov.vn, /Images/publishers/vov.png,1,0
 23896354-7b7f-4ab4-af21-1bbfe2f4f82f, Công An Nhân Dân, cand.com.vn, /Images/publishers/cand.png,1,0
 fcbc7304-612f-477c-af10-554d46abdffa, Quân đội nhân dân, qdnd.vn, /Images/publishers/qdnd.png,1,0
-89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Tiền Phong, tienphong.vn, /Images/publishers/tp.png,1,0
+89a81534-4b8f-45aa-bb1a-4aab68a86f8d, Tiền Phong, tienphong.vn, /Images/publishers/tp.png,1,1
 3ffb9ef7-30a3-4a5e-b0cc-662bd514d23a, VTC News, vtc.vn, /Images/publishers/vtc.png, 1, 0
 dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Đại đoàn kết, daidoanket.vn, /Images/publishers/ddk.png, 0, 0
-f81f4939-d773-45ea-bac6-32f20c042b09, Hà Nội mới, hanoimoi.com.vn, /Images/publishers/hnm.png, 1, 0 
-2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Việt Báo, vietbao.vn, /Images/publishers/vietbao.png, 1, 0
-2992a5db-fe37-4c24-8d19-53a41158b34c, VnMedia, vnmedia.vn, /Images/publishers/vnm.png, 0,0
+f81f4939-d773-45ea-bac6-32f20c042b09, Hà Nội mới, hanoimoi.com.vn, /Images/publishers/hnm.png, 1, 1 
+2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Việt Báo, vietbao.vn, /Images/publishers/vietbao.png, 1, 1
+2992a5db-fe37-4c24-8d19-53a41158b34c, VnMedia, vnmedia.vn, /Images/publishers/vnm.png, 1,1

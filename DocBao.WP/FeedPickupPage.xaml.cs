@@ -33,6 +33,10 @@ namespace DocBao.WP
             await MyOnNavigatedTo();
             Binding();
 
+            var previousPage = NavigationService.BackStack.First().Source;
+            if (previousPage.ToString().Contains("ItemPage.xaml"))
+                SetAsThirdPage();                
+
             base.OnNavigatedTo(e);
         }
 

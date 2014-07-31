@@ -98,29 +98,37 @@
                                 </Grid.Background>
 
                                 <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="350"/>
+                                    <ColumnDefinition Width="210"/>
+                                    <ColumnDefinition Width="150"/>
                                     <ColumnDefinition Width="50"/>
                                 </Grid.ColumnDefinitions>
 
-                                <StackPanel Grid.Column="0"
+                                <Image Width="210"
+                                   Height="210"
+                                   Source="{Binding ImageUri}" 
+                                   Grid.Column="0"
+                                   VerticalAlignment="Center"/>
+                                
+                                <StackPanel Grid.Column="1"
                                             Margin="12"
-                                    HorizontalAlignment="Left">
-                                    <TextBlock Text="{Binding Name}" 
+                                            HorizontalAlignment="Left"
+                                            VerticalAlignment="Center">
+                                    <!--<TextBlock Text="{Binding Name}" 
                                            Foreground="{Binding ForegroundColor}"
                                            FontSize="{StaticResource PhoneFontSizeLarge}" 
                                            FontFamily="{StaticResource PhoneFontFamilySemiBold}"
-                                           TextWrapping="Wrap"/>
+                                           TextWrapping="Wrap"/>-->
                                     <TextBlock Text="{Binding Link}"
                                            Foreground="White"
-                                           FontSize="{StaticResource PhoneFontSizeNormal}"
+                                           FontSize="{StaticResource PhoneFontSizeSmall}"
                                            TextWrapping="NoWrap"/>
                                     <TextBlock Text="{Binding PublisherStats}"
                                            Foreground="White"
-                                           FontSize="{StaticResource PhoneFontSizeNormal}"
-                                           TextWrapping="NoWrap"/>
+                                           FontSize="{StaticResource PhoneFontSizeSmall}"
+                                           TextWrapping="Wrap"/>
                                 </StackPanel>
 
-                                <Image Grid.Column="1"
+                                <Image Grid.Column="2"
                                        Stretch="None"
                                     Source="{Binding SubscribedImageUri}" 
                                     Visibility="{Binding SubscribedImageVisibility}"

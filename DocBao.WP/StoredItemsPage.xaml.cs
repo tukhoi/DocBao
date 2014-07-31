@@ -125,6 +125,7 @@ namespace DocBao.WP
                 ImageUri = null,
                 Stats = "xem theo các đầu báo đã cài",
                 Selected = false,
+                PostAction = ViewModels.PostAction.Navigation,
                 NavigateUri = new Uri("/HubTilePage.xaml", UriKind.Relative)
             });
 
@@ -135,10 +136,10 @@ namespace DocBao.WP
                 ImageUri = null,
                 Stats = "xem nhóm các báo theo chuyên mục",
                 Selected = false,
+                PostAction = ViewModels.PostAction.Navigation,
                 NavigateUri = new Uri("/CustomViewPage.xaml", UriKind.Relative)
             });
 
-            //NavBar.SecondLPKVisibility = System.Windows.Visibility.Collapsed;
             NavBar.BindingNavBar(navBarViewModel);
             NavBar.Navigation = ((uri, id) => NavigationService.Navigate(uri));
             NavBar.NavigateHome = (() => this.BackToMainPage());
