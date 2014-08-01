@@ -753,3 +753,35 @@ f3bed2ac-3f3b-406a-b5dd-5e3da302d8c6,2992a5db-fe37-4c24-8d19-53a41158b34c, Ô t�
 5759561e-e3ba-4c0c-b391-e8df88c26dae,2992a5db-fe37-4c24-8d19-53a41158b34c, Bất động sản, http://vnmedia.vn/rss/?Catid=96, 1, 0
 5e301613-47b4-42e6-a983-79fdb329a884,2992a5db-fe37-4c24-8d19-53a41158b34c, Thông tin Cuộc sống, http://vnmedia.vn/rss/?Catid=390, 1, 0
 348ae5ed-42b8-42b6-b8f1-f0ad2b14f21a,2992a5db-fe37-4c24-8d19-53a41158b34c, Nghĩa tình, http://vnmedia.vn/rss/?Catid=385, 1, 0
+b96a8cd3-766f-489c-a7ff-2886c574b8bd, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Tin tức, http://quachdaica.info/news/rss/, 1, 1
+1d023a85-d797-46ed-87ba-fdcb8feaab76, 7d4df4df-0b29-409e-bb7d-05c107bcc292, 8x 9x, http://quachdaica.info/news/rss/8x-9x-world/ ,1,0
+1973491e-035a-47d7-be83-837197af09d4, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Thời sự, http://quachdaica.info/news/rss/thoi-su-xa-hoi/ ,1,1
+f4e50c9a-eeba-4473-b26c-c8eebb224ab1, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Thế giới, http://quachdaica.info/news/rss/the-gioi/ ,1,1
+32681c52-10aa-4be3-96c5-c6f7dfc61a3b, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Thể thao SopCast, http://quachdaica.info/news/rss/the-thao-sopcast/,1,1
+f1c189be-49f3-4d1e-9169-39f33430f152, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Giải trí, http://quachdaica.info/news/rss/giai-tri/,1,1
+d12cf4a7-bd82-48e0-a6df-ecbc99ca04c1, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Phóng sự, http://quachdaica.info/news/rss/phong-su/,1,1
+a1da2cd2-5595-476d-9da3-c507def8e251, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Showbiz, http://quachdaica.info/news/rss/showbiz-scandal/,1,1
+8179d8dc-6692-482d-aa1a-f6a688794f16, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Khám phá, http://quachdaica.info/news/rss/kham-pha/,1,0
+ad400044-c6f8-4c3f-a1cc-8b5295dfd1a6, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Sao Việt, http://quachdaica.info/news/rss/sao-viet/,1,1
+4237cb45-9e35-4428-94b3-22aaf81041b1, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Sao Ngoại, http://quachdaica.info/news/rss/sao-ngoai/,1,1
+d9ae4f22-1a59-4399-b573-ecce04b4727f, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Số Hóa, http://quachdaica.info/news/rss/so-hoa/,1,1
+d0eaeefa-7398-473f-96bc-9c57607318be, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Trắc nghiệm, http://quachdaica.info/news/rss/trac-nghiem/,1,0
+3bf44495-7ad5-46ab-bba8-aa43ca1070e0, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Horoscope, http://quachdaica.info/news/rss/horoscope/,1,0
+e9739236-447e-4a51-a6cb-2ccb6269c8d1, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Chuyện ấy, http://quachdaica.info/news/rss/thi-tham-chuyen-ay/,1,1
+e0843a05-4b3d-4229-a823-9b9526a36f21, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Bưởi bự, http://quachdaica.info/news/rss/Buoi-bu/,1,1
+7cffa1b9-dcf0-4db3-af2c-44509c97cd62, 7d4df4df-0b29-409e-bb7d-05c107bcc292, Shock Lạ, http://quachdaica.info/news/rss/shock-doc-la/,1,1
+7b08bc7a-92f6-459f-bf58-4193d056cf53, f59e0e67-c2b9-490f-95b6-f763c61e445f, Trang chủ, http://soha.vn/rss.htm,1,1
+fd6a208d-528a-4ac8-bd65-ed8f96a13ee3, f59e0e67-c2b9-490f-95b6-f763c61e445f, Giải trí, http://soha.vn/giai-tri.rss,1,1
+f36a4836-52b0-41a3-a469-d78cbdb19ae6, f59e0e67-c2b9-490f-95b6-f763c61e445f, Thể thao, http://soha.vn/the-thao.rss,1,1
+ed709a9e-448c-46ce-83b2-aa42102be482, f59e0e67-c2b9-490f-95b6-f763c61e445f, Xã hội, http://soha.vn/xa-hoi.rss,1,1
+9936a596-7cc6-4710-9bf3-2500dc12b1eb, f59e0e67-c2b9-490f-95b6-f763c61e445f, Pháp luật, http://soha.vn/phap-luat.rss,1,0
+615ab37a-3492-41d9-98f4-21e49911aaeb, f59e0e67-c2b9-490f-95b6-f763c61e445f, Kinh doanh, http://soha.vn/kinh-doanh.rss,1,0
+cf0de3d7-6d9c-4a4b-b800-fb1e6ae53e9d, f59e0e67-c2b9-490f-95b6-f763c61e445f, Công nghệ, http://soha.vn/cong-nghe.rss,1,1
+5c88ce6a-3ac0-4236-a45b-b99a89337df9, f59e0e67-c2b9-490f-95b6-f763c61e445f, Quốc tế, http://soha.vn/quoc-te.rss,1,1
+de749cc9-84a3-451a-b56c-1552317cced0, f59e0e67-c2b9-490f-95b6-f763c61e445f, Sống khỏe, http://soha.vn/song-khoe.rss,1,1
+a403a5ea-f4ed-42e4-ac51-b05c1251445d, f59e0e67-c2b9-490f-95b6-f763c61e445f, Quân sự, http://soha.vn/quan-su.rss,1,0
+3508f771-376f-498b-81e0-b21bafd35a1f, f59e0e67-c2b9-490f-95b6-f763c61e445f, Cư dân mạng, http://soha.vn/cu-dan-mang.rss,1,1
+68fd415b-4b01-487c-9753-7441bf213bbc, f59e0e67-c2b9-490f-95b6-f763c61e445f, Thế giới đó đây, http://soha.vn/the-gioi-do-day.rss,1,0
+1def0fd4-8117-4bb5-a3f5-62f22d931d64, f59e0e67-c2b9-490f-95b6-f763c61e445f, Tư vấn pháp luật, http://soha.vn/tu-van-phap-luat.rss,1,0
+143bc07e-2cac-464f-99db-1e9eb26c3eba, f59e0e67-c2b9-490f-95b6-f763c61e445f, World cup 2014, http://soha.vn/world-cup-2014.rss,1,0
+

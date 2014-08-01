@@ -33,4 +33,6 @@ fcbc7304-612f-477c-af10-554d46abdffa, Quân đội nhân dân, qdnd.vn, /Images/
 dbf1ab11-8b32-45f5-bf9b-5b037cb587e3, Đại đoàn kết, daidoanket.vn, /Images/publishers/ddk.png, 0, 0
 f81f4939-d773-45ea-bac6-32f20c042b09, Hà Nội mới, hanoimoi.com.vn, /Images/publishers/hnm.png, 1, 1 
 2ced4ee9-94f7-4a3d-adc9-e9caf6b47739, Việt Báo, vietbao.vn, /Images/publishers/vietbao.png, 1, 1
-2992a5db-fe37-4c24-8d19-53a41158b34c, VnMedia, vnmedia.vn, /Images/publishers/vnm.png, 1,1
+2992a5db-fe37-4c24-8d19-53a41158b34c, VnMedia, vnmedia.vn, /Images/publishers/vnm.png, 0,0
+7d4df4df-0b29-409e-bb7d-05c107bcc292, QuachDaiCa, quachdaica.info, /Images/publishers/qdc.png, 1, 1
+f59e0e67-c2b9-490f-95b6-f763c61e445f, SoHa, soha.vn, /Images/publishers/soha.png, 0,0

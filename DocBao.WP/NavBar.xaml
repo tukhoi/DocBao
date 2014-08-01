@@ -13,7 +13,7 @@
     <Grid x:Name="LayoutRoot">
         
         <Grid.Background>
-            <ImageBrush ImageSource="/Images/background.png"/>
+            <ImageBrush ImageSource="/Images/background.png"/>            
         </Grid.Background>        
 
         <StackPanel Orientation="Horizontal" Grid.Row="1">
@@ -48,6 +48,7 @@
                                 Width="190"
                                 FullModeHeader="{Binding FirstLPKFullModeHeader}"
                                 VerticalAlignment="Top"
+                                CacheMode="BitmapCache"
                                 Visibility="Collapsed">
                 <toolkit:ListPicker.Background>
                     <ImageBrush ImageSource="/Images/background2.png"/>
@@ -72,7 +73,6 @@
                                 <RowDefinition Height="210"/>
                                 <RowDefinition Height="5"/>
                             </Grid.RowDefinitions>
-                            
 
                             <Grid Grid.Row="1">
                                 <Grid.Background>
@@ -126,6 +126,7 @@
                                 VerticalAlignment="Center"
                                 FullModeHeader="{Binding SecondLPKFullModeHeader}"
                                 Width="190"
+                                CacheMode="BitmapCache"
                                 Visibility="Collapsed">
                 <toolkit:ListPicker.Background>
                     <ImageBrush ImageSource="/Images/background2.png"/>

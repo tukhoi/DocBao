@@ -81,11 +81,13 @@ namespace DocBao.WP
             //listPicker.Visibility = visibility;
             if (visibility == System.Windows.Visibility.Visible)
                 listPicker.SelectedItem = listPicker.Items.Select(x => x as IBrother).Where(x => x.Selected).FirstOrDefault();
-            listPicker.Width = showBoth ? 190 : 430;
+            //listPicker.Width = showBoth ? 190 : 430;
             listPicker.SelectionChanged += ListPicker_SelectionChanged;
 
             textBlock.Visibility = visibility;
-            textBlock.Text = (listPicker.SelectedItem as IBrother).Name;
+            var brother = listPicker.SelectedItem as IBrother;
+            if (brother != null)
+                textBlock.Text = brother.Name;
         }
 
         void txtHome_Tap(object sender, System.Windows.Input.GestureEventArgs e)

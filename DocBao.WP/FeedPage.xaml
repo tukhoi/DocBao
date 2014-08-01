@@ -69,7 +69,11 @@
         </StackPanel>
 
         <!--ContentPanel - place additional content here-->
-        <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" ManipulationCompleted="ContentPanel_ManipulationCompleted">
+        <Grid x:Name="ContentPanel" 
+              Grid.Row="1" 
+              Margin="12,0,12,0" 
+              CacheMode="BitmapCache"
+              ManipulationCompleted="ContentPanel_ManipulationCompleted">
             <Grid.RenderTransform>
                 <CompositeTransform x:Name="transform" />
             </Grid.RenderTransform>
@@ -80,6 +84,7 @@
                 </Grid.RowDefinitions>
 
                 <adduplex:AdControl Grid.Row="0"
+                    CacheMode="BitmapCache"
                     x:Name="adControl"
                     Margin="12,0,12,12"
                     AppId="105923"/>
