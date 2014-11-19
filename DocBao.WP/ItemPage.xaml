@@ -63,8 +63,8 @@
         <Grid x:Name="ContentPanel" Grid.Row="1" Margin="12,0,12,0" CacheMode="BitmapCache">
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
-                <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
             
             <Grid.ColumnDefinitions>
@@ -95,7 +95,15 @@
                 </Border.RenderTransform>
             </Border>
 
-            <SOMAWP8:SomaAdViewer Grid.Row="1"
+            <Border
+                x:Name="WBContainer"
+                Grid.Row="1"
+                Grid.Column="0"
+                Grid.ColumnSpan="2"
+                Margin="12,0,12,0"
+                />
+
+            <SOMAWP8:SomaAdViewer Grid.Row="2"
                 PopupAd="True"
                 Pub="923880017"
                 Adspace="65836846"
@@ -104,15 +112,7 @@
                 x:Name="adControl"
                 Grid.Column="0"
                 Grid.ColumnSpan="2"
-                Margin="12,0,12,0"/>
-
-            <Border
-                x:Name="WBContainer"
-                Grid.Row="2"
-                Grid.Column="0"
-                Grid.ColumnSpan="2"
-                Margin="12,0,12,12"
-                />
+                Margin="0,8,0,8"/>
         </Grid>
     </Grid>
 

@@ -21,6 +21,7 @@ using Davang.WP.Utilities.Extensions;
 using DocBao.ApplicationServices.UserBehavior;
 using System.Windows.Input;
 using Davang.WP.Utilities.Helper;
+using Davang.WP.Utilities;
 
 namespace DocBao.WP
 {

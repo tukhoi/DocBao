@@ -26,13 +26,13 @@ namespace DocBao.WP.Helper
 
             var category = feedManager.GetCategory(categoryId);
             if (category == null) return string.Empty;
+            if (category.Feeds == null || category.Feeds.Count == 0) return string.Empty;
 
             string updateStats = string.Empty;
-            if (category.Feeds.Max(f=>f.LastUpdatedTime).Equals(default(DateTime)))
+            if (category.Feeds.Where(f => f != null).Max(f => f.LastUpdatedTime).Equals(default(DateTime)))
                 updateStats = "chưa cập nhật";
             else
-                updateStats = "cập nhật " + category.Feeds.Max(f => f.LastUpdatedTime).ToString("dd/MM/yyyy hh:mm:ss tt");
-
+                updateStats = "cập nhật " + category.Feeds.Where(f => f != null).Max(f => f.LastUpdatedTime).ToString("dd/MM/yyyy hh:mm:ss tt");
             return updateStats;
         }
 
@@ -50,7 +50,7 @@ namespace DocBao.WP.Helper
             if (category == null) return string.Empty;
             var readItemCount = 0;
             var itemCount = 0;
-            category.Feeds.ForEach(f =>
+            category.Feeds.Where(f => f != null).ForEach(f =>
                 {
                     var feedResult = feedManager.GetSubscribedFeed(f.Id);
                     if (!feedResult.HasError)

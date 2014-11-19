@@ -17,6 +17,7 @@ using Davang.Parser.Dto;
 using Microsoft.Phone.Tasks;
 using Davang.Utilities.Log;
 using Davang.WP.Utilities.Extensions;
+using Davang.WP.Utilities;
 
 namespace DocBao.WP
 {

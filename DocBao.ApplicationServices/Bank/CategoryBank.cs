@@ -225,7 +225,7 @@ namespace DocBao.ApplicationServices.Bank
                     {
                         feedManager.GetSubscribedFeed(new Guid("86dc31e7-721c-411c-8a0f-108094d5dcd7"), true).Target,   //vnexpress
                         feedManager.GetSubscribedFeed(new Guid("298a3314-00a0-4550-982d-93ab3c5c227e"), true).Target,   //thanhnien
-                        feedManager.GetSubscribedFeed(new Guid("f46b4627-8418-47f4-9372-8b4e2daec3d5"), true).Target,   //haivl
+                        //feedManager.GetSubscribedFeed(new Guid("f46b4627-8418-47f4-9372-8b4e2daec3d5"), true).Target,   //haivl
                         feedManager.GetSubscribedFeed(new Guid("24340dc3-a088-4f4c-99f8-8d82f1ac5d19"), true).Target,   //24h
                         feedManager.GetSubscribedFeed(new Guid("c60422cb-8ca4-480e-87c8-acd080d7a208"), true).Target,   //ngoisao
                         feedManager.GetSubscribedFeed(new Guid("db54bfb3-ff6a-41dd-9eca-30b8c487cd47"), true).Target,   //thethaovanhoa

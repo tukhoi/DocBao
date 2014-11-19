@@ -79,19 +79,14 @@
             </Grid.RenderTransform>
             <Grid>
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
                     <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <adduplex:AdControl Grid.Row="0"
-                    CacheMode="BitmapCache"
-                    x:Name="adControl"
-                    Margin="12,0,12,12"
-                    AppId="105923"/>
-
-                <phone:LongListSelector x:Name="llsItemList"
+                <phone:LongListSelector 
+                    x:Name="llsItemList"
                     VerticalAlignment="Top"
-                    Grid.Row="1"
+                    Grid.Row="0"
                     ItemsSource="{Binding PagedItemViewModels}"
                     LayoutMode="List"
                     IsGroupingEnabled="False"
@@ -153,7 +148,15 @@
                             </Grid>
                         </DataTemplate>
                     </phone:LongListSelector.ItemTemplate>
-                </phone:LongListSelector>                
+                </phone:LongListSelector>
+
+                <adduplex:AdControl Grid.Row="1"
+                    VerticalAlignment="Bottom"
+                    CacheMode="BitmapCache"
+                    x:Name="adControl"
+                    Margin="0,8,0,8"
+                    IsTest="True"
+                    AppId="105923"/>
             </Grid>
         </Grid>
     </Grid>

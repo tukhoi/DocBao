@@ -20,6 +20,7 @@ using DocBao.WP.ViewModels;
 using System.Windows.Input;
 using Davang.WP.Utilities.Helper;
 using SOMAWP8;
+using Davang.WP.Utilities;
 
 namespace DocBao.WP
 {

@@ -3,7 +3,7 @@ ddc17557-3e9c-4937-98fa-bc3c0e514bcd, Dân Trí, dantri.com.vn, /Images/publishe
 ae68f542-48d6-4622-9419-1ee4461babf4, VietnamNet, vietnamnet.vn, /Images/publishers/vietnamnet.png, 1, 1
 51507882-9b60-4cf3-8523-2646366de8ee, ThanhNien, thanhnien.vn.com.vn, /Images/publishers/thanhnien.png, 1, 1
 25b84657-159b-40bc-8507-f97e72440797, CongAn, congan.com.vn, /Images/publishers/congan.png, 1, 0
-a1b77305-7182-43ff-b462-4231c101086d, HaiVL, haivl.com, /Images/publishers/haivl.png, 1, 1
+a1b77305-7182-43ff-b462-4231c101086d, HaiVL, haivl.com, /Images/publishers/haivl.png, 0, 0
 cac4a482-fb74-4ef6-8797-638cfb542f58, 24h, 24h.com.vn, /Images/publishers/24h.png, 1, 1
 e7ad6094-18fe-472f-b5da-7ba65164bb9c, BongDa, bongda.com.vn, /Images/publishers/bongda.png, 1, 1
 11d64201-5ef7-47d4-9dc9-aa26e4dee31b, NgoiSao, ngoisao.net, /Images/publishers/ngoisao.png, 1, 1
