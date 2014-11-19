@@ -155,7 +155,6 @@
                     CacheMode="BitmapCache"
                     x:Name="adControl"
                     Margin="0,8,0,8"
-                    IsTest="True"
                     AppId="105923"/>
             </Grid>
         </Grid>

@@ -1,4 +1,5 @@
-﻿using Davang.Utilities.Log;
+﻿using AppPromo;
+using Davang.Utilities.Log;
 using Davang.WP.Utilities;
 using DocBao.ApplicationServices;
 using DocBao.ApplicationServices.Background;
@@ -25,7 +26,7 @@ namespace DocBao.WP.Helper
 
         public DBBasePage()
         {
-            _feedManager = FeedManager.Instance;
+            _feedManager = FeedManager.Instance;            
         }
 
         protected async virtual Task MyOnNavigatedTo()
